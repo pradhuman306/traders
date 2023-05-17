@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <link rel="stylesheet" href="/assets/css/global.css">
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>IQB</title>
+
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  <script src="/assets/js/jquery-3.6.0.min.js"></script>
+  <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="/assets/js/jquery-ui.min.js"></script>
+  <script src="/assets/js/form-builder.min.js"></script>
+  <script src="/assets/js/app.js"></script>
+
+  <!-- <script>
+    const wrap = (toWrap, wrapper) => {
+      const newWrapper = wrapper ?? document.createElement("div");
+      toWrap.parentNode.appendChild(newWrapper);
+      return newWrapper.appendChild(toWrap);
+    };
+    // New attribute for specified fields 'fields' below
+    var newAttributes = {
+      showInputFeildBelowOption: {
+        type: "text",
+        label: "Display input fields below each option?",
+        className: "form-control",
+      },
+      showInputfieldOnLastOption: {
+        type: "checkbox",
+        label: "Display input field only for last option?",
+      },
+    };
+    var userAttrs = {};
+    const fields = ["checkbox-group", "radio-group"];
+    fields.forEach(function (item, index) {
+      userAttrs[item] = newAttributes;
+    });
+
+    let options = {
+      onAddOption: (optionTemplate, optionIndex) => {
+        optionTemplate.label = `Option ${optionIndex.index + 1}`
+        optionTemplate.value = `option-${optionIndex.index + 1}`
+        optionTemplate.isDisplayInput = false
+        return optionTemplate
+      },
+      typeUserAttrs: userAttrs,
+      disableFields: [
+        "button",
+        "autocomplete",
+        "hidden",
+        "file",
+        "select",
+        "number",
+      ],
+      disabledAttrs: [
+        "access",
+        "multiple",
+        "toggle",
+        "placeholder",
+        "inline",
+        "other",
+        "maxlength",
+        "rows",
+      ],
+      inputSets: [
+        {
+          label: "Category",
+          name: "questionnaire-cat", // optional - one will be generated from the label if name not supplied
+          showHeader: false, // optional - Use the label as the header for this set of inputs
+          fields: [
+            {
+              type: "header",
+              label: "Category name here...",
+              name: "questionnaire-cat",
+              className: "category",
+            },
+          ],
+        },
+        {
+          label: "User information",
+          name: "", // optional - one will be generated from the label if name not supplied
+          showHeader: false, // optional - Use the label as the header for this set of inputs
+          fields: [
+            {
+              type: "text",
+              label: "Name",
+              name: "user-information",
+              typeUserAttrs: {
+                text: {
+                  showInGroupDesc: {
+                    type: "checkbox",
+                    label: "Show in Group Desc.?",
+                  },
+                },
+              },
+            },
+            {
+              type: "text",
+              label: "file no.",
+            },
+            {
+              type: "text",
+              label: "Filled in by",
+            },
+            {
+              type: "date",
+              label: "Enter date",
+            },
+            {
+              type: "date",
+              label: "Date in dispute",
+            },
+          ],
+        },
+      ],
+    }
+    $(function ($) {
+      var formBuilder = $(document.getElementById("fb-editor")).formBuilder(options);
+      document.addEventListener("fieldAdded", function () {
+        console.log(formBuilder);
+        let addedFieldId = formBuilder.actions.getCurrentFieldId();
+        console.log(addedFieldId);
+        $('#' + addedFieldId + '-holder  li').append('<label class="input-display">Do you want to display Input field below this option?</label>');
+        $('#' + addedFieldId + '-holder  .input-display, #' + addedFieldId + '-holder .option-isDisplayInput').wrapAll('<div></div>');
+        $('#description-' + addedFieldId).parent('.input-wrap').html(
+          '<textarea name="description" class="fld-description form-control" id="description-' + addedFieldId + '" ></textarea>'
+        );
+        // description-frmb-1661760975541-fld-1
+      });
+    });
+  </script> -->
+</body>
+
+</html>
