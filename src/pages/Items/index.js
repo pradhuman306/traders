@@ -5,18 +5,22 @@ import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { deleteAccount, getAccountList } from '../../actions/accounts';
 import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
+import { deleteItems, getItems } from '../../actions/items';
+import AddItems from './AddItems';
+import EditItems from './EditItems';
 
-const TransportRent = (props) => {
+const Items = (props) => {
     const userId = props.auth.userdata.id;
-    const transRentList = useSelector((state)=>state.transportRentReducer).transportRentList;
+    const itemListAll = useSelector((state)=>state.itemReducer).itemList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
-    const [transportRentList, setList] = useState([...transRentList]);
-    const [transportRow,setTransportRow]= useState({});
-    const [id,setId]= useState({});
+    const [itemList, setList] = useState([...itemListAll]);
+    const [itemListRow, setItemRow] = useState({});
+    const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
@@ -28,32 +32,12 @@ const TransportRent = (props) => {
             return (
                 <>
                     <p>
-                        <b>Party name:</b> {data.email}
+                        <b>Item name:</b> {data.item}
                     </p>
-                    <p>
-                        <b>Date:</b> {data.date}
-                    </p>
-                    <p>
-                        <b>Bill no:</b> {data.bill_no}
-                    </p>
-                    <p>
-                        <b>Debit:</b> {data.debit}
-                    </p>
+                 
                 </>
             );
-        } else if (window.innerWidth <= 959) {
-            return (
-                <>
-                    <p>
-                        <b>Amount:</b> {data.amount}
-                    </p>
-                    <p>
-                    <b>Description:</b> {data.description}
-                    </p>
-                
-                </>
-            );
-        }
+        } 
     };
 
     var onresize = function () {
@@ -68,7 +52,7 @@ const TransportRent = (props) => {
     window.addEventListener("resize", onresize);
 
     useEffect(() => {
-        dispatch(getTransportRentList(userId));
+        dispatch(getItems(userId));
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
             setisExpandable(true);
         } else {
@@ -78,14 +62,9 @@ const TransportRent = (props) => {
 
     useEffect(() => {
         if (filterText) {
-            let tmp = transRentList.filter((item) => {
+            let tmp = itemListAll.filter((item) => {
                 if (
-                    item.party?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.destination?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.rate?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.advance?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.date?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.description?.toLowerCase().includes(filterText.toLowerCase()) 
+                    item.item?.toLowerCase().includes(filterText.toLowerCase()) 
                 ) {
                     return true;
                 }
@@ -93,10 +72,9 @@ const TransportRent = (props) => {
             });
             setList([...tmp]);
         } else {
-            setList([...transRentList]);
+            setList([...itemListAll]);
         }
-
-    }, [filterText,transRentList]);
+    }, [filterText,itemListAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -106,64 +84,30 @@ const TransportRent = (props) => {
 
     const columns = useMemo(
         () => [
-
-            {
-                name: "Party",
-                selector: (row) => {
-                    let newName = row.party.split(" ");
-                    let firstC = newName[0][0];
-                    let lastC = "";
-                    if (newName[1]) {
-                        lastC = newName[1][0].toUpperCase();
-                    }
-                    return (
-                        <div className="user-wrap">
-                            <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
-                            <div className="user-detail">{row.party}</div>
-                        </div>
-                    );
-                },
-                sortable: true,
-                width: "250px",
-            },
-            {
-                name: "Destination",
-                selector: (row) => row.destination,
-                sortable: true,
-                // width: "200px",
-                hide: "sm",
-            },
           
-            {
-                name: "Rate",
-                selector: (row) => row.rate,
-                sortable: true,
-                hide: "md",
+          {
+            name: "Item",
+            selector: (row) => {
+                let newName = row.item.split(" ");
+                let firstC = newName[0][0];
+                let lastC = "";
+                if (newName[1]) {
+                    lastC = newName[1][0].toUpperCase();
+                }
+                return (
+         
+                    <div className="user-wrap">
+                        <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
+                        <div className="user-detail">{row.item}</div>
+                    </div>
+                 
+                );
             },
-            {
-                name: "Advance",
-                selector: (row) => row.advance,
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Remaining Amount",
-                selector: (row) => row.rate - row.advance,
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Date",
-                selector: (row) => row.date,
-                sortable: true,
-                hide: "md",
-            },
-            {
-              name: "Description",
-              selector: (row) => row.description,
-              sortable: true,
-              hide: "md",
-          },
+            sortable: true,
+         
+        },
+          
+  
             {
                 name: "Actions",
                 width: "166px",
@@ -196,22 +140,20 @@ const TransportRent = (props) => {
                                     <li>
                               
                                  
-                                        {/* <a onClick={(e) => {
+                                        <a onClick={(e) => {
                                             e.preventDefault();
-                                            setTransportRow(row);
+                                            setItemRow(row);
                                             setId(row.id);
                                             
                                         }}
                                             className="active-user"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editcustomer"
+                                            data-bs-target="#editaccount"
                                         >
 
                                          Edit
-                                        </a> */}
-                                           <Link to={`/edittransportrent/${row.id}`}>
-                                            Edit
-                                    </Link>
+                                        </a>
+                                        
                                     </li>
 
                                     <li>
@@ -231,9 +173,9 @@ const TransportRent = (props) => {
                             </li>
                             <ConfirmModal
                                 id={row.id}
-                                name={row.party}
+                                name={row.item}
                                 yes={(id) => {
-                                    dispatch(deleteTransportRentList({id:row.id,name:row.party,user_id:userId}));
+                                    dispatch(deleteItems({id:row.id,name:row.item,user_id:userId}));
                                 }}
                              
                             />
@@ -254,7 +196,7 @@ const TransportRent = (props) => {
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder="Search transport rent..."
+                            placeholder="Search items..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
@@ -266,11 +208,11 @@ const TransportRent = (props) => {
                                 <button
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#addcustomer"
+                                    data-bs-target="#addaccount"
                                 >
-                                  <Link to="/addtransportrent">
-                                  Add Transport Rent
-                                  </Link>
+                            
+                                  Add Item
+                                
                                 
                                 </button>
                             </li>
@@ -278,9 +220,11 @@ const TransportRent = (props) => {
                     </div>
                 </div>
             </div>
+            <AddItems {...props}/>
+            <EditItems {...props} row_id={id} row_data={itemListRow} />
             <DataTable
                 columns={columns}
-                data={transportRentList}
+                data={itemList}
                 progressPending={false}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
@@ -293,4 +237,4 @@ const TransportRent = (props) => {
         </div>
     )
 }
-export default TransportRent;
+export default Items;

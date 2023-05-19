@@ -19,6 +19,8 @@ import EditTransportRent from "../pages/TransportRent/EditTransportRent";
 import AddParty from "../pages/BalanceSheet/AddParty";
 import EditParty from "../pages/BalanceSheet/EditParty";
 import AccountDetails from "../pages/Bank/AccountDetails";
+import Items from "../pages/Items";
+import GoDown from "../pages/Stock";
 
 function Router(props) {
   const auth = props.auth;
@@ -80,6 +82,18 @@ function Router(props) {
                 <LayoutContainer
                   auth={auth}
                   children={<BalanceSheet {...props} />}
+                />
+              </PrivateRoute>
+            }
+          />
+            <Route
+            key="items"
+            path="items"
+            element={
+              <PrivateRoute>
+                <LayoutContainer
+                  auth={auth}
+                  children={<Items {...props} />}
                 />
               </PrivateRoute>
             }
@@ -152,7 +166,7 @@ function Router(props) {
               <PrivateRoute>
                 <LayoutContainer
                   auth={auth}
-                  children={<Stock {...props} />}
+                  children={<GoDown {...props} />}
                 />
               </PrivateRoute>
             }

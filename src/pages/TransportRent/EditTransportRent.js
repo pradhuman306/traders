@@ -4,33 +4,72 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getParty } from '../../actions/balancesheet';
 import { formatDate } from '../../actions/common';
 import { addTransportRent, getTransportRentList, updateTransportRent } from '../../actions/transportrent';
+import Select from 'react-select';
+
 
 const EditTransportRent = (props) => {
   const transRentList = useSelector((state) => state.transportRentReducer).transportRentList;
+  const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
   const { id } = useParams();
   console.log(id);
   const nav = useNavigate();
   const user_id = props.auth.userdata.id;
   const dispatch = useDispatch();
-  const [transRentListAll,setTransrentList]=useState([...transRentList]);
+  const [transRentListAll, setTransrentList] = useState([...transRentList]);
   const [error, setError] = useState({});
+  const [partyListOpt, setPartyListOptions] = useState([]);
   const [editData, setEditData] = useState({});
+  const [valueParty,setValueParty] = useState({});
 
   useEffect(() => {
     if (transRentList.length > 0) {
       let editDataTemp = transRentList.filter((item) => item.id.toString() === id);
       editDataTemp[0].date = formatDate(editDataTemp[0].date);
-      setEditData({...editDataTemp[0]});
+      setEditData({ ...editDataTemp[0] });
+      console.log(editDataTemp[0]);
+      let newPartyList = [];
+      partyList.forEach((item) => {
+        newPartyList.push({ label: item.name, value: item.id });
+        if(item.id.toString() === editDataTemp[0].party_id.toString()){
+          setValueParty({ label: item.name, value: item.id });
+        }
+      })
+
+      setPartyListOptions([...newPartyList]);
+
     }
-    console.log(transRentList);
-  }, [id,transRentList])
+  }, [id, transRentList, partyList])
 
   useEffect(() => {
     dispatch(getTransportRentList(user_id));
+    dispatch(getParty(user_id));
   }, [])
 
+
+  const handleSelectChange = (e, setFieldValue) => {
+    setFieldValue('party', e.value);
+    console.log(e.value);
+    setValueParty(e);
+  }
+
+  // const setOptionsValue = (val) => {
+  //   let tmp = [];
+  //   if (val) {
+  //     tmp = partyList.filter((item) => {
+  //       if (item.value.toString() === val.toString()) {
+  //         return true;
+  //       }
+
+  //     }
+
+
+  //     )
+  //   }
+  //   console.log(tmp);
+  // }
 
 
   return (
@@ -40,7 +79,7 @@ const EditTransportRent = (props) => {
         <Formik
           enableReinitialize
           initialValues={{
-            party: editData.party,
+            party: editData.party_id,
             destination: editData.destination,
             rate: editData.rate,
             advance: editData.advance,
@@ -50,19 +89,19 @@ const EditTransportRent = (props) => {
           validate={(values) => {
             const errors = {};
             if (!values.party) {
-              errors.party = "Please fill Party !"
+              errors.party = "Please select Party!"
             }
             if (!values.destination) {
-              errors.destination = "Please fill Destination !"
+              errors.destination = "Please fill Destination!"
             }
             if (!values.rate) {
-              errors.rate = "Please fill Rate !"
-            }
+              errors.rate = "Please fill Rate!"
+            } 
             if (!values.advance) {
-              errors.advance = "Please fill Advance !"
+              errors.advance = "Please fill Advance!"
             }
             if (!values.date) {
-              errors.date = "Please fill Date !"
+              errors.date = "Please fill Date!"
             }
 
             setError({ ...errors });
@@ -76,23 +115,24 @@ const EditTransportRent = (props) => {
             setSubmitting(false);
           }}
         >
-          {({ values, isSubmitting, dirty, handleReset, touched }) => (
+          {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
             <Form action="" id="newcustomer">
               <div className="form-fields-wrap">
-
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group mb-4">
                       <label>
                         Party <span className="error">*</span>
                       </label>
-                      <Field
-                        type="text"
-                        name="party"
+                      <Select
                         className={`form-control ${touched.party && error.party
-                            ? "input-error"
-                            : ""
+                          ? "input-error"
+                          : ""
                           }`}
+                        options={partyListOpt}
+                        name="party"
+                        onChange={(e) => handleSelectChange(e, setFieldValue)}
+                        value={valueParty}
                       />
                       <ErrorMessage
                         className="error"
@@ -111,8 +151,8 @@ const EditTransportRent = (props) => {
                         type="text"
                         name="destination"
                         className={`form-control ${touched.destination && error.destination
-                            ? "input-error"
-                            : ""
+                          ? "input-error"
+                          : ""
                           }`}
                       />
                       <ErrorMessage
@@ -133,8 +173,8 @@ const EditTransportRent = (props) => {
                         type="text"
                         name="rate"
                         className={`form-control ${touched.rate && error.rate
-                            ? "input-error"
-                            : ""
+                          ? "input-error"
+                          : ""
                           }`}
                       />
                       <ErrorMessage
@@ -154,8 +194,8 @@ const EditTransportRent = (props) => {
                         type="text"
                         name="advance"
                         className={`form-control ${touched.advance && error.advance
-                            ? "input-error"
-                            : ""
+                          ? "input-error"
+                          : ""
                           }`}
                       />
                       <ErrorMessage
@@ -178,12 +218,12 @@ const EditTransportRent = (props) => {
                         <Field
                           type="date"
                           className={`form-control ${touched.date &&
-                              error.date
-                              ? "input-error"
-                              : ""
+                            error.date
+                            ? "input-error"
+                            : ""
                             }`}
                           name="date"
-                         
+
                         />
 
                       </div>

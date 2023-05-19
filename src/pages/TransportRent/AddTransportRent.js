@@ -1,15 +1,36 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react'
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addTransportRent } from '../../actions/transportrent';
+import Select from 'react-select';
+import { useEffect } from 'react';
+import { getParty } from '../../actions/balancesheet';
+
 
 const AddTransportRent = (props) => {
     const nav = useNavigate();
+    const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
     const [error, setError] = useState({});
+    const [partyListOpt, setPartyListOptions] = useState([]);
+    useEffect(()=>{
+dispatch(getParty(user_id));
+    },[])
+    useEffect(()=>{
+      let newPartyList = [];
+      partyList.forEach((item)=>{
+        newPartyList.push({label:item.name,value:item.id});
+      })
+      setPartyListOptions([...newPartyList]);
+    },[partyList])
+
+    const handleSelectChange = (e,setFieldValue) => {
+      setFieldValue('party',e.value);
+      console.log(e.value);
+    } 
   return (
     <div className="body-content">
     <div className="usermanagement-main">
@@ -26,7 +47,7 @@ const AddTransportRent = (props) => {
               validate={(values) => {
                 const errors = {};
                if(!values.party){
-                errors.party = "Please fill Party !"
+                errors.party = "Please select Party !"
                }
                if(!values.destination){
                 errors.destination = "Please fill Destination !"
@@ -51,7 +72,7 @@ const AddTransportRent = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
                   <div className="form-fields-wrap">
                  
@@ -62,7 +83,7 @@ const AddTransportRent = (props) => {
                             
                           Party <span className="error">*</span>
                           </label>
-                          <Field
+                          {/* <Field
                             type="text"
                             name="party"
                             className={`form-control ${
@@ -70,7 +91,19 @@ const AddTransportRent = (props) => {
                                 ? "input-error"
                                 : ""
                             }`}
-                          />
+                          /> */}
+                           <Select 
+                           className={`form-control ${
+                              touched.party && error.party
+                                ? "input-error"
+                                : ""
+                            }`} 
+                            options={partyListOpt} 
+                            name="party" 
+                      
+                            onChange={(e)=>handleSelectChange(e,setFieldValue)}
+                            />
+                          
                           <ErrorMessage
                             className="error"
                             name="party"

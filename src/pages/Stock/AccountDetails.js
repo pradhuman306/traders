@@ -4,23 +4,40 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
+import { deleteAccount, getAccountDetails, getAccountList } from '../../actions/accounts';
 import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
+import EditAccount from './EditGoDown';
+import AddAccount from './AddAccount';
+import AddAccountDetails from './AddAccountDetails';
+import { formatDate } from '../../actions/common';
+import EditAccountDetails from './EditAccountDetails';
 
-const TransportRent = (props) => {
+const AccountDetails = (props) => {
+    const {accountid} = useParams();
+    console.log(accountid);
     const userId = props.auth.userdata.id;
-    const transRentList = useSelector((state)=>state.transportRentReducer).transportRentList;
+    const accountDetailsAll = useSelector((state)=>state.accountReducer).accountDetails;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
-    const [transportRentList, setList] = useState([...transRentList]);
-    const [transportRow,setTransportRow]= useState({});
-    const [id,setId]= useState({});
+    const [accountDetails, setList] = useState([...accountDetailsAll]);
+    const [accountListRow, setAccountRow] = useState({});
+    const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
+
+
+    useEffect(()=>{
+        dispatch(getAccountDetails({user_id:userId,id:accountid}));
+    },[accountid])
+
+
+
+
 
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
@@ -28,32 +45,12 @@ const TransportRent = (props) => {
             return (
                 <>
                     <p>
-                        <b>Party name:</b> {data.email}
+                        <b>Account name:</b> {data.account}
                     </p>
-                    <p>
-                        <b>Date:</b> {data.date}
-                    </p>
-                    <p>
-                        <b>Bill no:</b> {data.bill_no}
-                    </p>
-                    <p>
-                        <b>Debit:</b> {data.debit}
-                    </p>
+                 
                 </>
             );
-        } else if (window.innerWidth <= 959) {
-            return (
-                <>
-                    <p>
-                        <b>Amount:</b> {data.amount}
-                    </p>
-                    <p>
-                    <b>Description:</b> {data.description}
-                    </p>
-                
-                </>
-            );
-        }
+        } 
     };
 
     var onresize = function () {
@@ -68,7 +65,7 @@ const TransportRent = (props) => {
     window.addEventListener("resize", onresize);
 
     useEffect(() => {
-        dispatch(getTransportRentList(userId));
+        dispatch(getAccountList(userId));
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
             setisExpandable(true);
         } else {
@@ -78,14 +75,11 @@ const TransportRent = (props) => {
 
     useEffect(() => {
         if (filterText) {
-            let tmp = transRentList.filter((item) => {
+            let tmp = accountDetailsAll.filter((item) => {
                 if (
-                    item.party?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.destination?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.rate?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.advance?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.date?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.description?.toLowerCase().includes(filterText.toLowerCase()) 
+                    item.credit?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.debit?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.date?.toLowerCase().includes(filterText.toLowerCase())
                 ) {
                     return true;
                 }
@@ -93,10 +87,9 @@ const TransportRent = (props) => {
             });
             setList([...tmp]);
         } else {
-            setList([...transRentList]);
+            setList([...accountDetailsAll]);
         }
-
-    }, [filterText,transRentList]);
+    }, [filterText,accountDetailsAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -106,64 +99,41 @@ const TransportRent = (props) => {
 
     const columns = useMemo(
         () => [
-
             {
-                name: "Party",
-                selector: (row) => {
-                    let newName = row.party.split(" ");
-                    let firstC = newName[0][0];
-                    let lastC = "";
-                    if (newName[1]) {
-                        lastC = newName[1][0].toUpperCase();
-                    }
-                    return (
-                        <div className="user-wrap">
-                            <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
-                            <div className="user-detail">{row.party}</div>
-                        </div>
-                    );
-                },
-                sortable: true,
-                width: "250px",
-            },
-            {
-                name: "Destination",
-                selector: (row) => row.destination,
-                sortable: true,
-                // width: "200px",
-                hide: "sm",
+                name: "Sr no.",
+                selector: (row,index) => index+1,
+                sortable: false,
+                width: "100px",
             },
           
-            {
-                name: "Rate",
-                selector: (row) => row.rate,
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Advance",
-                selector: (row) => row.advance,
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Remaining Amount",
-                selector: (row) => row.rate - row.advance,
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Date",
-                selector: (row) => row.date,
-                sortable: true,
-                hide: "md",
-            },
-            {
-              name: "Description",
-              selector: (row) => row.description,
-              sortable: true,
-              hide: "md",
-          },
+          {
+            name: "Credit",
+            selector: (row) => row.credit,
+            sortable: true,
+         
+        },
+           
+        {
+            name: "Debit",
+            selector: (row) => row.debit,
+            sortable: true,
+         
+        },
+        {
+            name: "Description",
+            selector: (row) => row.description,
+            sortable: true,
+         
+        },
+           
+        {
+            name: "Date",
+            selector: (row) => formatDate(row.date),
+            sortable: true,
+         
+        },
+          
+  
             {
                 name: "Actions",
                 width: "166px",
@@ -196,22 +166,20 @@ const TransportRent = (props) => {
                                     <li>
                               
                                  
-                                        {/* <a onClick={(e) => {
+                                        <a onClick={(e) => {
                                             e.preventDefault();
-                                            setTransportRow(row);
+                                            setAccountRow(row);
                                             setId(row.id);
                                             
                                         }}
                                             className="active-user"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editcustomer"
+                                            data-bs-target="#editaccountdetails"
                                         >
 
                                          Edit
-                                        </a> */}
-                                           <Link to={`/edittransportrent/${row.id}`}>
-                                            Edit
-                                    </Link>
+                                        </a>
+                                        
                                     </li>
 
                                     <li>
@@ -231,9 +199,9 @@ const TransportRent = (props) => {
                             </li>
                             <ConfirmModal
                                 id={row.id}
-                                name={row.party}
+                                name={row.name}
                                 yes={(id) => {
-                                    dispatch(deleteTransportRentList({id:row.id,name:row.party,user_id:userId}));
+                                    dispatch(deleteAccount({id:row.id,name:row.name,user_id:userId}));
                                 }}
                              
                             />
@@ -254,7 +222,7 @@ const TransportRent = (props) => {
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder="Search transport rent..."
+                            placeholder="Search account details..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
@@ -266,11 +234,11 @@ const TransportRent = (props) => {
                                 <button
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#addcustomer"
+                                    data-bs-target="#addaccountdetails"
                                 >
-                                  <Link to="/addtransportrent">
-                                  Add Transport Rent
-                                  </Link>
+                            
+                                  Add Account Details
+                                
                                 
                                 </button>
                             </li>
@@ -278,9 +246,12 @@ const TransportRent = (props) => {
                     </div>
                 </div>
             </div>
+            <AddAccountDetails {...props} accountid={accountid} />
+            <EditAccountDetails {...props} accountid={accountid} row_id={id} row_data={accountListRow} />
+            
             <DataTable
                 columns={columns}
-                data={transportRentList}
+                data={accountDetails}
                 progressPending={false}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
@@ -293,4 +264,4 @@ const TransportRent = (props) => {
         </div>
     )
 }
-export default TransportRent;
+export default AccountDetails;

@@ -13,6 +13,7 @@ import EditAccount from './EditAccount';
 import AddAccount from './AddAccount';
 import AddAccountDetails from './AddAccountDetails';
 import { formatDate } from '../../actions/common';
+import EditAccountDetails from './EditAccountDetails';
 
 const AccountDetails = (props) => {
     const {accountid} = useParams();
@@ -76,7 +77,9 @@ const AccountDetails = (props) => {
         if (filterText) {
             let tmp = accountDetailsAll.filter((item) => {
                 if (
-                    item.name?.toLowerCase().includes(filterText.toLowerCase()) 
+                    item.credit?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.debit?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.date?.toLowerCase().includes(filterText.toLowerCase())
                 ) {
                     return true;
                 }
@@ -171,7 +174,7 @@ const AccountDetails = (props) => {
                                         }}
                                             className="active-user"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editaccount"
+                                            data-bs-target="#editaccountdetails"
                                         >
 
                                          Edit
@@ -244,7 +247,8 @@ const AccountDetails = (props) => {
                 </div>
             </div>
             <AddAccountDetails {...props} accountid={accountid} />
-            {/* <EditAccount {...props} row_id={id} row_data={accountListRow} /> */}
+            <EditAccountDetails {...props} accountid={accountid} row_id={id} row_data={accountListRow} />
+            
             <DataTable
                 columns={columns}
                 data={accountDetails}

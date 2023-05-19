@@ -2,12 +2,12 @@ import config from "../config";
 import * as ajaxCall from "../common/ajaxCall";
 import * as actionTypes from "../constants/actionTypes";
 
-export const getAccountList = (payload) => (dispatch) => {
+export const getGoDownList = (payload) => (dispatch) => {
     ajaxCall
-    .get(`${config.BASE_URL}accounts/${payload}`)
+    .get(`${config.BASE_URL}stocks/${payload}`)
     .then((res) => {
         dispatch({
-            type: actionTypes.SET_ACCOUNT_LIST,
+            type: actionTypes.SET_GODOWN_LIST,
             payload: res.data.data,
           });
     })
@@ -19,15 +19,15 @@ export const getAccountList = (payload) => (dispatch) => {
     });
 }
 
-export const addAccount = (payload,elementRef) => (dispatch) => {
+export const addGoDown = (payload,elementRef) => (dispatch) => {
 
     ajaxCall
-    .post(`${config.BASE_URL}createaccount`,payload)
+    .post(`${config.BASE_URL}createstock`,payload)
     .then((res) => {
-        dispatch(getAccountList(payload.user_id));
+        dispatch(getGoDownList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
-            payload: "Account created successfully!",
+            payload: "GoDown created successfully!",
           });
           elementRef.current.click();
     })
@@ -39,15 +39,15 @@ export const addAccount = (payload,elementRef) => (dispatch) => {
     });
 }
 
-export const updateAccount = (payload,elementRef) => (dispatch) => {
+export const updateGoDown = (payload,elementRef) => (dispatch) => {
 
     ajaxCall
-    .post(`${config.BASE_URL}updateaccount`,payload)
+    .post(`${config.BASE_URL}updatestock`,payload)
     .then((res) => {
-        dispatch(getAccountList(payload.user_id));
+        dispatch(getGoDownList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
-            payload: "Account Updated successfully!",
+            payload: "GoDown Updated successfully!",
           });
           elementRef.current.click();
     })
@@ -59,12 +59,12 @@ export const updateAccount = (payload,elementRef) => (dispatch) => {
     });
 }
 
-export const deleteAccount = (payload) => (dispatch) => {
+export const deleteGoDown = (payload) => (dispatch) => {
     ajaxCall
-    .post(`${config.BASE_URL}deleteaccount/${payload.id}`)
+    .post(`${config.BASE_URL}deletestock/${payload.id}`)
     .then((res) => {
         console.log(payload);
-        dispatch(getAccountList(payload.user_id));
+        dispatch(getGoDownList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
             payload: `${payload.name} Deleted Successfully!`,
