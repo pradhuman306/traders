@@ -4,27 +4,41 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { deleteParty, getParty } from '../../actions/balancesheet';
+import { Link, useParams } from 'react-router-dom';
+import { deleteAccount, getAccountDetails, getAccountList } from '../../actions/accounts';
 import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
-import AddParty from './AddParty';
-import EditParty from './EditParty';
+import { formatDate } from '../../actions/common';
+import { deleteStockDetails, getStockDetails } from '../../actions/godown';
+import AddStockDetails from './AddStockDetails';
+import EditStockDetails from './EditStockDetails';
+import { getItems } from '../../actions/items';
 
-const BalanceSheet = (props) => {
+const StockDetails = (props) => {
+    const {stockid} = useParams();
+    console.log(stockid);
     const userId = props.auth.userdata.id;
-    const partyData = useSelector((state)=>state.balanceSheetReducer).partyList;
-    const btnPending = useSelector((state)=>state.balanceSheetReducer).pending;
+    const stockDetailsAll = useSelector((state)=>state.godownReducer).stockDetails;
+    const itemListAll = useSelector((state)=>state.itemReducer).itemList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
-    const [partyList, setList] = useState([...partyData]);
-    const [partyRow, setPartyRow] = useState({});
+    const [stockDetails, setList] = useState([...stockDetailsAll]);
+    const [stockDetailsListRow, setDetailsListRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
+ 
+
+    useEffect(()=>{
+        dispatch(getStockDetails({user_id:userId,id:stockid}));
+    },[stockid])
+
+
+
+
 
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
@@ -32,9 +46,9 @@ const BalanceSheet = (props) => {
             return (
                 <>
                     <p>
-                        <b>Party name:</b> {data.email}
+                        <b>Account name:</b> {data.account}
                     </p>
-            
+                 
                 </>
             );
         } 
@@ -52,20 +66,24 @@ const BalanceSheet = (props) => {
     window.addEventListener("resize", onresize);
 
     useEffect(() => {
-        dispatch(getParty(userId));
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
             setisExpandable(true);
         } else {
             setisExpandable(false);
         }
+        dispatch(getItems(userId));
     }, []);
 
     useEffect(() => {
         if (filterText) {
-            let tmp = partyList.filter((item) => {
+            let tmp = stockDetailsAll.filter((item) => {
                 if (
-                    item.name?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.mobile?.toLowerCase().includes(filterText.toLowerCase()) 
+                    item.firm?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.item?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.quantity?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.weight?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.vehicle_no?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.date?.toLowerCase().includes(filterText.toLowerCase()) 
                 ) {
                     return true;
                 }
@@ -73,9 +91,9 @@ const BalanceSheet = (props) => {
             });
             setList([...tmp]);
         } else {
-            setList([...partyData]);
+            setList([...stockDetailsAll]);
         }
-    }, [filterText,partyData]);
+    }, [filterText,stockDetailsAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -85,39 +103,56 @@ const BalanceSheet = (props) => {
 
     const columns = useMemo(
         () => [
-
             {
-                name: "Party",
-                selector: (row) => {
-                    let newName = row.name.split(" ");
-                    let firstC = newName[0][0];
-                    let lastC = "";
-                    if (newName[1]) {
-                        lastC = newName[1][0].toUpperCase();
-                    }
-                    return (
-                      <Link to={`/balancesheet/${row.id}`}>
-                        <div className="user-wrap">
-                            <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
-                            <div className="user-detail">{row.name}</div>
-                        </div>
-                        </Link>
-                    );
-                },
-                sortable: true,
-                width: "50%",
+                name: "Sr no.",
+                selector: (row,index) => index+1,
+                sortable: false,
+                width: "100px",
             },
-
-            {
-              name: "Mobile",
-              selector: (row) => row.mobile,
-              sortable: true,
-            
-          },
+          
+          {
+            name: "Firm",
+            selector: (row) => row.firm,
+            sortable: true,
          
+        },
+           
+        {
+            name: "Item",
+            selector: (row) => row.item,
+            sortable: true,
+         
+        },
+        {
+            name: "Quantity",
+            selector: (row) => row.quantity,
+            sortable: true,
+         
+        },
+        {
+            name: "Weight",
+            selector: (row) => row.weight,
+            sortable: true,
+         
+        },
+        {
+            name: "Vehicle no.",
+            selector: (row) => row.vehicle_no,
+            sortable: true,
+         
+        },
+           
+        {
+            name: "Date",
+            selector: (row) => formatDate(row.date),
+            sortable: true,
+         
+        },
+          
+  
             {
                 name: "Actions",
-                width: "10%",
+                width: "166px",
                 selector: (row) => {
                     return (
                         <ul className="table-drop-down">
@@ -149,18 +184,18 @@ const BalanceSheet = (props) => {
                                  
                                         <a onClick={(e) => {
                                             e.preventDefault();
-                                            setPartyRow(row);
+                                            setDetailsListRow(row);
                                             setId(row.id);
                                             
                                         }}
                                             className="active-user"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editparty"
+                                            data-bs-target="#editaccountdetails"
                                         >
 
                                          Edit
                                         </a>
-                                       
+                                        
                                     </li>
 
                                     <li>
@@ -180,9 +215,9 @@ const BalanceSheet = (props) => {
                             </li>
                             <ConfirmModal
                                 id={row.id}
-                                name={row.name}
+                                name={row.item}
                                 yes={(id) => {
-                                    dispatch(deleteParty({id:row.id,name:row.name,user_id:userId}));
+                                    dispatch(deleteStockDetails({id:row.id,stock_id:stockid,name:row.item,user_id:userId}));
                                 }}
                              
                             />
@@ -203,7 +238,7 @@ const BalanceSheet = (props) => {
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder="Search party..."
+                            placeholder="Search stock details..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
@@ -215,10 +250,10 @@ const BalanceSheet = (props) => {
                                 <button
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#addparty"
+                                    data-bs-target="#addstockdetails"
                                 >
-                           
-                                  Add Party
+                            
+                                  Add Stock Details
                                 
                                 
                                 </button>
@@ -227,11 +262,12 @@ const BalanceSheet = (props) => {
                     </div>
                 </div>
             </div>
-            <AddParty {...props} btnPending={btnPending} />
-            <EditParty {...props} row_id={id} row_data={partyRow} btnPending={btnPending}  />
+            <AddStockDetails itemListAll={itemListAll} {...props} stockid={stockid} />
+            <EditStockDetails itemListAll={itemListAll} {...props} stockid={stockid} row_id={id} row_data={stockDetailsListRow} />
+            
             <DataTable
                 columns={columns}
-                data={partyList}
+                data={stockDetails}
                 progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
@@ -244,4 +280,4 @@ const BalanceSheet = (props) => {
         </div>
     )
 }
-export default BalanceSheet;
+export default StockDetails;

@@ -224,7 +224,7 @@ const Bank = (props) => {
             <DataTable
                 columns={columns}
                 data={accountList}
-                progressPending={false}
+                progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination

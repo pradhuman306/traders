@@ -1,15 +1,20 @@
 import React, { useEffect } from "react";
 import Router from "./routes/index";
 import { BrowserRouter } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
 
 
 import "react-toastify/dist/ReactToastify.css";
+import { SET_LOADED } from "./constants/actionTypes";
+import { useState } from "react";
 
 function App() {
   const auth = useSelector((state) => state.authReducer);
   const message = useSelector((state) => state.toasterReducer);
+  const pendingData = useSelector((state) => state.loaderReducer).pending;
+  const [btnPending,setBtnPending] = useState(false);
+  const dispatch = useDispatch();
   useEffect(() => {
     switch (message.type) {
       case "success":
@@ -37,14 +42,16 @@ function App() {
         });
         break;
     }
+
+    dispatch({type:SET_LOADED});
   }, [message]);
 
 
   return (
     <>
       <BrowserRouter>
-        <Router auth={auth} />
-        <ToastContainer limit={2} autoClose={1000} />
+        <Router auth={auth} setBtnPending={setBtnPending} btnPending={btnPending} pendingData={pendingData} />
+        <ToastContainer limit={2} autoClose={1000}  />
       </BrowserRouter>
     </>
   );

@@ -225,7 +225,7 @@ const Items = (props) => {
             <DataTable
                 columns={columns}
                 data={itemList}
-                progressPending={false}
+                progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination

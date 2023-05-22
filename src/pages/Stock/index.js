@@ -95,7 +95,7 @@ const GoDown = (props) => {
                     lastC = newName[1][0].toUpperCase();
                 }
                 return (
-                  <Link to={`/accountdetails/${row.id}`}>
+                  <Link to={`/stockdetails/${row.id}`}>
                     <div className="user-wrap">
                         <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
                         <div className="user-detail">{row.name}</div>
@@ -232,7 +232,7 @@ const GoDown = (props) => {
             <DataTable
                 columns={columns}
                 data={godownList}
-                progressPending={false}
+                progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination

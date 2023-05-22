@@ -72,10 +72,11 @@ export const login = (loginDetails) => (dispatch) => {
     });
 };
 
-export const ResetEmailSend = (payload, nav) => (dispatch) => {
+export const ResetEmailSend = (payload, nav, setBtnPending) => (dispatch) => {
   api
-    .get(`${config.BASE_URL}resetlink?email=${payload.email}`)
+    .post(`${config.BASE_URL}forgotpassword`,{email:payload.email})
     .then((response) => {
+      setBtnPending(false);
       if (response.status == 200) {
         dispatch({
           type: actionTypes.SUCCESS_MESSAGE,
@@ -85,6 +86,7 @@ export const ResetEmailSend = (payload, nav) => (dispatch) => {
       }
     })
     .catch((error) => {
+      setBtnPending(false);
       dispatch({
         type: actionTypes.ERROR_MESSAGE,
         payload: error.response.data.message,
@@ -92,11 +94,13 @@ export const ResetEmailSend = (payload, nav) => (dispatch) => {
     });
 };
 
-export const ResetPassword = (payload) => (dispatch) => {
+export const ResetPassword = (payload,nav,setBtnPending) => (dispatch) => {
   api
     .post(`${config.BASE_URL}resetpassword`, payload)
     .then((response) => {
+      setBtnPending(false);
       if (response.status == 200) {
+        nav('/signin');
         dispatch({
           type: actionTypes.SUCCESS_MESSAGE,
           payload: response.data.message,
@@ -104,6 +108,7 @@ export const ResetPassword = (payload) => (dispatch) => {
       }
     })
     .catch((error) => {
+      setBtnPending(false);
       dispatch({
         type: actionTypes.ERROR_MESSAGE,
         payload: error.response.data.message,
@@ -111,22 +116,24 @@ export const ResetPassword = (payload) => (dispatch) => {
     });
 };
 
-export const UpdateProfile = (payload, locale) => (dispatch) => {
+export const UpdateProfile = (payload,setBtnPending) => (dispatch) => {
   ajaxCall
-    .post(`${config.BASE_URL}updateusersetting`, payload)
+    .post(`${config.BASE_URL}updateprofile`, payload)
     .then((response) => {
+      setBtnPending(false);
       payload.id = payload.user_id;
       if (response.status == 200) {
         localstorage.set("userdata", JSON.stringify(payload));
         if (response.data.status === 1) {
           dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
-            payload: locale.User_settings_update_successfully,
+            payload: "User updated successfully!",
           });
         }
       }
     })
     .catch((error) => {
+      setBtnPending(false);
       dispatch({
         type: actionTypes.ERROR_MESSAGE,
         payload: error.response.data.message,
@@ -134,18 +141,21 @@ export const UpdateProfile = (payload, locale) => (dispatch) => {
     });
 };
 
-export const UpdatePassword = (payload, locale) => (dispatch) => {
+export const UpdatePassword = (payload,resetForm,setBtnPending) => (dispatch) => {
   ajaxCall
     .post(`${config.BASE_URL}updatepassword`, payload)
     .then((response) => {
+      setBtnPending(false);
       if (response.status == 200) {
+        resetForm();
         dispatch({
           type: actionTypes.SUCCESS_MESSAGE,
-          payload: "Password changed successfully",
+          payload: "Password updated successfully",
         });
       }
     })
     .catch((error) => {
+      setBtnPending(false);
       dispatch({
         type: actionTypes.ERROR_MESSAGE,
         payload: error.response.data.message,

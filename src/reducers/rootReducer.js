@@ -6,6 +6,7 @@ import balanceSheetReducer from "./balanceSheetReducer";
 import accountReducer from "./accountReducer";
 import itemReducer from "./itemReducer";
 import godownReducer from "./godownReducer";
+import loaderReducer from "./loaderReducer";
 import { combineReducers } from "redux";
 import * as actionTypes from "../constants/actionTypes";
 const appReducer = combineReducers({
@@ -16,7 +17,8 @@ const appReducer = combineReducers({
   balanceSheetReducer,
   accountReducer,
   itemReducer,
-  godownReducer
+  godownReducer,
+  loaderReducer
 });
 
 export default function (state, action) {

@@ -4,7 +4,8 @@ import { useDispatch } from "react-redux";
 import { ResetEmailSend } from "../../actions/auth";
 import Footer from "../Footer";
 import { Link, useNavigate } from "react-router-dom";
-function ResetPassword() {
+import ButtonLoader from "../Customloader/ButtonLoader";
+function ResetPassword(props) {
   const nav = useNavigate();
   const [error, setError] = useState({});
   const dispatch = useDispatch();
@@ -45,7 +46,8 @@ function ResetPassword() {
                     return errors;
                   }}
                   onSubmit={(values, { setSubmitting }) => {
-                    dispatch(ResetEmailSend(values, nav));
+                    props.setBtnPending(true);
+                    dispatch(ResetEmailSend(values, nav,props.setBtnPending));
                     setSubmitting(false);
                   }}
                 >
@@ -74,7 +76,7 @@ function ResetPassword() {
                          
                           className="btn btn-primary w-100"
                         >
-                          Send
+                         {props.btnPending?<ButtonLoader/>:"Send"}
                         </button>
                       </div>
                       

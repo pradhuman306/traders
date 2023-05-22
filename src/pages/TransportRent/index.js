@@ -8,16 +8,21 @@ import { Link } from 'react-router-dom';
 import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
+import AddTransportRent from './AddTransportRent';
+import EditTransportRent from './EditTransportRent';
 
 const TransportRent = (props) => {
     const userId = props.auth.userdata.id;
     const transRentList = useSelector((state)=>state.transportRentReducer).transportRentList;
+    const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [transportRentList, setList] = useState([...transRentList]);
     const [transportRow,setTransportRow]= useState({});
     const [id,setId]= useState({});
     const [isExpandable, setisExpandable] = useState(false);
+
+    
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
@@ -196,7 +201,7 @@ const TransportRent = (props) => {
                                     <li>
                               
                                  
-                                        {/* <a onClick={(e) => {
+                                        <a onClick={(e) => {
                                             e.preventDefault();
                                             setTransportRow(row);
                                             setId(row.id);
@@ -204,14 +209,14 @@ const TransportRent = (props) => {
                                         }}
                                             className="active-user"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editcustomer"
+                                            data-bs-target="#edittransportrent"
                                         >
 
                                          Edit
-                                        </a> */}
-                                           <Link to={`/edittransportrent/${row.id}`}>
+                                        </a>
+                                           {/* <Link to={`/edittransportrent/${row.id}`}>
                                             Edit
-                                    </Link>
+                                    </Link> */}
                                     </li>
 
                                     <li>
@@ -266,11 +271,11 @@ const TransportRent = (props) => {
                                 <button
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#addcustomer"
+                                    data-bs-target="#addtransportrent"
                                 >
-                                  <Link to="/addtransportrent">
+                         
                                   Add Transport Rent
-                                  </Link>
+                                 
                                 
                                 </button>
                             </li>
@@ -278,10 +283,12 @@ const TransportRent = (props) => {
                     </div>
                 </div>
             </div>
+            <AddTransportRent {...props} partyList={partyList} />
+            <EditTransportRent {...props} row_data={transportRow} row_id={id} partyList={partyList} />
             <DataTable
                 columns={columns}
                 data={transportRentList}
-                progressPending={false}
+                progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination

@@ -1,29 +1,40 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useRef } from 'react';
-import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addAccount, addAccountDetails, updateAccountDetails } from '../../actions/accounts';
+import {  addAccountDetails } from '../../actions/accounts';
+import Select from 'react-select';
+import { addStockDetails } from '../../actions/godown';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
-const EditAccountDetails = (props) => {
+const AddStockDetails = (props) => {
     const elementRef = useRef(null);
     const nav = useNavigate();
     const user_id = props.auth.userdata.id;
-    const accountid = props.accountid;
+    const stockid = props.stockid;
     const dispatch = useDispatch();
-    const [dataList, setdataList] = useState(props.row_data);
     const [error, setError] = useState({});
+    const [newListItems, setNewListItems] = useState([]);
+    const handleSelectChange = (e,setFieldValue) => {
+      setFieldValue('item',e.value);
+      console.log(e.value);
+    } 
+
     useEffect(()=>{
-      setdataList({...props.row_data});
-  },[props.row_id])
+      let newItemsList = [];
+      props.itemListAll.forEach(element => {
+        newItemsList.push({label:element.item,value:element.id})
+      });
+      setNewListItems(newItemsList);
+    },[props.itemListAll])
+ 
   return (
     <div
     className="modal right fade"
-    id="editaccountdetails"
+    id="addstockdetails"
     tabIndex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
@@ -31,7 +42,7 @@ const EditAccountDetails = (props) => {
     <div className="modal-dialog">
       <div className="modal-content right-modal">
         <div className="modal-head">
-          <h4>Edit Account Details</h4>
+          <h4>Add Stock Details</h4>
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -43,36 +54,38 @@ const EditAccountDetails = (props) => {
             <img src="/assets/images/icon-close.svg" alt="" />
           </a>
         </div>
-        {Object.keys(dataList).length != 0 ?  <div className="modal-body">
+        <div className="modal-body">
     <Formik
-    enableReinitialize
               initialValues={{
-                date:dataList.date,
-                credit:dataList.credit,
-                debit:dataList.debit,
-                description:dataList.description,
+                firm:"",
+                item:"",
+                quantity:"",
+                weight:"",
+                vehicle_no:"",
+                date:""
              
               }}
               validate={(values) => {
                 const errors = {};
-          
-               if(!values.date){
-                errors.date = "Please fill date !"
-               }
+                if(!values.item){
+                  errors.item = "Please select item!"
+                 }
+                if(!values.date){
+                  errors.date = "Please fill date!"
+                 }
            
                 setError({ ...errors });
                 return errors;
               }}
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
-                values.id = props.row_id;
-                values.accountid = accountid;
+                values.stock_id = stockid;
                 props.setBtnPending(true);
-                dispatch(updateAccountDetails(values,elementRef,props.setBtnPending));
+                dispatch(addStockDetails(values,elementRef,props.setBtnPending));
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
                   <div className="form-fields-wrap">
                  
@@ -81,44 +94,79 @@ const EditAccountDetails = (props) => {
                         <div className="form-group mb-4">
                           <label>
                             
-                          Credit
+                          firm
                           </label>
                           <Field
                             type="text"
-                            name="credit"
-                            className={`form-control ${
-                              touched.credit && error.credit
-                                ? "input-error"
-                                : ""
-                            }`}
+                            name="firm"
+                            className={`form-control`}
                           />
+                       
+                        </div>
+                      </div>
+
+                      <div className="col-md-6">
+                        <div className="form-group mb-4">
+                          <label>
+                            
+                          Item
+                          </label>
+                          <Select 
+                           className={`form-control`} 
+                            options={newListItems} 
+                            name="item" 
+                            onChange={(e)=>handleSelectChange(e,setFieldValue)}
+                            />
+                          
                           <ErrorMessage
                             className="error"
-                            name="credit"
+                            name="item"
                             component="span"
                           />
+                       
+                        </div>
+                      </div>
+                   
+                      <div className="col-md-6">
+                        <div className="form-group mb-4">
+                          <label>
+                            
+                          Quantity
+                          </label>
+                          <Field
+                            type="text"
+                            name="quantity"
+                            className={`form-control`}
+                          />
+                     
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
                             
-                          Debit
+                          Weight
                           </label>
                           <Field
                             type="text"
-                            name="debit"
-                            className={`form-control ${
-                              touched.debit && error.debit
-                                ? "input-error"
-                                : ""
-                            }`}
+                            name="weight"
+                            className={`form-control`}
                           />
-                          <ErrorMessage
-                            className="error"
-                            name="debit"
-                            component="span"
+                     
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="form-group mb-4">
+                          <label>
+                            
+                          Vehicle no.
+                          </label>
+                          <Field
+                            type="text"
+                            name="vehicle_no"
+                            className={`form-control`}
                           />
+                     
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -143,24 +191,7 @@ const EditAccountDetails = (props) => {
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
-                        <div className="form-group mb-4">
-                          <label>
-                            
-                          Description
-                          </label>
-                          <Field
-                            type="text"
-                            name="description"
-                            className={`form-control`}
-                          />
-                          <ErrorMessage
-                            className="error"
-                            name="description"
-                            component="span"
-                          />
-                        </div>
-                      </div>
+                    
                     </div>
                   
                 
@@ -170,7 +201,7 @@ const EditAccountDetails = (props) => {
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
-                         {props.btnPending?<ButtonLoader/>:"Update"}
+                          {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
                   </div>
@@ -178,11 +209,11 @@ const EditAccountDetails = (props) => {
                 </Form>
               )}
             </Formik>
-            </div>:""}
+            </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default EditAccountDetails;
+export default AddStockDetails;

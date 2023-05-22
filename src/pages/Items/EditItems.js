@@ -6,10 +6,10 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateItems } from '../../actions/items';
+import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const EditItems = (props) => {
-  console.log(props);
     const elementRef = useRef(null);
     const nav = useNavigate();
     const user_id = props.auth.userdata.id;
@@ -61,7 +61,8 @@ const EditItems = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 values.id = dataList.id;
-                dispatch(updateItems(values,elementRef));
+                props.setBtnPending(true);
+                dispatch(updateItems(values,elementRef,props.setBtnPending));
                 console.log(values);
                 setSubmitting(false);
               }}
@@ -103,7 +104,7 @@ const EditItems = (props) => {
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
-                            Update
+                              {props.btnPending?<ButtonLoader/>:"Update"}
                         </button>
                       </div>
                   </div>

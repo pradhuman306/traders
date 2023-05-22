@@ -21,6 +21,8 @@ import EditParty from "../pages/BalanceSheet/EditParty";
 import AccountDetails from "../pages/Bank/AccountDetails";
 import Items from "../pages/Items";
 import GoDown from "../pages/Stock";
+import StockDetails from "../pages/Stock/StockDetails";
+import PartyHistory from "../pages/BalanceSheet/PartyHistory";
 
 function Router(props) {
   const auth = props.auth;
@@ -37,14 +39,14 @@ function Router(props) {
           <Route
             key="reset-password"
             path="reset-password"
-            element={<ResetPassword />}
+            element={<ResetPassword {...props} />}
           />
           <Route key="reset-link" path="reset-link" element={<Resetlink />} />
 
           <Route
             key="reset-password_token"
             path="reset-password/:token"
-            element={<CreateNewPassword />}
+            element={<CreateNewPassword {...props} />}
           />
         </>
       )}
@@ -86,7 +88,7 @@ function Router(props) {
               </PrivateRoute>
             }
           />
-            <Route
+          <Route
             key="items"
             path="items"
             element={
@@ -123,6 +125,22 @@ function Router(props) {
               </PrivateRoute>
             }
           />
+
+          <Route
+            key="partyhistory"
+            path="balancesheet/:partyid"
+            element={
+              <PrivateRoute>
+                <LayoutContainer
+                  auth={auth}
+                  children={<PartyHistory {...props} />}
+                />
+              </PrivateRoute>
+            }
+          />
+
+
+
           <Route
             key="transportrent"
             path="transportrent"
@@ -192,6 +210,20 @@ function Router(props) {
                 <LayoutContainer
                   auth={auth}
                   children={<AccountDetails {...props} />}
+                />
+              </PrivateRoute>
+            }
+          />
+
+
+          <Route
+            key="stockdetails"
+            path="stockdetails/:stockid"
+            element={
+              <PrivateRoute>
+                <LayoutContainer
+                  auth={auth}
+                  children={<StockDetails {...props} />}
                 />
               </PrivateRoute>
             }

@@ -1,11 +1,14 @@
 import config from "../config";
 import * as ajaxCall from "../common/ajaxCall";
 import * as actionTypes from "../constants/actionTypes";
+import { setLoadedData, setPendingData } from "./common";
 
 export const getItems = (payload) => (dispatch) => {
+  setPendingData(dispatch);
     ajaxCall
     .get(`${config.BASE_URL}items/${payload}`)
     .then((res) => {
+      setLoadedData(dispatch);
         dispatch({
             type: actionTypes.SET_ITEM_LIST,
             payload: res.data.data,
@@ -19,11 +22,12 @@ export const getItems = (payload) => (dispatch) => {
     });
 }
 
-export const addItems= (payload,elementRef) => (dispatch) => {
+export const addItems= (payload,elementRef,setBtnPending) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createitem`,payload)
     .then((res) => {
+      setBtnPending(false);
         dispatch(getItems(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
@@ -32,6 +36,7 @@ export const addItems= (payload,elementRef) => (dispatch) => {
           elementRef.current.click();
     })
     .catch((error) => {
+      setBtnPending(false);
       dispatch({
         type: actionTypes.ERROR_MESSAGE,
         payload: error.response.data.message,
@@ -39,11 +44,12 @@ export const addItems= (payload,elementRef) => (dispatch) => {
     });
 }
 
-export const updateItems = (payload,elementRef) => (dispatch) => {
+export const updateItems = (payload,elementRef,setBtnPending) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}updateitem`,payload)
     .then((res) => {
+      setBtnPending(false);
         dispatch(getItems(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
@@ -52,6 +58,7 @@ export const updateItems = (payload,elementRef) => (dispatch) => {
           elementRef.current.click();
     })
     .catch((error) => {
+      setBtnPending(false);
       dispatch({
         type: actionTypes.ERROR_MESSAGE,
         payload: error.response.data.message,

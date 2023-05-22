@@ -1,45 +1,55 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react'
 import { useEffect } from 'react';
+import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getParty, updateParty } from '../../actions/balancesheet';
+import ButtonLoader from '../Customloader/ButtonLoader';
 
 const EditParty = (props) => {
-  const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
-  const { id } = useParams();
-  console.log(id);
-  const nav = useNavigate();
+  const elementRef = useRef(null);
   const user_id = props.auth.userdata.id;
   const dispatch = useDispatch();
+  const [dataList, setdataList] = useState(props.row_data);
   const [error, setError] = useState({});
-  const [editData, setEditData] = useState({});
+  const [btnPending,setBtnPending] = useState(false);
+  useEffect(()=>{
+    setdataList({...props.row_data});
+},[props.row_data])
 
-  useEffect(() => {
-    if (partyList.length > 0) {
-      let editDataTemp = partyList.filter((item) => item.id.toString() === id);
-      setEditData({...editDataTemp[0]});
-    }
-    console.log(partyList);
-  }, [id,partyList])
-
-  useEffect(() => {
-    dispatch(getParty(user_id));
-  }, [])
-
-
- 
 
   return (
-    <div className="body-content">
-      <div className="usermanagement-main">
-        <h2>Edit Party</h2>
+    <div
+    className="modal right fade"
+    id="editparty"
+    tabIndex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog">
+      <div className="modal-content right-modal">
+        <div className="modal-head">
+          <h4>Edit Party</h4>
+          <a
+            onClick={(e) => e.preventDefault()}
+            type="button"
+            className="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ref={elementRef}
+          >
+            <img src="/assets/images/icon-close.svg" alt="" />
+          </a>
+        </div>
+        <div className="modal-body">
+        {Object.keys(dataList).length != 0 ?
         <Formik
           enableReinitialize
           initialValues={{
-            name: editData.name,
-            mobile: editData.mobile,
+            name: dataList.name,
+            mobile: dataList.mobile,
           }}
           validate={(values) => {
             const errors = {};
@@ -54,8 +64,9 @@ const EditParty = (props) => {
           }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             values.user_id = user_id;
-            values.id = id;
-            dispatch(updateParty(values, nav));
+            values.id = props.row_id;
+            setBtnPending(true);
+            dispatch(updateParty(values, elementRef,setBtnPending));
             setSubmitting(false);
           }}
         >
@@ -106,14 +117,17 @@ const EditParty = (props) => {
                     disabled={isSubmitting}
                     className="btn btn-primary m-auto"
                   >
-                    Update
+                {btnPending?<ButtonLoader/>:"Update"}
                   </button>
                 </div>
               </div>
 
             </Form>
           )}
-        </Formik>
+        </Formik>:""}
+
+        </div>
+        </div>
       </div>
     </div>
   )

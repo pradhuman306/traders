@@ -7,10 +7,13 @@ import { addTransportRent } from '../../actions/transportrent';
 import Select from 'react-select';
 import { useEffect } from 'react';
 import { getParty } from '../../actions/balancesheet';
+import { useRef } from 'react';
+import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddTransportRent = (props) => {
     const nav = useNavigate();
+    const elementRef = useRef(null);
     const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
@@ -32,9 +35,29 @@ dispatch(getParty(user_id));
       console.log(e.value);
     } 
   return (
-    <div className="body-content">
-    <div className="usermanagement-main">
-    <h2>Add Transport Rent</h2>
+    <div
+    className="modal right fade"
+    id="addtransportrent"
+    tabIndex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog">
+      <div className="modal-content right-modal">
+        <div className="modal-head">
+          <h4>Add Transport Rent</h4>
+          <a
+            onClick={(e) => e.preventDefault()}
+            type="button"
+            className="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ref={elementRef}
+          >
+            <img src="/assets/images/icon-close.svg" alt="" />
+          </a>
+        </div>
+        <div className="modal-body">
     <Formik
               initialValues={{
                 party:"",
@@ -67,8 +90,9 @@ dispatch(getParty(user_id));
                 return errors;
               }}
               onSubmit={(values, { setSubmitting, resetForm }) => {
+                props.setBtnPending(true);
                 values.user_id = user_id;
-                dispatch(addTransportRent(values,nav));
+                dispatch(addTransportRent(values,elementRef,props.setBtnPending));
                 setSubmitting(false);
               }}
             >
@@ -228,7 +252,7 @@ dispatch(getParty(user_id));
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
-                            Add
+                          {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
                   </div>
@@ -236,7 +260,9 @@ dispatch(getParty(user_id));
                 </Form>
               )}
             </Formik>
-    </div>
+            </div>
+        </div>
+      </div>
     </div>
   )
 }

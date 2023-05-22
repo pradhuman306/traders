@@ -8,83 +8,72 @@ import { getParty } from '../../actions/balancesheet';
 import { formatDate } from '../../actions/common';
 import { addTransportRent, getTransportRentList, updateTransportRent } from '../../actions/transportrent';
 import Select from 'react-select';
+import { useRef } from 'react';
+import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const EditTransportRent = (props) => {
-  const transRentList = useSelector((state) => state.transportRentReducer).transportRentList;
-  const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
-  const { id } = useParams();
-  console.log(id);
-  const nav = useNavigate();
+  const elementRef = useRef(null);
   const user_id = props.auth.userdata.id;
+  const stockid = props.stockid;
   const dispatch = useDispatch();
-  const [transRentListAll, setTransrentList] = useState([...transRentList]);
+  const [dataList, setdataList] = useState(props.row_data);
+  const [newListParty, setNewListParty] = useState([]);
   const [error, setError] = useState({});
-  const [partyListOpt, setPartyListOptions] = useState([]);
-  const [editData, setEditData] = useState({});
-  const [valueParty,setValueParty] = useState({});
+  useEffect(()=>{
+    setdataList({...props.row_data});
+    setValueParty({label:props.row_data.party,value:props.row_data.id});
+    console.log(props.row_data);
+},[props.row_id])
+useEffect(()=>{
+  let newPartyList = [];
+  props.partyList.forEach(element => {
+    console.log(element);
+    newPartyList.push({label:element.name,value:element.id})
+  });
+  setNewListParty(newPartyList);
+},[props.partyList])
 
-  useEffect(() => {
-    if (transRentList.length > 0) {
-      let editDataTemp = transRentList.filter((item) => item.id.toString() === id);
-      editDataTemp[0].date = formatDate(editDataTemp[0].date);
-      setEditData({ ...editDataTemp[0] });
-      console.log(editDataTemp[0]);
-      let newPartyList = [];
-      partyList.forEach((item) => {
-        newPartyList.push({ label: item.name, value: item.id });
-        if(item.id.toString() === editDataTemp[0].party_id.toString()){
-          setValueParty({ label: item.name, value: item.id });
-        }
-      })
-
-      setPartyListOptions([...newPartyList]);
-
-    }
-  }, [id, transRentList, partyList])
-
-  useEffect(() => {
-    dispatch(getTransportRentList(user_id));
-    dispatch(getParty(user_id));
-  }, [])
-
-
-  const handleSelectChange = (e, setFieldValue) => {
-    setFieldValue('party', e.value);
-    console.log(e.value);
-    setValueParty(e);
-  }
-
-  // const setOptionsValue = (val) => {
-  //   let tmp = [];
-  //   if (val) {
-  //     tmp = partyList.filter((item) => {
-  //       if (item.value.toString() === val.toString()) {
-  //         return true;
-  //       }
-
-  //     }
-
-
-  //     )
-  //   }
-  //   console.log(tmp);
-  // }
-
+const handleSelectChange = (e,setFieldValue) => {
+  setFieldValue('party',e.value);
+  setValueParty(e);
+  console.log(e.value);
+} 
+const [valueParty,setValueParty] = useState({});
 
   return (
-    <div className="body-content">
-      <div className="usermanagement-main">
-        <h2>Edit Transport Rent</h2>
-        <Formik
+    <div
+    className="modal right fade"
+    id="edittransportrent"
+    tabIndex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog">
+      <div className="modal-content right-modal">
+        <div className="modal-head">
+          <h4>Edit Transport Rent</h4>
+          <a
+            onClick={(e) => e.preventDefault()}
+            type="button"
+            className="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ref={elementRef}
+          >
+            <img src="/assets/images/icon-close.svg" alt="" />
+          </a>
+        </div>
+        <div className="modal-body">
+        {Object.keys(dataList).length != 0 ? <Formik
           enableReinitialize
           initialValues={{
-            party: editData.party_id,
-            destination: editData.destination,
-            rate: editData.rate,
-            advance: editData.advance,
-            date: editData.date,
-            description: editData.description
+            party: dataList.party_id,
+            destination: dataList.destination,
+            rate: dataList.rate,
+            advance: dataList.advance,
+            date: dataList.date,
+            description: dataList.description
           }}
           validate={(values) => {
             const errors = {};
@@ -110,8 +99,9 @@ const EditTransportRent = (props) => {
           }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
             values.user_id = user_id;
-            values.id = id;
-            dispatch(updateTransportRent(values, nav));
+            values.id = props.row_id;
+            props.setBtnPending(true);
+            dispatch(updateTransportRent(values, elementRef,props.setBtnPending));
             setSubmitting(false);
           }}
         >
@@ -129,7 +119,7 @@ const EditTransportRent = (props) => {
                           ? "input-error"
                           : ""
                           }`}
-                        options={partyListOpt}
+                        options={newListParty}
                         name="party"
                         onChange={(e) => handleSelectChange(e, setFieldValue)}
                         value={valueParty}
@@ -255,14 +245,16 @@ const EditTransportRent = (props) => {
                     disabled={isSubmitting}
                     className="btn btn-primary m-auto"
                   >
-                    Update
+                 {props.btnPending?<ButtonLoader/>:"Update"}
                   </button>
                 </div>
               </div>
 
             </Form>
           )}
-        </Formik>
+        </Formik> : ""}
+        </div>
+        </div>
       </div>
     </div>
   )

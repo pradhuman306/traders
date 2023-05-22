@@ -3,12 +3,14 @@ import Footer from "../Footer";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import { ResetPassword } from "../../actions/auth";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-function CreateNewPassword() {
+import ButtonLoader from "../Customloader/ButtonLoader";
+function CreateNewPassword(props) {
   const [error, setError] = useState({})
   const params = useParams();
   const dispatch = useDispatch();
+  const nav = useNavigate();
   return (
     <>
       <section className="login-main">
@@ -30,12 +32,6 @@ function CreateNewPassword() {
                     const errors = {};
                     if (!values.password) {
                       errors.password = "Enter Password";
-                    }else if(
-                      !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/i.test(
-                        values.password
-                      )
-                    ){
-                      errors.password = "The password should be min 8 and max 20 characters. It should have atleast a smallcase, uppercase, number and special character without white spaces"
                     }
                     if(!values.password_confirmation) {
                       errors.password_confirmation = "Enter Confirm Password";
@@ -52,8 +48,9 @@ function CreateNewPassword() {
                     return errors;
                   }}
                   onSubmit={(values, { setSubmitting }) => {
-                    values.token = params.token
-                    dispatch(ResetPassword(values))
+                    values.token = params.token;
+                    props.setBtnPending(true);
+                    dispatch(ResetPassword(values,nav,props.setBtnPending))
                     setSubmitting(false);
                   }}
                 >
@@ -88,7 +85,7 @@ function CreateNewPassword() {
                           disabled={isSubmitting}
                           className="btn btn-primary w-100"
                         >
-                          Submit
+                           {props.btnPending?<ButtonLoader/>:"Submit"}
                         </button>
                       </div>
                       <div className="form-group">

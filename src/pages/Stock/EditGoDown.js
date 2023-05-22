@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addAccount, updateAccount } from '../../actions/accounts';
 import { updateGoDown } from '../../actions/godown';
+import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const EditGoDown = (props) => {
@@ -63,7 +64,8 @@ const EditGoDown = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 values.id = dataList.id;
-                dispatch(updateGoDown(values,elementRef));
+                props.setBtnPending(true);
+                dispatch(updateGoDown(values,elementRef,props.setBtnPending));
                 console.log(values);
                 setSubmitting(false);
               }}
@@ -126,7 +128,7 @@ const EditGoDown = (props) => {
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
-                            Update
+                                {props.btnPending?<ButtonLoader/>:"Update"}
                         </button>
                       </div>
                   </div>

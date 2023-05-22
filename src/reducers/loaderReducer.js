@@ -1,29 +1,24 @@
-
 import {
-    SET_GODOWN_LIST,
-    SET_STOCK_DETAILS
+    SET_PENDING,
+    SET_LOADED,
 } from "../constants/actionTypes";
 const initialState = {
-    godownList: [],
-    stockDetails: [],
-    pending: false,
+    pending: true,
 }
 
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case SET_GODOWN_LIST:
+        case SET_PENDING:
             return {
                 ...state,
-                godownList: action.payload
+                pending: true
             };
-
-        case SET_STOCK_DETAILS:
+        case SET_LOADED:
             return {
                 ...state,
-                stockDetails: action.payload
+                pending: false
             };
-
 
         default:
             return state;

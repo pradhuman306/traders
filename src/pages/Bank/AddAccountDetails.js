@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addAccount, addAccountDetails } from '../../actions/accounts';
+import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddAccountDetails = (props) => {
@@ -59,7 +60,8 @@ const AddAccountDetails = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 values.account_id = accountid;
-                dispatch(addAccountDetails(values,elementRef));
+                props.setBtnPending(true);
+                dispatch(addAccountDetails(values,elementRef,props.setBtnPending));
                 setSubmitting(false);
               }}
             >
@@ -161,7 +163,7 @@ const AddAccountDetails = (props) => {
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
-                            Add
+                         {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
                   </div>

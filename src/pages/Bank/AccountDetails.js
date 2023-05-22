@@ -5,7 +5,7 @@ import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { deleteAccount, getAccountDetails, getAccountList } from '../../actions/accounts';
+import { deleteAccount, deleteAccountDetails, getAccountDetails, getAccountList } from '../../actions/accounts';
 import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
@@ -201,7 +201,7 @@ const AccountDetails = (props) => {
                                 id={row.id}
                                 name={row.name}
                                 yes={(id) => {
-                                    dispatch(deleteAccount({id:row.id,name:row.name,user_id:userId}));
+                                    dispatch(deleteAccountDetails({id:row.id,accountid:accountid,name:row.name,user_id:userId}));
                                 }}
                              
                             />
@@ -252,7 +252,7 @@ const AccountDetails = (props) => {
             <DataTable
                 columns={columns}
                 data={accountDetails}
-                progressPending={false}
+                progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination

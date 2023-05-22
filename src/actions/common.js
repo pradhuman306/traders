@@ -1,3 +1,5 @@
+import { SET_LOADED, SET_PENDING } from "../constants/actionTypes";
+
 export const formatDate = (date) => {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -13,4 +15,11 @@ export const formatDate = (date) => {
     }
 
     return year+"-"+month+"-"+day;
+}
+
+export const setPendingData = (dispatch) => {
+  dispatch({type:SET_PENDING});
+}
+export const setLoadedData = (dispatch) => {
+  dispatch({type:SET_LOADED});
 }

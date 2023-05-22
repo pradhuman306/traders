@@ -1,20 +1,44 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react'
+import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addParty } from '../../actions/balancesheet';
+import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddParty = (props) => {
+  const elementRef = useRef(null);
     const nav = useNavigate();
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
     const [error, setError] = useState({});
+    const [btnPending,setBtnPending] = useState(false);
   return (
-    <div className="body-content">
-    <div className="usermanagement-main">
-    <h2>Add Party</h2>
+    <div
+    className="modal right fade"
+    id="addparty"
+    tabIndex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div className="modal-dialog">
+      <div className="modal-content right-modal">
+        <div className="modal-head">
+          <h4>Add Party</h4>
+          <a
+            onClick={(e) => e.preventDefault()}
+            type="button"
+            className="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ref={elementRef}
+          >
+            <img src="/assets/images/icon-close.svg" alt="" />
+          </a>
+        </div>
+        <div className="modal-body">
     <Formik
               initialValues={{
                 name:"",
@@ -35,7 +59,8 @@ const AddParty = (props) => {
               }}
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
-                dispatch(addParty(values,nav));
+                setBtnPending(true);
+                dispatch(addParty(values,elementRef,setBtnPending));
                 setSubmitting(false);
               }}
             >
@@ -87,7 +112,8 @@ const AddParty = (props) => {
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
-                            Add
+                          {btnPending?<ButtonLoader/>:"Add Party"}
+                       
                         </button>
                       </div>
                   </div>
@@ -95,7 +121,9 @@ const AddParty = (props) => {
                 </Form>
               )}
             </Formik>
-    </div>
+            </div>
+        </div>
+      </div>
     </div>
   )
 }
