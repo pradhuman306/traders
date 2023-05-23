@@ -117,7 +117,7 @@ dispatch(getParty(user_id));
                             }`}
                           /> */}
                            <Select 
-                           className={`form-control ${
+                           className={`${
                               touched.party && error.party
                                 ? "input-error"
                                 : ""

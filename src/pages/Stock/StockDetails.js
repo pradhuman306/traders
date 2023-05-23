@@ -10,7 +10,7 @@ import { deleteTransportRentList, getTransportRentList } from '../../actions/tra
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
 import { formatDate } from '../../actions/common';
-import { deleteStockDetails, getStockDetails } from '../../actions/godown';
+import { deleteStockDetails, getStockById, getStockDetails } from '../../actions/godown';
 import AddStockDetails from './AddStockDetails';
 import EditStockDetails from './EditStockDetails';
 import { getItems } from '../../actions/items';
@@ -20,25 +20,28 @@ const StockDetails = (props) => {
     console.log(stockid);
     const userId = props.auth.userdata.id;
     const stockDetailsAll = useSelector((state)=>state.godownReducer).stockDetails;
+    const stockSingle = useSelector((state)=>state.godownReducer).stockSingle;
     const itemListAll = useSelector((state)=>state.itemReducer).itemList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [stockDetails, setList] = useState([...stockDetailsAll]);
+    const [stockSingleDetails, setStockSingle] = useState({...stockSingle});
     const [stockDetailsListRow, setDetailsListRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
- 
 
     useEffect(()=>{
         dispatch(getStockDetails({user_id:userId,id:stockid}));
+        dispatch(getStockById(stockid));
     },[stockid])
 
-
-
-
+    useEffect(()=>{
+        setStockSingle({...stockSingle});
+        
+    },[stockSingle])
 
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
@@ -242,6 +245,9 @@ const StockDetails = (props) => {
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
+                    </div>
+                    <div>
+                    {stockSingleDetails.name}
                     </div>
                     <div className="datatable-filter-right">
                         <ul className="btn-group">

@@ -4,19 +4,24 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteBuySellList, getBuyList } from '../../actions/buysell';
+import { deleteBuySellList, getBuyList, getSellList } from '../../actions/buysell';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
+import AddBuySell from './AddBuySell';
 
 const BuySell = (props) => {
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
     const buyListAll = useSelector((state)=>state.buySellReducer).buyList;
-    // const sellListAll = useSelector((state)=>state.buySellReducer).sellList;
+    const sellListAll = useSelector((state)=>state.buySellReducer).sellList;
     const [filterText, setFilter] = useState("");
     const [buyList, setBuyList] = useState([...buyListAll]);
     // const [sellList, setSellList] = useState([...sellListAll]);
     const [buySellRow,setBuysell]= useState({});
+    const [isActive,setIsActive]= useState({
+        "buy":true,
+        "sell":false
+    });
     const [id,setId]= useState({});
     const [isExpandable, setisExpandable] = useState(false);
 
@@ -78,14 +83,22 @@ const BuySell = (props) => {
         }
     }, []);
 
-    useEffect(() => {
+    const handleSetActive = (param) =>{
+        let activeTab = {...isActive};
+        if(param === 'buy'){
+            activeTab.buy = true;
+            activeTab.sell = false;
+        }else{
+            activeTab.sell = true; 
+            activeTab.buy = false;
+        }
+        setIsActive({...activeTab});
+    }
+    const filterValue = (filterText,list) => {
         if (filterText) {
-            let tmp = buyListAll.filter((item) => {
+            let tmp = list.filter((item) => {
                 if (
-                    item.name.includes(filterText) ||
-                    item.firstname.includes(filterText) ||
-                    item.lastname.includes(filterText) ||
-                    item.email.includes(filterText)
+                    item.amount.includes(filterText) 
                 ) {
                     return true;
                 }
@@ -93,9 +106,20 @@ const BuySell = (props) => {
             });
             setBuyList([...tmp]);
         } else {
-            setBuyList([...buyListAll]);
+            setBuyList([...list]);
         }
-    }, [filterText]);
+    }
+
+
+
+    useEffect(() => {
+        if(isActive.buy){
+            filterValue(filterText,buyListAll);
+        }else{
+            filterValue(filterText,sellListAll);
+        }
+    
+    }, [filterText,buyListAll,isActive,sellListAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -236,9 +260,9 @@ const BuySell = (props) => {
                             </li>
                             <ConfirmModal
                                 id={row.id}
-                                name={row.name}
+                                name={row.party}
                                 yes={(id) => {
-                                    dispatch(deleteBuySellList(id));
+                                    dispatch(deleteBuySellList({id:row.id,user_id:user_id},isActive));
                                 }}
                              
                             />
@@ -249,15 +273,23 @@ const BuySell = (props) => {
                 },
             },
         ],
-        []
+        [isActive]
     );
 
     return (
         <div className="body-content">
             <div className="usermanagement-main">
             <div>   <ul id="report-filter" className="report-filter tabs">
-                            <li className="filter-item pending-r active" onClick={()=>  dispatch(getBuyList(user_id))}>Buy</li>
-                            <li className="filter-item complete-r" onClick={()=>dispatch(getBuyList(user_id))} >Sell</li>
+                            <li className={`filter-item pending-r ${isActive.buy?'active':""}`} onClick={()=>  {dispatch(getBuyList(user_id))
+                                        handleSetActive('buy');
+                                    
+                                    }
+                            }>Buy</li>
+                            <li className={`filter-item complete-r ${isActive.sell?'active':""}`} onClick={()=>{dispatch(getSellList(user_id))
+                              handleSetActive('sell');
+                        }} 
+                            
+                            >Sell</li>
                         </ul></div>
                 <div className="datatable-filter-wrap">
                    
@@ -277,7 +309,7 @@ const BuySell = (props) => {
                                 <button
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#addcustomer"
+                                    data-bs-target="#addbuysell"
                                 >
                                    Add New Buy/Sell
                                 </button>
@@ -286,10 +318,11 @@ const BuySell = (props) => {
                     </div>
                 </div>
             </div>
+            <AddBuySell {...props} isActive={isActive} />
             <DataTable
                 columns={columns}
                 data={buyList}
-                progressPending={false}
+                progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination

@@ -32,7 +32,12 @@ const PartyHistory = (props) => {
         dispatch(getPartyById(partyid));
         
     },[partyid])
+    
 
+    useEffect(()=>{
+        setPartySingle({...partySingle});
+        
+    },[partySingle])
 
 
 

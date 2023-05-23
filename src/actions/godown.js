@@ -105,6 +105,24 @@ export const getStockDetails = (payload) => (dispatch) => {
     });
 }
 
+export const getStockById = (payload) => (dispatch) => {
+  setPendingData(dispatch);
+    ajaxCall
+    .get(`${config.BASE_URL}getstock/${payload}`)
+    .then((res) => {
+        dispatch({
+            type: actionTypes.SET_SINGLE_STOCK,
+            payload: res.data.data,
+          });
+    })
+    .catch((error) => {
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    });
+}
+
 
 export const addStockDetails = (payload,elementRef,setBtnPending) => (dispatch) => {
 

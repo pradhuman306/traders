@@ -109,6 +109,23 @@ export const getAccountDetails = (payload) => (dispatch) => {
     });
 }
 
+export const getAccountById = (payload) => (dispatch) => {
+    ajaxCall
+    .get(`${config.BASE_URL}getaccount/${payload}`)
+    .then((res) => {
+      console.log(res.data.data);
+        dispatch({
+            type: actionTypes.SET_SINGLE_ACCOUNT,
+            payload: res.data.data,
+          });
+    })
+    .catch((error) => {
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    });
+}
 
 export const addAccountDetails = (payload,elementRef,setBtnPending) => (dispatch) => {
 

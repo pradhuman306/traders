@@ -115,7 +115,7 @@ const [valueParty,setValueParty] = useState({});
                         Party <span className="error">*</span>
                       </label>
                       <Select
-                        className={`form-control ${touched.party && error.party
+                        className={`${touched.party && error.party
                           ? "input-error"
                           : ""
                           }`}

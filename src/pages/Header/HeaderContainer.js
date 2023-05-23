@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import {  Link } from "react-router-dom";
 import { signout } from "../../actions/auth";
 function HeaderContainer(props) {
-
+  console.log(props);
   const dispatch = useDispatch();
   const logout = (e) => {
     document.body.classList.remove("menu-open");
@@ -32,7 +32,7 @@ function HeaderContainer(props) {
           <div className="navbar-left">
               <Link to="/">
               <img
-              src="/assets/images/logo-full.svg"
+              src={props.logo}
               width="100px"
               alt=""
             />
@@ -51,7 +51,7 @@ function HeaderContainer(props) {
           { <div className="sidebar-header">
           <figure>
             <img
-              src="/assets/images/logo.svg"
+              src={props.logo}
               alt=""
             />
           </figure>

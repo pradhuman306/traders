@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import Footer from "../Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../actions/auth";
+import { getLogo, login } from "../../actions/auth";
 import {  Link} from "react-router-dom";
 import * as Cokkie from "../../common/Cookies";
 import ButtonLoader from "../Customloader/ButtonLoader";
-const Signin = () => {
+const Signin = (props) => {
+
   const dispatch = useDispatch();
   const message = useSelector((state) => state.toasterReducer);
+  const logo = useSelector((state) => state.logoReducer).logo;
   const email = Cokkie.getCookie("email") ? Cokkie.getCookie("email") : "";
   const password = Cokkie.getCookie("password")
     ? Cokkie.getCookie("password")
@@ -24,6 +26,7 @@ const Signin = () => {
     setTimeout(() => {
       setsignInPending(false);
     }, 1000);
+    dispatch(getLogo());
   }, []);
 
   useEffect(() => {
@@ -39,7 +42,7 @@ const Signin = () => {
             <div className="login-head text-center mb-4">
               <a href="#">
                 <img
-                  src="/assets/images/logo.svg"
+                  src={logo}
                   className="image"
                 />
               </a>

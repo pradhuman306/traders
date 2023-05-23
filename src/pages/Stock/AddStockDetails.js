@@ -112,7 +112,11 @@ const AddStockDetails = (props) => {
                           Item
                           </label>
                           <Select 
-                           className={`form-control`} 
+                            className={`${
+                              touched.item && error.item
+                                ? "input-error"
+                                : ""
+                            }`} 
                             options={newListItems} 
                             name="item" 
                             onChange={(e)=>handleSelectChange(e,setFieldValue)}

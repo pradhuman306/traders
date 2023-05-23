@@ -1,18 +1,26 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { useDispatch } from "react-redux";
 import AuthContext from "../../context/authContext";
-import { UpdateProfile, UpdatePassword } from "../../actions/auth";
+import { UpdateProfile, UpdatePassword, updateLogo, getLogo } from "../../actions/auth";
 import ButtonLoader from "../Customloader/ButtonLoader";
 function Setting(props) {
   console.log(props);
   const auth = useContext(AuthContext);
   const dispatch = useDispatch();
   const [error, setError] = useState({});
+  const [img, setImg] = useState(props.logo);
 
   var { name, mobile, email, id } =
     auth && auth.userdata ? auth.userdata : undefined;
 
+  const handleChange = (e,setFieldValue) => {
+    setFieldValue("logo", e.currentTarget.files[0]);
+    setImg(URL.createObjectURL(e.currentTarget.files[0]));
+  }
+useEffect(()=>{
+dispatch(getLogo());
+},[])
   return (
     <>
 
@@ -308,35 +316,29 @@ function Setting(props) {
                     >
                       <Formik
               initialValues={{
-                current_password: "",
-                new_password: "",
-                confirm_password: "",
-                file:{}
+                logo:"",
               }}
               validate={(values) => {
                 const errors = {};
-                console.log(values.file);
-                if (!values.current_password) {
-                  errors.current_password =
-                    "Enter current Password"
+             
+                if (!values.logo || !img) {
+                  errors.logo =
+                    "Please select logo"
                 }
-                if (!values.new_password) {
-                  errors.new_password = "Enter new Password";
-                } 
-                if (
-                  values.new_password &&
-                  values.confirm_password &&
-                  values.new_password != values.confirm_password
-                ) {
-                  errors.confirm_password = "Password does not match";
-                }
+       
                 setError({ ...errors });
                 return errors;
               }}
               onSubmit={(values, { setSubmitting,resetForm }) => {
                 values.user_id = id;
                 props.setBtnPending(true);
-                dispatch(UpdatePassword(values,resetForm,props.setBtnPending));
+                // dispatch(UpdatePassword(values,resetForm,props.setBtnPending));
+                dispatch(updateLogo(values,props.setBtnPending));
+                if (!values.logo) {
+                  values.old_logo = img;
+                  delete values.logo;
+                }
+                console.log(values);
                 setSubmitting(false);
               }}
             >
@@ -347,64 +349,50 @@ function Setting(props) {
 
                     <div className="col-md-6 col-sm-6">
                       <div className="form-group mb-3">
-                        <label htmlFor="">Current password</label>
-                        <Field
-                          type="password"
-                          className={`form-control icon icon-lock ${touched.current_password && error.current_password
-                              ? "input-error"
-                              : ""
-                            }`}
-                          placeholder="Enter current password"
-                          name="current_password"
-                        />
-                        <ErrorMessage
+                    
+                      
+
+   <div className="col-md-9">
+                <div
+                  className="image-input"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  data-bs-original-title="Upload image"
+                >
+                  <input
+                    type="file"
+                    name="letter_pad"
+                    id="letter_pad"
+                    className=""
+                    placeholder="Enter letter_pad"
+                    onChange={(e) => handleChange(e,setFieldValue)}
+                  />
+                  <input
+                    type="hidden"
+                    name="old_letter_pad"
+                    id="old_letter_pad"
+                    value=""
+                  />
+                  <label htmlFor="letter_pad" className="image-button">
+                    <img src="/assets/images/icon-image.svg" alt="" />
+                    {"Upload logo here"}
+                  </label>
+                </div>
+                <ErrorMessage
                           className="error"
-                          name="current_password"
+                          name="logo"
                           component="span"
                         />
-                        <input id="file" name="file" type="file" onChange={(event) => {
-  setFieldValue("file", event.currentTarget.files[0]);
-}} />
+                <div className="col-md-3">
+                <div className="logo-wrapper">
+                  {img && <img className="preview-img" src={img} alt="" />}
+                </div>
+              </div>
+              </div>
+
                       </div>
                     </div>
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                        <label htmlFor="">New password</label>
-                        <Field
-                          type="password"
-                          className={`form-control icon icon-lock ${touched.new_password && error.new_password
-                              ? "input-error"
-                              : ""
-                            }`}
-                          placeholder="Enter new password"
-                          name="new_password"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="new_password"
-                          component="span"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                        <label htmlFor="">Confirm new password</label>
-                        <Field
-                          type="password"
-                          className={`form-control icon icon-lock ${touched.confirm_password && error.confirm_password
-                              ? "input-error"
-                              : ""
-                            }`}
-                          placeholder="Enter confirm password"
-                          name="confirm_password"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="confirm_password"
-                          component="span"
-                        />
-                      </div>
-                    </div>
+              
                   </div>
                   <div className="row mt-2">
                     <div className="col-12">

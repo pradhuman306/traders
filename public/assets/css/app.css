@@ -1929,3 +1929,47 @@ body .react-form-builder-toolbar .form-group.mb-4 {
 body .hjBMSB {
     font-size: 14px;
 }
+
+
+
+
+.report-filter.tabs {
+    display: inline-flex;
+    margin-bottom: 10px;
+    border: 1px solid rgba(var(--border-color));
+}
+.report-filter.tabs .filter-item {
+    border-right: 1px solid rgba(var(--border-color));
+    padding: 7px 25px;
+    cursor: pointer;
+}
+.filter-item.active {
+    background: rgba(var(--themeColor));
+    color: #fff;
+}
+.form-group .css-13cymwt-control, .form-group .css-t3ipsp-control {
+    min-height: 46px;
+    border-radius: 10px;
+    border-width: 1px;
+}
+.form-group .css-t3ipsp-control:hover {
+    border-color: transparent;
+}
+
+
+.setting-form .nav a.active {
+    background: rgba(var(--themeColor), 0.08);
+    border-radius: 10px;
+}
+.setting-form .nav a {
+    padding: 15px;
+    border-radius: 10px;
+}
+.form-group .input-error .css-13cymwt-control {
+    border-color: rgba(var(--warning-color));
+}
+.group-field {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 15px;
+}

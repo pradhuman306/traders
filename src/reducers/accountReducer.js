@@ -1,11 +1,13 @@
 
 import {
     SET_ACCOUNT_LIST,
-    SET_ACCOUNT_DETAILS
+    SET_ACCOUNT_DETAILS,
+    SET_SINGLE_ACCOUNT
 } from "../constants/actionTypes";
 const initialState = {
     accountList: [],
     accountDetails: [],
+    accountSingle:{},
     pending: false,
 }
 
@@ -22,6 +24,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 accountDetails: action.payload
+            };
+        case SET_SINGLE_ACCOUNT:
+            return {
+                ...state,
+                accountSingle: action.payload[0]
             };
 
 

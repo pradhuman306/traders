@@ -141,6 +141,59 @@ export const UpdateProfile = (payload,setBtnPending) => (dispatch) => {
     });
 };
 
+export const updateLogo = (payload,setBtnPending) => (dispatch) => {
+  ajaxCall
+    .post(`${config.BASE_URL}updatelogo`, payload)
+    .then((response) => {
+      setBtnPending(false);
+      payload.id = payload.user_id;
+      if (response.status == 200) {
+        // localstorage.set("userdata", JSON.stringify(payload));
+        if (response.data.status === 1) {
+          dispatch({
+            type: actionTypes.SUCCESS_MESSAGE,
+            payload: "Logo updated successfully!",
+          });
+          dispatch({
+            type: actionTypes.SET_LOGO,
+            payload: response.data.data.logo,
+          });
+          localstorage.set("sitelogo", JSON.stringify(response.data.data.logo));
+        }
+      }
+    })
+    .catch((error) => {
+      setBtnPending(false);
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    });
+};
+
+export const getLogo = () => (dispatch) => {
+  api
+    .get(`${config.BASE_URL}getsitelogo`)
+    .then((response) => {
+      if (response.status == 200) {
+        console.log(response.data.data.logo);
+        
+        dispatch({
+          type: actionTypes.SET_LOGO,
+          payload: response.data.data.logo,
+        });
+        localstorage.set("sitelogo", JSON.stringify(response.data.data.logo));
+      }
+    })
+    .catch((error) => {
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    });
+};
+
+
 export const UpdatePassword = (payload,resetForm,setBtnPending) => (dispatch) => {
   ajaxCall
     .post(`${config.BASE_URL}updatepassword`, payload)

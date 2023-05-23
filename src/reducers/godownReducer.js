@@ -1,11 +1,13 @@
 
 import {
     SET_GODOWN_LIST,
+    SET_SINGLE_STOCK,
     SET_STOCK_DETAILS
 } from "../constants/actionTypes";
 const initialState = {
     godownList: [],
     stockDetails: [],
+    stockSingle: {},
     pending: false,
 }
 
@@ -18,6 +20,12 @@ export default function (state = initialState, action) {
                 godownList: action.payload
             };
 
+        case SET_SINGLE_STOCK:
+            return {
+                ...state,
+                stockSingle: action.payload[0],
+                pending: false
+            };
         case SET_STOCK_DETAILS:
             return {
                 ...state,

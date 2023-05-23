@@ -13,8 +13,10 @@ function App() {
   const auth = useSelector((state) => state.authReducer);
   const message = useSelector((state) => state.toasterReducer);
   const pendingData = useSelector((state) => state.loaderReducer).pending;
+  const logo = useSelector((state) => state.logoReducer).logo;
   const [btnPending,setBtnPending] = useState(false);
   const dispatch = useDispatch();
+
   useEffect(() => {
     switch (message.type) {
       case "success":
@@ -50,7 +52,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Router auth={auth} setBtnPending={setBtnPending} btnPending={btnPending} pendingData={pendingData} />
+        <Router auth={auth} setBtnPending={setBtnPending} btnPending={btnPending} pendingData={pendingData} logo={logo} />
         <ToastContainer limit={2} autoClose={1000}  />
       </BrowserRouter>
     </>
