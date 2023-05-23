@@ -22,12 +22,14 @@ export const getTransportRentList = (payload) => (dispatch) => {
     });
 }
 
-export const addTransportRent = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const addTransportRent = (payload,elementRef,setBtnPending,resetForm,partyRef) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createrent`,payload)
     .then((res) => {
       setBtnPending(false);
+      resetForm();  
+      partyRef.current.clearValue();
         dispatch(getTransportRentList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,

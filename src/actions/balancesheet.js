@@ -43,11 +43,12 @@ export const getPartyById = (payload) => (dispatch) => {
     });
 }
 
-export const addParty = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const addParty = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}createparty`,payload)
     .then((res) => {
       setBtnPending(false);
+      resetForm();
         dispatch(getParty(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,

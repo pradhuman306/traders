@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UserMenu from "./UserMenu";
-import { useDispatch } from "react-redux";
-import {  Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {  Link, useParams } from "react-router-dom";
 import { signout } from "../../actions/auth";
 function HeaderContainer(props) {
-  console.log(props);
+  const params = useParams();
+  console.log(params,'from header contianer');
   const dispatch = useDispatch();
+  const stockSingle = useSelector((state)=>state.godownReducer).stockSingle;
+  const accountSingleAll = useSelector((state)=>state.accountReducer).accountSingle;
+  const [singleDetails, setSingleDetails] = useState({});
+
   const logout = (e) => {
     document.body.classList.remove("menu-open");
     dispatch(signout());
@@ -18,6 +23,18 @@ function HeaderContainer(props) {
     navIcon.classList.toggle("open");
   };
   let name = props.role.userdata.name;
+
+  useEffect(()=>{
+    if(params.stockid){
+      setSingleDetails({...stockSingle});
+    }else if(params.accountid){
+      setSingleDetails({...accountSingleAll});
+    }else{
+      setSingleDetails({});
+    }
+  },[params])
+
+
 
   return (
     <div className="body-header">
@@ -37,9 +54,10 @@ function HeaderContainer(props) {
               alt=""
             />
               </Link>
+              <div className="">{params.stockid || params.accountid ? singleDetails.name:""}</div>
           </div>
           <div className="navbar-right">
-            <UserMenu  />
+       
             <div className="divider"></div>
             <div className="divider"></div>
             <div className="account-info-wrapper">
@@ -91,7 +109,7 @@ function HeaderContainer(props) {
                     strokeWidth="2"
                   ></circle>
                 </svg>
-                <span>Setting</span>
+                <span>Settings</span>
               </Link>
             </li>
             <li onClick={() => logout()}>

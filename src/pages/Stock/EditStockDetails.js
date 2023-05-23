@@ -209,7 +209,11 @@ const EditStockDetails = (props) => {
                  </div>
                
              
-                 <div className="col-md-12 text-center mt-4">
+             
+               </div>
+               <div className='frm-btn-wrap'>
+                    <div className='row'>
+                    <div className="col-md-12 text-center mt-4">
                      <button
                        type="submit"
                        disabled={isSubmitting}
@@ -218,8 +222,8 @@ const EditStockDetails = (props) => {
                     {props.btnPending?<ButtonLoader/>:"Update"}
                      </button>
                    </div>
-               </div>
-           
+                    </div>
+                  </div>
              </Form>
               )}
             </Formik>

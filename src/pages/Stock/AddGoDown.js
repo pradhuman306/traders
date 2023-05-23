@@ -57,7 +57,7 @@ const AddGoDown = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 props.setBtnPending(true);
-                dispatch(addGoDown(values,elementRef,props.setBtnPending));
+                dispatch(addGoDown(values,elementRef,props.setBtnPending,resetForm));
                 setSubmitting(false);
               }}
             >
@@ -66,7 +66,7 @@ const AddGoDown = (props) => {
                   <div className="form-fields-wrap">
                  
                     <div className="row">
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             
@@ -88,7 +88,7 @@ const AddGoDown = (props) => {
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             
@@ -114,6 +114,10 @@ const AddGoDown = (props) => {
                     </div>
                   
                 
+                   
+                  </div>
+                  <div className='frm-btn-wrap'>
+                    <div className='row'>
                     <div className="col-md-12 text-center mt-4">
                         <button
                           type="submit"
@@ -123,6 +127,7 @@ const AddGoDown = (props) => {
                           {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
+                    </div>
                   </div>
               
                 </Form>

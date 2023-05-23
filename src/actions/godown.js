@@ -22,11 +22,12 @@ export const getGoDownList = (payload) => (dispatch) => {
     });
 }
 
-export const addGoDown = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const addGoDown = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createstock`,payload)
     .then((res) => {
+      resetForm();
       setBtnPending(false);
         dispatch(getGoDownList(payload.user_id));
         dispatch({
@@ -124,11 +125,14 @@ export const getStockById = (payload) => (dispatch) => {
 }
 
 
-export const addStockDetails = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const addStockDetails = (payload,elementRef,setBtnPending,resetForm,itemRef) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createstockrecord`,payload)
     .then((res) => {
+      resetForm();
+      elementRef.current.click();
+      itemRef.current.clearValue();
       setBtnPending(false);
         dispatch(getStockDetails({user_id:payload.user_id,id:payload.stock_id}));
         dispatch({

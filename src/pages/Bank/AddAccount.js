@@ -54,7 +54,7 @@ const AddAccount = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 props.setBtnPending(true);
-                dispatch(addAccount(values,elementRef,props.setBtnPending));
+                dispatch(addAccount(values,elementRef,props.setBtnPending,resetForm));
                 setSubmitting(false);
               }}
             >
@@ -89,6 +89,10 @@ const AddAccount = (props) => {
                     </div>
                   
                 
+                   
+                  </div>
+                  <div className='frm-btn-wrap'>
+                    <div className='row'>
                     <div className="col-md-12 text-center mt-4">
                         <button
                           type="submit"
@@ -98,8 +102,8 @@ const AddAccount = (props) => {
                         {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
+                    </div>
                   </div>
-              
                 </Form>
               )}
             </Formik>

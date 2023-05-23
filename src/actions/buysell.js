@@ -23,13 +23,85 @@ export const getBuyList = (payload) => (dispatch) => {
     });
 }
 
-export const addBuySell = () => (dispatch) => {
+export const addBuy = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
   ajaxCall
-  .post(`${config.BASE_URL}getpurchase`)
+  .post(`${config.BASE_URL}createbuy`,payload)
   .then((res) => {
-      console.log(res);
+    elementRef.current.click();
+    setBtnPending(false);
+    resetForm();
+    dispatch(getBuyList(payload.user_id));
+      dispatch({
+        type: actionTypes.SUCCESS_MESSAGE,
+        payload: res.data.message,
+      });
   })
   .catch((error) => {
+    setBtnPending(false);
+    dispatch({
+      type: actionTypes.ERROR_MESSAGE,
+      payload: error.response.data.message,
+    });
+  });
+}
+
+export const updateBuy = (payload,elementRef,setBtnPending) => (dispatch) => {
+  ajaxCall
+  .post(`${config.BASE_URL}updatebuy`,payload)
+  .then((res) => {
+    elementRef.current.click();
+    setBtnPending(false);
+    dispatch(getBuyList(payload.user_id));
+      dispatch({
+        type: actionTypes.SUCCESS_MESSAGE,
+        payload: res.data.message,
+      });
+  })
+  .catch((error) => {
+    setBtnPending(false);
+    dispatch({
+      type: actionTypes.ERROR_MESSAGE,
+      payload: error.response.data.message,
+    });
+  });
+}
+
+export const addSell = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
+  ajaxCall
+  .post(`${config.BASE_URL}createsale`,payload)
+  .then((res) => {
+    resetForm();
+    elementRef.current.click();
+    setBtnPending(false);
+    dispatch(getSellList(payload.user_id));
+    dispatch({
+      type: actionTypes.SUCCESS_MESSAGE,
+      payload: res.data.message,
+    });
+  })
+  .catch((error) => {
+    setBtnPending(false);
+    dispatch({
+      type: actionTypes.ERROR_MESSAGE,
+      payload: error.response.data.message,
+    });
+  });
+}
+
+export const updateSell = (payload,elementRef,setBtnPending) => (dispatch) => {
+  ajaxCall
+  .post(`${config.BASE_URL}updatesale`,payload)
+  .then((res) => {
+    elementRef.current.click();
+    setBtnPending(false);
+    dispatch(getSellList(payload.user_id));
+    dispatch({
+      type: actionTypes.SUCCESS_MESSAGE,
+      payload: res.data.message,
+    });
+  })
+  .catch((error) => {
+    setBtnPending(false);
     dispatch({
       type: actionTypes.ERROR_MESSAGE,
       payload: error.response.data.message,
@@ -38,30 +110,27 @@ export const addBuySell = () => (dispatch) => {
 }
 
 export const deleteBuySellList = (payload,isActive) => (dispatch) => {
-  console.log(`${config.BASE_URL}${isActive.buy?"deletebuy":"deletesale"}/${payload.id}`);
-  console.log(isActive);
-  
-  // ajaxCall
-  // .post(`${config.BASE_URL}${isActive.buy?"deletebuy":"deletesale"}/${payload.id}`)
-  // .then((res) => {
-  //     console.log(payload);
-  //     if(isActive.buy){
-  //       dispatch(getBuyList(payload.user_id));
-  //     }else{
-  //       dispatch(getSellList(payload.user_id));
-  //     }
+  ajaxCall
+  .post(`${config.BASE_URL}${isActive.buy?"deletebuy":"deletesale"}/${payload.id}`)
+  .then((res) => {
+      console.log(payload);
+      if(isActive.buy){
+        dispatch(getBuyList(payload.user_id));
+      }else{
+        dispatch(getSellList(payload.user_id));
+      }
 
-  //     dispatch({
-  //         type: actionTypes.SUCCESS_MESSAGE,
-  //         payload: `${payload.name} Deleted Successfully!`,
-  //       });
-  // })
-  // .catch((error) => {
-  //   dispatch({
-  //     type: actionTypes.ERROR_MESSAGE,
-  //     payload: error.response.data.message,
-  //   });
-  // });
+      dispatch({
+          type: actionTypes.SUCCESS_MESSAGE,
+          payload: `${payload.name} Deleted Successfully!`,
+        });
+  })
+  .catch((error) => {
+    dispatch({
+      type: actionTypes.ERROR_MESSAGE,
+      payload: error.response.data.message,
+    });
+  });
 }
 
 export const getSellList = (payload) => (dispatch) => {

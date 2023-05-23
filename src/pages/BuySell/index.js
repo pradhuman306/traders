@@ -5,15 +5,18 @@ import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBuySellList, getBuyList, getSellList } from '../../actions/buysell';
+import { getItems } from '../../actions/items';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
 import AddBuySell from './AddBuySell';
-
+import EditBuySell from './EditBuySell';
 const BuySell = (props) => {
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
     const buyListAll = useSelector((state)=>state.buySellReducer).buyList;
     const sellListAll = useSelector((state)=>state.buySellReducer).sellList;
+    const itemListAll = useSelector((state)=>state.itemReducer).itemList;
+    const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
     const [filterText, setFilter] = useState("");
     const [buyList, setBuyList] = useState([...buyListAll]);
     // const [sellList, setSellList] = useState([...sellListAll]);
@@ -76,6 +79,7 @@ const BuySell = (props) => {
 
     useEffect(() => {
         dispatch(getBuyList(user_id));
+        dispatch(getItems(user_id));
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
             setisExpandable(true);
         } else {
@@ -142,12 +146,18 @@ const BuySell = (props) => {
                     return (
                         <div className="user-wrap">
                             <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
-                            <div className="user-detail">{row.name}</div>
+                            <div className="user-detail">{row.party} {row.URD?<span className='badge'>URD</span>:""}</div>
                         </div>
                     );
                 },
                 sortable: true,
-                // width: "250px",
+                width: "200px",
+            },
+            {
+                name: "Date",
+                selector: (row) => row.date,
+                sortable: true,
+                hide: "md",
             },
             {
                 name: "Bill no",
@@ -158,46 +168,39 @@ const BuySell = (props) => {
             },
             {
                 name: "Amount",
-                selector: (row) => row.amount,
+                selector: (row) => "₹"+parseInt(row.amount).toLocaleString("en-IN"),
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "Debit",
-                selector: (row) => row.debit,
+                selector: (row) => "₹"+parseInt(row.debit).toLocaleString("en-IN"),
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "commission",
-                selector: (row) => row.commission,
+                selector: (row) => row.commission+"%",
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "GST",
-                selector: (row) => row.gst,
+                selector: (row) => row.gst+"%",
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "Total Amount",
-                selector: (row) => row.amount,
+                selector: (row) =>  isActive.buy?
+                row.commission/100 == 0 ? "₹"+(row.amount - row.debit) :
+                "₹"+((row.amount)-[(row.amount - row.debit)*(row.commission/100)]).toLocaleString("en-IN") :row.commission/100 == 0? "₹"+(row.amount - row.debit):
+                "₹"+(parseInt(row.amount)+parseInt([(row.amount - row.debit)*(row.commission/100)])).toLocaleString("en-IN"),
                 sortable: true,
                 hide: "md",
             },
-            {
-                name: "Date",
-                selector: (row) => row.date,
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Description",
-                selector: (row) => row.description,
-                sortable: true,
-                hide: "md",
-            },
+     
+         
         
             {
                 name: "Actions",
@@ -236,7 +239,7 @@ const BuySell = (props) => {
                                         }}
                                             className="active-user"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editcustomer"
+                                            data-bs-target="#editbuysell"
                                         >
 
                                          Edit
@@ -318,7 +321,8 @@ const BuySell = (props) => {
                     </div>
                 </div>
             </div>
-            <AddBuySell {...props} isActive={isActive} />
+            <AddBuySell itemListAll={itemListAll} {...props} isActive={isActive} partyList={partyList} />
+            <EditBuySell itemListAll={itemListAll} {...props} isActive={isActive} partyList={partyList} row_id={id} row_data={buySellRow} />
             <DataTable
                 columns={columns}
                 data={buyList}

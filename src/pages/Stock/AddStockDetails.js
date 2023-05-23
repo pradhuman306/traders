@@ -13,13 +13,17 @@ import ButtonLoader from '../Customloader/ButtonLoader';
 const AddStockDetails = (props) => {
     const elementRef = useRef(null);
     const nav = useNavigate();
+    const itemRef = useRef(null);
     const user_id = props.auth.userdata.id;
     const stockid = props.stockid;
     const dispatch = useDispatch();
     const [error, setError] = useState({});
     const [newListItems, setNewListItems] = useState([]);
     const handleSelectChange = (e,setFieldValue) => {
-      setFieldValue('item',e.value);
+      if(e){
+        setFieldValue('item',e.value);
+      }
+    
       console.log(e.value);
     } 
 
@@ -81,7 +85,7 @@ const AddStockDetails = (props) => {
                 values.user_id = user_id;
                 values.stock_id = stockid;
                 props.setBtnPending(true);
-                dispatch(addStockDetails(values,elementRef,props.setBtnPending));
+                dispatch(addStockDetails(values,elementRef,props.setBtnPending,itemRef));
                 setSubmitting(false);
               }}
             >
@@ -118,6 +122,7 @@ const AddStockDetails = (props) => {
                                 : ""
                             }`} 
                             options={newListItems} 
+                            ref={itemRef}
                             name="item" 
                             onChange={(e)=>handleSelectChange(e,setFieldValue)}
                             />
@@ -199,6 +204,10 @@ const AddStockDetails = (props) => {
                     </div>
                   
                 
+                  
+                  </div>
+                  <div className='frm-btn-wrap'>
+                    <div className='row'>
                     <div className="col-md-12 text-center mt-4">
                         <button
                           type="submit"
@@ -208,8 +217,8 @@ const AddStockDetails = (props) => {
                           {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
+                    </div>
                   </div>
-              
                 </Form>
               )}
             </Formik>

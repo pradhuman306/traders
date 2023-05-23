@@ -55,7 +55,7 @@ const AddItems = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 props.setBtnPending(true);
-                dispatch(addItems(values,elementRef,props.setBtnPending));
+                dispatch(addItems(values,elementRef,props.setBtnPending,resetForm));
                 setSubmitting(false);
               }}
             >

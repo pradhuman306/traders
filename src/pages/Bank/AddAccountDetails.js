@@ -61,7 +61,7 @@ const AddAccountDetails = (props) => {
                 values.user_id = user_id;
                 values.account_id = accountid;
                 props.setBtnPending(true);
-                dispatch(addAccountDetails(values,elementRef,props.setBtnPending));
+                dispatch(addAccountDetails(values,elementRef,props.setBtnPending,resetForm));
                 setSubmitting(false);
               }}
             >

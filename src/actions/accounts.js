@@ -25,12 +25,13 @@ export const getAccountList = (payload) => (dispatch) => {
     });
 }
 
-export const addAccount = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const addAccount = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createaccount`,payload)
     .then((res) => {
       setBtnPending(false);
+      resetForm();
         dispatch(getAccountList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
@@ -127,12 +128,13 @@ export const getAccountById = (payload) => (dispatch) => {
     });
 }
 
-export const addAccountDetails = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const addAccountDetails = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createaccountrecord`,payload)
     .then((res) => {
       setBtnPending(false);
+      resetForm();
         dispatch(getAccountDetails({user_id:payload.user_id,id:payload.account_id}));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,

@@ -250,7 +250,7 @@ function SideNav(props) {
                     />
                   </g>
                 </svg>
-                <span>Setting</span>
+                <span>Settings</span>
               </Link>
             </li>
           </ul>

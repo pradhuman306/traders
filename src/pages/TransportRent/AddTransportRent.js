@@ -12,8 +12,8 @@ import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddTransportRent = (props) => {
-    const nav = useNavigate();
     const elementRef = useRef(null);
+    const partyRef = useRef(null);
     const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
@@ -31,8 +31,11 @@ dispatch(getParty(user_id));
     },[partyList])
 
     const handleSelectChange = (e,setFieldValue) => {
-      setFieldValue('party',e.value);
-      console.log(e.value);
+      if(e){
+        setFieldValue('party',e.value);
+        console.log(e.value);
+      }
+    
     } 
   return (
     <div
@@ -92,7 +95,7 @@ dispatch(getParty(user_id));
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 props.setBtnPending(true);
                 values.user_id = user_id;
-                dispatch(addTransportRent(values,elementRef,props.setBtnPending));
+                dispatch(addTransportRent(values,elementRef,props.setBtnPending,resetForm,partyRef));
                 setSubmitting(false);
               }}
             >
@@ -122,9 +125,10 @@ dispatch(getParty(user_id));
                                 ? "input-error"
                                 : ""
                             }`} 
+                            isSearchable={true}
                             options={partyListOpt} 
+                            ref={partyRef}
                             name="party" 
-                      
                             onChange={(e)=>handleSelectChange(e,setFieldValue)}
                             />
                           
@@ -246,7 +250,11 @@ dispatch(getParty(user_id));
                       </div>
                     </div>
                 
-                    <div className="col-md-12 text-center mt-4">
+                   
+                  </div>
+                  <div className='frm-btn-wrap'>
+                      <div className='row'>
+                      <div className="col-md-12 text-center mt-4">
                         <button
                           type="submit"
                           disabled={isSubmitting}
@@ -255,7 +263,8 @@ dispatch(getParty(user_id));
                           {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
-                  </div>
+                        </div>
+                      </div>
               
                 </Form>
               )}

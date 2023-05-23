@@ -75,7 +75,7 @@ const EditGoDown = (props) => {
                   <div className="form-fields-wrap">
                  
                     <div className="row">
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             
@@ -97,7 +97,7 @@ const EditGoDown = (props) => {
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             
@@ -122,6 +122,10 @@ const EditGoDown = (props) => {
                     </div>
                   
                 
+                  
+                  </div>
+                  <div className='frm-btn-wrap'>
+                    <div className='row'>
                     <div className="col-md-12 text-center mt-4">
                         <button
                           type="submit"
@@ -131,6 +135,7 @@ const EditGoDown = (props) => {
                                 {props.btnPending?<ButtonLoader/>:"Update"}
                         </button>
                       </div>
+                    </div>
                   </div>
               
                 </Form>

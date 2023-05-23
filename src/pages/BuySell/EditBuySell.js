@@ -9,49 +9,54 @@ import { useEffect } from 'react';
 import { getParty } from '../../actions/balancesheet';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
-import { addBuy, addSell } from '../../actions/buysell';
+import { addBuy, addSell, updateBuy, updateSell } from '../../actions/buysell';
 
 
-const AddBuySell = (props) => {
+const EditBuySell = (props) => {
+    console.log(props.row_data);
+    console.log(props.row_id);
     const elementRef = useRef(null);
-    const itemSelectRef = useRef("");
-    const partySelectRef = useRef("");
+    const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
     const [error, setError] = useState({});
     const [isActive, setIsActive] = useState({ ...props.isActive });
     const [partyListOpt, setPartyListOptions] = useState([]);
     const [newListItems, setNewListItems] = useState([]);
-    const [partyValue, setPartyValue] = useState({});
-    const [itemValue, setItemValue] = useState({});
+    const [valueParty, setValueParty] = useState({});
+    const [valueItem, setValueItem] = useState({});
+    const [rowData, setRowData] = useState(props.row_data);
+    const [checkedURD,setCheckedURD]=useState({});
     const handleSelectChangeItem = (e, setFieldValue) => {
-        if (e) {
-            setFieldValue('item', e.value);
-            setItemValue(e);
-            console.log(e.value);
-        }
-
+        setFieldValue('item', e.value);
+        setValueItem(e);
+        console.log(e.value);
     }
     useEffect(() => {
         dispatch(getParty(user_id));
     }, [])
     useEffect(() => {
+        setRowData({...props.row_data})
+        setValueParty({label:props.row_data.party,value:props.row_data.party_id});
+        setValueItem({label:props.row_data.item,value:props.row_data.item_id});
+        setCheckedURD(props.row_data.URD == 1?true:false);
+        console.log(props.row_data);
+    }, [props.row_data])
+    useEffect(() => {
         setIsActive({ ...props.isActive });
     }, [props.isActive])
     useEffect(() => {
         let newPartyList = [];
-        props.partyList.forEach((item) => {
+        partyList.forEach((item) => {
             newPartyList.push({ label: item.name, value: item.id });
         })
         setPartyListOptions([...newPartyList]);
-    }, [props.partyList])
+    }, [partyList])
 
     const handleSelectChange = (e, setFieldValue) => {
-        if (e) {
-            setFieldValue('party', e.value);
-            setPartyValue(e);
-            console.log(e.value);
-        }
+        setFieldValue('party', e.value);
+        setValueParty(e);
+        console.log(e.value);
     }
 
     useEffect(() => {
@@ -72,37 +77,19 @@ const AddBuySell = (props) => {
             newActive.sell = true;
             newActive.buy = false;
         }
-
+        console.log(isActive);
         setIsActive({ ...newActive });
     }
 
-    // const handleChangeValues =  (param,values,setFieldValue,value) => {
-    //     let val="";
-    //     if(param == 'amount'){
-    //         setFieldValue('amount',values.target.value);
-    //         val = "₹"+(parseInt(values.target.value)).toLocaleString("en-IN");   
-    //     }
-    //      if(param == 'debit'){
-    //         setFieldValue('debit',values.target.value);
-    //         val = "₹"+(parseInt((value.amount - values.target.value))).toLocaleString("en-IN")
-    //     }
-    //      if(param == 'commission'){
-    //         setFieldValue('commission',values.target.value);
-    //         val = "₹"+(parseInt(value.amount)-(value.amount - value.debit)*(values.target.value/100)).toLocaleString("en-IN")
-    //     }
-
-    //     if(value.amount && value.debit && value.commission){
-    //         val = "₹"+(parseInt(value.amount)-(value.amount - value.debit)*(value.commission/100)).toLocaleString("en-IN")
-    //     }
-
-    //     setFieldValue('totalamount',val);
-    // }
-
-
+const handleChangeCheck = (e,setFieldValue) => {
+    console.log(e.target.checked);
+    setFieldValue('URD',e.target.checked)
+    setCheckedURD(e.target.checked);
+}
     return (
         <div
             className="modal right fade"
-            id="addbuysell"
+            id="editbuysell"
             tabIndex="-1"
             aria-labelledby="exampleModalLabel"
             aria-hidden="true"
@@ -110,7 +97,7 @@ const AddBuySell = (props) => {
             <div className="modal-dialog">
                 <div className="modal-content right-modal">
                     <div className="modal-head">
-                        <h4>Add Buy Sell</h4>
+                        <h4>Edit Buy Sell</h4>
 
                         <a
                             onClick={(e) => e.preventDefault()}
@@ -124,20 +111,20 @@ const AddBuySell = (props) => {
                         </a>
                     </div>
                     <div className="modal-body">
-                        <Formik
+                    {Object.keys(rowData).length != 0 ? <Formik
+                            enableReinitialize
                             initialValues={{
-                                party: "",
-                                bill_no: "",
-                                amount: "",
-                                debit: "",
-                                gst: "",
-                                item: "",
-                                weight: "",
-                                commission: "",
-                                URD: "",
-                                description: "",
-                                totalamount: 0,
-                                date: ""
+                                party: rowData.party_id,
+                                bill_no: rowData.bill_no,
+                                amount: rowData.amount,
+                                debit: rowData.debit,
+                                gst: rowData.gst,
+                                item: rowData.item_id,
+                                weight: rowData.weight,
+                                commission: rowData.commission,
+                                URD: rowData.URD,
+                                description: rowData.description,
+                                date: rowData.date?rowData.date.split(" ")[0]:""
                             }}
                             validate={(values) => {
                                 const errors = {};
@@ -151,24 +138,23 @@ const AddBuySell = (props) => {
                                     errors.date = "Please select Date !"
                                 }
 
-
                                 setError({ ...errors });
 
                                 return errors;
                             }}
-                            onSubmit={(values, { setSubmitting, resetForm, setFieldValue }) => {
+                            onSubmit={(values, { setSubmitting, resetForm }) => {
                                 props.setBtnPending(true);
                                 values.user_id = user_id;
+                                values.id = props.row_id;
                                 console.log(values);
-                                console.log(itemSelectRef);
-                                itemSelectRef.current.clearValue();
-                                partySelectRef.current.clearValue();
                                 if (isActive.buy) {
-                                    dispatch(addBuy(values, elementRef, props.setBtnPending, resetForm));
+                       
+                                    dispatch(updateBuy(values, elementRef, props.setBtnPending));
                                 } else {
-                                    dispatch(addSell(values, elementRef, props.setBtnPending, resetForm));
+                               
+                                    dispatch(updateSell(values, elementRef, props.setBtnPending));
                                 }
-
+                 
                                 setSubmitting(false);
                             }}
                         >
@@ -179,14 +165,14 @@ const AddBuySell = (props) => {
                                             <div className='col-md-12'>
                                                 <div className='group-field'>
                                                     <div>
-                                                        <Field type="radio" id="buy" name="picked" value="buy" onClick={(e) => handleRadioChange("buy")} checked={isActive.buy} />
-                                                        <label htmlFor='buy'>
+                                                        <Field type="radio" id="buy1" name="picked1" value="buy" onClick={(e) => handleRadioChange("buy")} checked={isActive.buy} />
+                                                        <label htmlFor='buy1'>
                                                             Buy
                                                         </label>
                                                     </div>
                                                     <div>
-                                                        <Field type="radio" id="sell" name="picked" value="sell" onClick={(e) => handleRadioChange("sell")} checked={isActive.sell} />
-                                                        <label htmlFor='sell'>
+                                                        <Field type="radio" id="sell1" name="picked1" value="sell" onClick={(e) => handleRadioChange("sell")} checked={isActive.sell} />
+                                                        <label htmlFor='sell1'>
                                                             Sell
                                                         </label>
                                                     </div>
@@ -196,18 +182,18 @@ const AddBuySell = (props) => {
                                         <div className="row">
                                             <div className="col-md-12">
                                                 <div className="form-group mb-4">
-
-
-                                                    <Field
+                                                    <input
                                                         type="checkbox"
-                                                        name="URD"
+                                                        name="URD1"
                                                         className={`form-control ${touched.URD && error.URD
                                                             ? "input-error"
                                                             : ""
                                                             }`}
-                                                        id="URD"
+                                                        id="URD1"
+                                                        onClick={(e)=>handleChangeCheck(e,setFieldValue)}
+                                                        checked={checkedURD}
                                                     />
-                                                    <label htmlFor='URD'>
+                                                    <label htmlFor='URD1'>
                                                         Unregisterd Dealer
                                                     </label>
 
@@ -230,10 +216,8 @@ const AddBuySell = (props) => {
                                                             : ""
                                                             }`}
                                                         options={partyListOpt}
+                                                        value={valueParty}
                                                         name="party"
-                                                        isSearchable={true}
-                                                        isClearable={true}
-                                                        ref={partySelectRef}
                                                         onChange={(e) => handleSelectChange(e, setFieldValue)}
                                                     />
 
@@ -281,10 +265,8 @@ const AddBuySell = (props) => {
                                                             : ""
                                                             }`}
                                                         options={newListItems}
-                                                        isSearchable={true}
-                                                        isClearable={true}
                                                         name="item"
-                                                        ref={itemSelectRef}
+                                                        value={valueItem}    
                                                         onChange={(e) => handleSelectChangeItem(e, setFieldValue)}
                                                     />
 
@@ -307,8 +289,6 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
-                                                    //  onChange={(e)=>handleChangeValues('amount',e,setFieldValue,values)}
-
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -333,7 +313,6 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
-                                                    // onChange={(e)=>handleChangeValues('debit',e,setFieldValue,values)}
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -355,8 +334,6 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
-                                                    // onChange={(e)=>handleChangeValues('commission',e,setFieldValue,values)}
-
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -397,11 +374,11 @@ const AddBuySell = (props) => {
                                                         className={`form-control`}
                                                         disabled={true}
                                                         value={
-                                                            isActive.buy ?
-                                                                values.commission / 100 == 0 ? "₹" + (values.amount - values.debit) :
-                                                                    "₹" + ((values.amount) - [(values.amount - values.debit) * (values.commission / 100)]).toLocaleString("en-IN") : values.commission / 100 == 0 ? "₹" + (values.amount - values.debit) :
-                                                                    "₹" + (parseInt(values.amount) + parseInt([(values.amount - values.debit) * (values.commission / 100)])).toLocaleString("en-IN")
-
+                                                            isActive.buy?
+                                                            values.commission/100 == 0 ? "₹"+(values.amount - values.debit) :
+                                                            "₹"+((values.amount)-[(values.amount - values.debit)*(values.commission/100)]).toLocaleString("en-IN") :values.commission/100 == 0? "₹"+(values.amount - values.debit):
+                                                            "₹"+(parseInt(values.amount)+parseInt([(values.amount - values.debit)*(values.commission/100)])).toLocaleString("en-IN")
+                                                            
                                                         }
                                                     />
                                                     {/* <ErrorMessage
@@ -411,7 +388,6 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div className="row">
 
@@ -463,10 +439,10 @@ const AddBuySell = (props) => {
                                                     />
                                                 </div>
                                             </div>
-
+                                        
                                         </div>
                                         <div className="row">
-
+                                           
                                             <div className="col-md-12">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -481,27 +457,27 @@ const AddBuySell = (props) => {
                                                 </div>
                                             </div>
                                         </div>
-
-
-
-                                    </div>
-                                    <div className='frm-btn-wrap'>
-                                        <div className='row'>
-                                            <div className="col-md-12 text-center mt-4">
-                                                <button
-                                                    type="submit"
-                                                    disabled={isSubmitting}
-                                                    className="btn btn-primary m-auto"
-                                                >
-                                                    {props.btnPending ? <ButtonLoader /> : "Add"}
-                                                </button>
-                                            </div>
                                         </div>
-                                    </div>
+                                        <div className='frm-btn-wrap'>
+                                        <div className='row'>
+                                        <div className="col-md-12 text-center mt-4">
+                                            <button
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                                className="btn btn-primary m-auto"
+                                            >
+                                                {props.btnPending ? <ButtonLoader /> : "Update"}
+                                            </button>
+                                        </div>
+                                            </div>
+                                            </div>
+
+                                       
+                                  
 
                                 </Form>
                             )}
-                        </Formik>
+                        </Formik>: ""}
                     </div>
                 </div>
             </div>
@@ -509,4 +485,4 @@ const AddBuySell = (props) => {
     )
 }
 
-export default AddBuySell;
+export default EditBuySell;

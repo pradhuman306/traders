@@ -22,11 +22,12 @@ export const getItems = (payload) => (dispatch) => {
     });
 }
 
-export const addItems= (payload,elementRef,setBtnPending) => (dispatch) => {
+export const addItems= (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createitem`,payload)
     .then((res) => {
+      resetForm();
       setBtnPending(false);
         dispatch(getItems(payload.user_id));
         dispatch({

@@ -112,13 +112,8 @@ const StockDetails = (props) => {
                 sortable: false,
                 width: "100px",
             },
-          
-          {
-            name: "Firm",
-            selector: (row) => row.firm,
-            sortable: true,
-         
-        },
+        
+     
            
         {
             name: "Item",
@@ -139,6 +134,12 @@ const StockDetails = (props) => {
          
         },
         {
+            name: "Date",
+            selector: (row) => formatDate(row.date),
+            sortable: true,
+         
+        },
+        {
             name: "Vehicle no.",
             selector: (row) => row.vehicle_no,
             sortable: true,
@@ -146,11 +147,12 @@ const StockDetails = (props) => {
         },
            
         {
-            name: "Date",
-            selector: (row) => formatDate(row.date),
+            name: "Firm",
+            selector: (row) => row.firm,
             sortable: true,
          
         },
+    
           
   
             {
@@ -246,9 +248,9 @@ const StockDetails = (props) => {
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
                     </div>
-                    <div>
+                    {/* <div>
                     {stockSingleDetails.name}
-                    </div>
+                    </div> */}
                     <div className="datatable-filter-right">
                         <ul className="btn-group">
                         

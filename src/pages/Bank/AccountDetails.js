@@ -20,11 +20,11 @@ const AccountDetails = (props) => {
     console.log(accountid);
     const userId = props.auth.userdata.id;
     const accountDetailsAll = useSelector((state)=>state.accountReducer).accountDetails;
-    const accountSingleAll = useSelector((state)=>state.accountReducer).accountSingle;
+    // const accountSingleAll = useSelector((state)=>state.accountReducer).accountSingle;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [accountDetails, setList] = useState([...accountDetailsAll]);
-    const [accountSingle, setAccountSingle] = useState({...accountSingleAll});
+    // const [accountSingle, setAccountSingle] = useState({...accountSingleAll});
     
     const [accountListRow, setAccountRow] = useState({});
     const [id, setId] = useState("");
@@ -39,9 +39,9 @@ const AccountDetails = (props) => {
         dispatch(getAccountById(accountid));
     },[accountid])
 
-    useEffect(()=>{
-        setAccountSingle({...accountSingleAll});
-    },[accountSingleAll])
+    // useEffect(()=>{
+    //     setAccountSingle({...accountSingleAll});
+    // },[accountSingleAll])
 
 
 
@@ -233,9 +233,9 @@ const AccountDetails = (props) => {
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         {accountSingle.name}
-                    </div>
+                    </div> */}
                     <div className="datatable-filter-right">
                         <ul className="btn-group">
                         
