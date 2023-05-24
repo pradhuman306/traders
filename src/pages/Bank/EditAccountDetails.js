@@ -5,13 +5,12 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addAccount, addAccountDetails, updateAccountDetails } from '../../actions/accounts';
+import {  updateAccountDetails } from '../../actions/accounts';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const EditAccountDetails = (props) => {
     const elementRef = useRef(null);
-    const nav = useNavigate();
     const user_id = props.auth.userdata.id;
     const accountid = props.accountid;
     const dispatch = useDispatch();
@@ -164,6 +163,10 @@ const EditAccountDetails = (props) => {
                     </div>
                   
                 
+               
+                  </div>
+                  <div className='frm-btn-wrap'>
+                    <div className='row'>
                     <div className="col-md-12 text-center mt-4">
                         <button
                           type="submit"
@@ -173,8 +176,8 @@ const EditAccountDetails = (props) => {
                          {props.btnPending?<ButtonLoader/>:"Update"}
                         </button>
                       </div>
+                    </div>
                   </div>
-              
                 </Form>
               )}
             </Formik>

@@ -9,8 +9,8 @@ function HeaderContainer(props) {
   const dispatch = useDispatch();
   const stockSingle = useSelector((state)=>state.godownReducer).stockSingle;
   const accountSingleAll = useSelector((state)=>state.accountReducer).accountSingle;
+  const partySingleAll = useSelector((state)=>state.balanceSheetReducer).partySingle;
   const [singleDetails, setSingleDetails] = useState({});
-
   const logout = (e) => {
     document.body.classList.remove("menu-open");
     dispatch(signout());
@@ -29,10 +29,12 @@ function HeaderContainer(props) {
       setSingleDetails({...stockSingle});
     }else if(params.accountid){
       setSingleDetails({...accountSingleAll});
+    }else if(params.partyid){
+      setSingleDetails({...partySingleAll});
     }else{
       setSingleDetails({});
     }
-  },[params])
+  },[params,partySingleAll,stockSingle,stockSingle])
 
 
 
@@ -54,8 +56,8 @@ function HeaderContainer(props) {
               alt=""
             />
               </Link>
-              <div className="">{params.stockid || params.accountid ? singleDetails.name:""}</div>
           </div>
+              <div className=""><h4>{params.stockid || params.accountid || params.partyid ? singleDetails.name:""}</h4></div>
           <div className="navbar-right">
        
             <div className="divider"></div>

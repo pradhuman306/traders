@@ -139,7 +139,6 @@ export const addStockDetails = (payload,elementRef,setBtnPending,resetForm,itemR
             type: actionTypes.SUCCESS_MESSAGE,
             payload: "Stock details created successfully!",
           });
-          elementRef.current.click();
     })
     .catch((error) => {
       setBtnPending(false);

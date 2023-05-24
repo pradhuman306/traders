@@ -1,11 +1,12 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import UserMenu from "../Header/UserMenu";
 
 function SideNav(props) {
   const pathname = useLocation().pathname;
-
+  const params = useParams();
+  console.log(pathname);
   const handleClick = () => {
     document.body.classList.toggle("menu-open");
 
@@ -44,7 +45,7 @@ function SideNav(props) {
               onClick={(e) => {
                 handleClick(e);
               }}
-              className={`${pathname === "/buysell" ? "active" : ""}`}
+              className={`${pathname === "/buysell"  ? "active" : ""}`}
             >
               <Link to="/buysell">
                 <svg
@@ -70,7 +71,7 @@ function SideNav(props) {
               onClick={(e) => {
                 handleClick(e);
               }}
-              className={`${pathname === "/balancesheet" ? "active" : ""}`}
+              className={`${pathname === "/balancesheet" || pathname === `/balancesheet/${params.partyid}` ? "active" : ""}`}
             >
               <Link to="/balancesheet">
                 <svg
@@ -123,7 +124,7 @@ function SideNav(props) {
               onClick={(e) => {
                 handleClick(e);
               }}
-              className={`${pathname === "/stock" ? "active" : ""}`}
+              className={`${pathname === "/stock" || pathname === `/stockdetails/${params.stockid}` ? "active" : ""}`}
             >
               <Link to="/stock">
                 <svg
@@ -155,7 +156,7 @@ function SideNav(props) {
               onClick={(e) => {
                 handleClick(e);
               }}
-              className={`${pathname === "/bank" ? "active" : ""}`}
+              className={`${pathname === "/bank" || pathname === `/accountdetails/${params.accountid}` ? "active" : ""}`}
             >
               <Link to="/bank">
                 <svg

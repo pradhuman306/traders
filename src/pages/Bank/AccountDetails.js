@@ -4,13 +4,10 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { deleteAccount, deleteAccountDetails, getAccountById, getAccountDetails, getAccountList } from '../../actions/accounts';
-import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
+import {  useParams } from 'react-router-dom';
+import {  deleteAccountDetails, getAccountById, getAccountDetails, getAccountList } from '../../actions/accounts';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
-import EditAccount from './EditAccount';
-import AddAccount from './AddAccount';
 import AddAccountDetails from './AddAccountDetails';
 import { formatDate } from '../../actions/common';
 import EditAccountDetails from './EditAccountDetails';
@@ -20,33 +17,21 @@ const AccountDetails = (props) => {
     console.log(accountid);
     const userId = props.auth.userdata.id;
     const accountDetailsAll = useSelector((state)=>state.accountReducer).accountDetails;
-    // const accountSingleAll = useSelector((state)=>state.accountReducer).accountSingle;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [accountDetails, setList] = useState([...accountDetailsAll]);
-    // const [accountSingle, setAccountSingle] = useState({...accountSingleAll});
-    
     const [accountListRow, setAccountRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
-    // data provides access to your row data
-
 
     useEffect(()=>{
         dispatch(getAccountDetails({user_id:userId,id:accountid}));
         dispatch(getAccountById(accountid));
     },[accountid])
 
-    // useEffect(()=>{
-    //     setAccountSingle({...accountSingleAll});
-    // },[accountSingleAll])
-
-
-
     const ExpandedComponent = ({ data }) => {
-        // window.innerWidth <= 599 ? <></> : "";
         if (window.innerWidth <= 599) {
             return (
                 <>
@@ -111,17 +96,18 @@ const AccountDetails = (props) => {
                 sortable: false,
                 width: "100px",
             },
+            
           
           {
             name: "Credit",
-            selector: (row) => row.credit,
+            selector: (row) => row.credit ? <span className='credit'>{"₹"+parseInt(row.credit).toLocaleString("en-IN")}</span>:"",
             sortable: true,
          
         },
            
         {
             name: "Debit",
-            selector: (row) => row.debit,
+            selector: (row) =>  row.debit ? <span className='debit'>{"₹"+parseInt(row.debit).toLocaleString("en-IN")}</span>:"",
             sortable: true,
          
         },

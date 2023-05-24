@@ -6,7 +6,6 @@ import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deleteParty, getParty } from '../../actions/balancesheet';
-import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
 import AddParty from './AddParty';
@@ -217,10 +216,7 @@ const BalanceSheet = (props) => {
                                     data-bs-toggle="modal"
                                     data-bs-target="#addparty"
                                 >
-                           
                                   Add Party
-                                
-                                
                                 </button>
                             </li>
                         </ul>

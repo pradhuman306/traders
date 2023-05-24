@@ -78,12 +78,6 @@ dispatch(getParty(user_id));
                if(!values.destination){
                 errors.destination = "Please fill Destination !"
                }
-               if(!values.rate){
-                errors.rate = "Please fill Rate !"
-               }
-               if(!values.advance){
-                errors.advance = "Please fill Advance !"
-               }
                if(!values.date){
                 errors.date = "Please fill Date !"
                }
@@ -166,48 +160,58 @@ dispatch(getParty(user_id));
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
-                          Rate <span className="error">*</span>
+                          Rate 
                           </label>
                           <Field
                             type="text"
                             name="rate"
+                            placeholder="₹"
                             className={`form-control ${
                               touched.rate && error.rate
                                 ? "input-error"
                                 : ""
                             }`}
                           />
-                          <ErrorMessage
-                            className="error"
-                            name="rate"
-                            component="span"
-                          />
+                       
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
-                            Advance <span className="error">*</span>
+                            Advance 
                             
                           </label>
                           <Field
                             type="text"
                             name="advance"
+                            placeholder="₹"
                             className={`form-control ${
                               touched.advance && error.advance
                                 ? "input-error"
                                 : ""
                             }`}
                           />
-                          <ErrorMessage
-                            className="error"
-                            name="advance"
-                            component="span"
-                          />
+                       
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
+                      <div className="col-md-6">
+                        <div className="form-group mb-4">
+                          <label>
+                            Remaining amount 
+                            
+                          </label>
+                          <Field
+                            type="text"
+                            name="remainamount"
+                            placeholder="₹"
+                            className={`form-control`}
+                            value={"₹"+parseInt(values.rate-values.advance).toLocaleString("en-IN")}
+                            disabled
+                          />
+                       
+                        </div>
+                      </div>
+                     
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
@@ -235,7 +239,11 @@ dispatch(getParty(user_id));
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
+                     
+                    </div>
+                    <div className="row">
+                  
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                         <label>
                             Description

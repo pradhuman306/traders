@@ -5,6 +5,7 @@ import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { formatDate } from '../../actions/common';
 import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
@@ -141,25 +142,25 @@ const TransportRent = (props) => {
           
             {
                 name: "Rate",
-                selector: (row) => row.rate,
+                selector: (row) =>"₹"+parseInt(row.rate).toLocaleString("en-IN"),
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "Advance",
-                selector: (row) => row.advance,
+                selector: (row) => "₹"+parseInt(row.advance).toLocaleString("en-IN"),
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "Remaining Amount",
-                selector: (row) => row.rate - row.advance,
+                selector: (row) => "₹"+parseInt(row.rate - row.advance).toLocaleString("en-IN"),
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "Date",
-                selector: (row) => row.date,
+                selector: (row) => formatDate(row.date),
                 sortable: true,
                 hide: "md",
             },

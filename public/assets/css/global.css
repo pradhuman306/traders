@@ -223,7 +223,7 @@ input[type="checkbox"]:checked+label:after {
   left: 7px;
   width: 6px;
   height: 10px;
-  border: solid rgba(var(--baseColor));
+  border: solid rgba(var(--themeColor));
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
@@ -1762,7 +1762,7 @@ input#input-error1:focus {
   width: 30px;
   height: 30px;
 }
-body .jfrgbA,body .bnAwAJ {
+/* body .jfrgbA,body .bnAwAJ {
   padding-left: 25px;
   padding-right: 25px;
-}
+} */

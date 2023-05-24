@@ -70,7 +70,7 @@ const AddParty = (props) => {
                   <div className="form-fields-wrap">
 
                     <div className="row">
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             Party <span className="error">*</span>
@@ -90,7 +90,7 @@ const AddParty = (props) => {
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             Mobile

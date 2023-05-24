@@ -351,7 +351,7 @@ dispatch(getLogo());
                       <div className="form-group mb-3">
                     
                       
-
+                      <div className="row">
    <div className="col-md-9">
                 <div
                   className="image-input"
@@ -383,6 +383,7 @@ dispatch(getLogo());
                           name="logo"
                           component="span"
                         />
+                        </div>
                 <div className="col-md-3">
                 <div className="logo-wrapper">
                   {img && <img className="preview-img" src={img} alt="" />}

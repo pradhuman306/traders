@@ -1,9 +1,7 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react'
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { addTransportRent } from '../../actions/transportrent';
+import { useDispatch } from 'react-redux';
 import Select from 'react-select';
 import { useEffect } from 'react';
 import { getParty } from '../../actions/balancesheet';
@@ -50,7 +48,6 @@ const AddBuySell = (props) => {
         if (e) {
             setFieldValue('party', e.value);
             setPartyValue(e);
-            console.log(e.value);
         }
     }
 
@@ -75,29 +72,6 @@ const AddBuySell = (props) => {
 
         setIsActive({ ...newActive });
     }
-
-    // const handleChangeValues =  (param,values,setFieldValue,value) => {
-    //     let val="";
-    //     if(param == 'amount'){
-    //         setFieldValue('amount',values.target.value);
-    //         val = "₹"+(parseInt(values.target.value)).toLocaleString("en-IN");   
-    //     }
-    //      if(param == 'debit'){
-    //         setFieldValue('debit',values.target.value);
-    //         val = "₹"+(parseInt((value.amount - values.target.value))).toLocaleString("en-IN")
-    //     }
-    //      if(param == 'commission'){
-    //         setFieldValue('commission',values.target.value);
-    //         val = "₹"+(parseInt(value.amount)-(value.amount - value.debit)*(values.target.value/100)).toLocaleString("en-IN")
-    //     }
-
-    //     if(value.amount && value.debit && value.commission){
-    //         val = "₹"+(parseInt(value.amount)-(value.amount - value.debit)*(value.commission/100)).toLocaleString("en-IN")
-    //     }
-
-    //     setFieldValue('totalamount',val);
-    // }
-
 
     return (
         <div
@@ -307,6 +281,7 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        placeholder="₹"
                                                     //  onChange={(e)=>handleChangeValues('amount',e,setFieldValue,values)}
 
                                                     />
@@ -333,6 +308,7 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        placeholder="₹"
                                                     // onChange={(e)=>handleChangeValues('debit',e,setFieldValue,values)}
                                                     />
                                                     {/* <ErrorMessage
@@ -355,7 +331,8 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
-                                                    // onChange={(e)=>handleChangeValues('commission',e,setFieldValue,values)}
+                                                            placeholder="%"
+                                            
 
                                                     />
                                                     {/* <ErrorMessage
@@ -377,6 +354,7 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        placeholder="%"
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -396,14 +374,15 @@ const AddBuySell = (props) => {
                                                         name="totalamount"
                                                         className={`form-control`}
                                                         disabled={true}
+                                                        placeholder="₹"
                                                         value={
                                                             isActive.buy ?
                                                                 values.commission / 100 == 0 ? "₹" + (values.amount - values.debit) :
                                                                     "₹" + ((values.amount) - [(values.amount - values.debit) * (values.commission / 100)]).toLocaleString("en-IN") : values.commission / 100 == 0 ? "₹" + (values.amount - values.debit) :
                                                                     "₹" + (parseInt(values.amount) + parseInt([(values.amount - values.debit) * (values.commission / 100)])).toLocaleString("en-IN")
 
-                                                        }
-                                                    />
+                                                        } 
+                                                    /> 
                                                     {/* <ErrorMessage
                                                         className="error"
                                                         name="commision"

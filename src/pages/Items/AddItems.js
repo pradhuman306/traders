@@ -90,6 +90,11 @@ const AddItems = (props) => {
                     </div>
                   
                 
+              
+                  </div>
+             
+                      <div className='frm-btn-wrap'>
+                    <div className='row'>
                     <div className="col-md-12 text-center mt-4">
                         <button
                           type="submit"
@@ -99,8 +104,8 @@ const AddItems = (props) => {
                            {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
+                    </div>
                   </div>
-              
                 </Form>
               )}
             </Formik>

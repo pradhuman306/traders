@@ -54,7 +54,19 @@ const StockDetails = (props) => {
                  
                 </>
             );
-        } 
+        } else if (window.innerWidth <= 959) {
+            return (
+                <>
+                    <p>
+                        <b>Amount:</b> {data.amount}
+                    </p>
+                    <p>
+                    <b>Description:</b> {data.description}
+                    </p>
+                
+                </>
+            );
+        }
     };
 
     var onresize = function () {

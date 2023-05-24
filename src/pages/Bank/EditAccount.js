@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addAccount, updateAccount } from '../../actions/accounts';
+import { updateAccount } from '../../actions/accounts';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 

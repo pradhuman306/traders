@@ -3,14 +3,12 @@ import React from 'react'
 import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { addAccount, addAccountDetails } from '../../actions/accounts';
+import { addAccountDetails } from '../../actions/accounts';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddAccountDetails = (props) => {
     const elementRef = useRef(null);
-    const nav = useNavigate();
     const user_id = props.auth.userdata.id;
     const accountid = props.accountid;
     const dispatch = useDispatch();
@@ -65,7 +63,7 @@ const AddAccountDetails = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({  isSubmitting, touched }) => (
                 <Form action="" id="newcustomer">
                   <div className="form-fields-wrap">
                  
@@ -79,6 +77,7 @@ const AddAccountDetails = (props) => {
                           <Field
                             type="text"
                             name="credit"
+                            placeholder="₹"
                             className={`form-control ${
                               touched.credit && error.credit
                                 ? "input-error"
@@ -101,6 +100,7 @@ const AddAccountDetails = (props) => {
                           <Field
                             type="text"
                             name="debit"
+                            placeholder="₹"
                             className={`form-control ${
                               touched.debit && error.debit
                                 ? "input-error"
@@ -157,6 +157,10 @@ const AddAccountDetails = (props) => {
                     </div>
                   
                 
+                  
+                  </div>
+                  <div className='frm-btn-wrap'>
+                    <div className='row'>
                     <div className="col-md-12 text-center mt-4">
                         <button
                           type="submit"
@@ -166,8 +170,8 @@ const AddAccountDetails = (props) => {
                          {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
                       </div>
+                    </div>
                   </div>
-              
                 </Form>
               )}
             </Formik>

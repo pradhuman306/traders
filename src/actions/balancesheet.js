@@ -25,14 +25,19 @@ export const getParty = (payload) => (dispatch) => {
     });
 }
 
-export const getPartyById = (payload) => (dispatch) => {
+export const getPartyById = (payload,param) => (dispatch) => {
+  setPendingData(dispatch);
     ajaxCall
-    .get(`${config.BASE_URL}getparty/${payload}`)
+    .get(`${config.BASE_URL}getparty/${payload}?f=${param}`)
     .then((res) => {
-        console.log(res);
+      setLoadedData(dispatch);
         dispatch({
             type: actionTypes.SET_SINGLE_PARTY,
             payload: res.data.data,
+          });
+          dispatch({
+            type: actionTypes.SET_PARTY_HISTORY,
+            payload: res.data.history,
           });
     })
     .catch((error) => {
@@ -106,24 +111,6 @@ export const deleteParty = (payload) => (dispatch) => {
 }
 
 
-export const getPartyHistory = (payload) => (dispatch) => {
-  setPendingData(dispatch);
-  ajaxCall
-  .get(`${config.BASE_URL}getaccountrecords/${payload.user_id}/${payload.id}`)
-  .then((res) => {
-    setLoadedData(dispatch);
-      dispatch({
-          type: actionTypes.SET_PARTY_HISTORY,
-          payload: res.data.data,
-        });
-  })
-  .catch((error) => {
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
-  });
-}
 
 
 

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteBuySellList, getBuyList, getSellList } from '../../actions/buysell';
+import { formatDate } from '../../actions/common';
 import { getItems } from '../../actions/items';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
@@ -19,7 +20,6 @@ const BuySell = (props) => {
     const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
     const [filterText, setFilter] = useState("");
     const [buyList, setBuyList] = useState([...buyListAll]);
-    // const [sellList, setSellList] = useState([...sellListAll]);
     const [buySellRow,setBuysell]= useState({});
     const [isActive,setIsActive]= useState({
         "buy":true,
@@ -102,7 +102,16 @@ const BuySell = (props) => {
         if (filterText) {
             let tmp = list.filter((item) => {
                 if (
-                    item.amount.includes(filterText) 
+                    item.amount.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.party.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.date.includes(filterText) ||
+                    item.gst.toString().includes(filterText) ||
+                    item.item.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.weight.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.debit.toString().includes(filterText.toLowerCase()) ||
+                    item.commission.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.bill_no.toLowerCase().includes(filterText.toLowerCase()) 
+                    
                 ) {
                     return true;
                 }
@@ -153,9 +162,9 @@ const BuySell = (props) => {
                 sortable: true,
                 width: "200px",
             },
-            {
+            { 
                 name: "Date",
-                selector: (row) => row.date,
+                selector: (row) => formatDate(row.date),
                 sortable: true,
                 hide: "md",
             },
@@ -168,25 +177,25 @@ const BuySell = (props) => {
             },
             {
                 name: "Amount",
-                selector: (row) => "₹"+parseInt(row.amount).toLocaleString("en-IN"),
+                selector: (row) => row.amount ? "₹"+parseInt(row.amount).toLocaleString("en-IN"):"",
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "Debit",
-                selector: (row) => "₹"+parseInt(row.debit).toLocaleString("en-IN"),
+                selector: (row) => row.debit ? "₹"+parseInt(row.debit).toLocaleString("en-IN"):"",
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "commission",
-                selector: (row) => row.commission+"%",
+                selector: (row) => row.commission ? row.commission+"%" :"",
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "GST",
-                selector: (row) => row.gst+"%",
+                selector: (row) => row.gst? row.gst+"%":"",
                 sortable: true,
                 hide: "md",
             },
@@ -199,9 +208,6 @@ const BuySell = (props) => {
                 sortable: true,
                 hide: "md",
             },
-     
-         
-        
             {
                 name: "Actions",
                 width: "166px",

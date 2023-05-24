@@ -7,7 +7,7 @@ import {
     sellList:[],
     pending: false,
   }
- 
+
   
   export default function (state = initialState, action) {
     switch (action.type) {

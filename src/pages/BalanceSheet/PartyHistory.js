@@ -4,43 +4,34 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import CustomLoader from '../Customloader';
-import { formatDate } from '../../actions/common';
-import { getPartyById, getPartyHistory } from '../../actions/balancesheet';
+import { getPartyById } from '../../actions/balancesheet';
+import { formatDate, totalAmountCalculate } from '../../actions/common';
+import Select from 'react-select';
 
 
 const PartyHistory = (props) => {
-    const {partyid} = useParams();
-    
+    const { partyid } = useParams();
+
     const userId = props.auth.userdata.id;
-    const partyHistoryAll = useSelector((state)=>state.balanceSheetReducer).partyHistory;
-    const partySingle = useSelector((state)=>state.balanceSheetReducer).partySingle;
+    const partyHistoryAll = useSelector((state) => state.balanceSheetReducer).partyHistory;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [historyDetails, setList] = useState([...partyHistoryAll]);
-    const [partyDetails, setPartySingle] = useState({...partySingle});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
+    const [newListItems, setNewListItems] = useState([]);
+    const [valueFilter,setValueFilter] = useState({});
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
 
 
-    useEffect(()=>{
-        dispatch(getPartyHistory({user_id:userId,id:partyid}));
+    useEffect(() => {
         dispatch(getPartyById(partyid));
-        
-    },[partyid])
-    
 
-    useEffect(()=>{
-        setPartySingle({...partySingle});
-        
-    },[partySingle])
-
-
-
+    }, [partyid])
 
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
@@ -50,10 +41,10 @@ const PartyHistory = (props) => {
                     <p>
                         <b>Account name:</b> {data.account}
                     </p>
-                 
+
                 </>
             );
-        } 
+        }
     };
 
     var onresize = function () {
@@ -68,14 +59,37 @@ const PartyHistory = (props) => {
     window.addEventListener("resize", onresize);
 
     useEffect(() => {
-  
+
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
             setisExpandable(true);
         } else {
             setisExpandable(false);
         }
+        let newFilterItems = [{
+            label: "This month",
+            value: "1m"
+        }, {
+            label: "Last month",
+            value: "1lm"
+        }, {
+            label: "Last 3 months",
+            value: "3m"
+        }, {
+            label: "Last 6 months",
+            value: "6m"
+        }, {
+            label: "This year",
+            value: "1y"
+        }]
+        setNewListItems([...newFilterItems]);
+        setValueFilter(newFilterItems[0]);
     }, []);
-
+    const handleSelectChange = (e) => {
+        if(e){
+            dispatch(getPartyById(partyid, e.value));
+            setValueFilter(e);
+        }
+    }
     useEffect(() => {
         if (filterText) {
             let tmp = partyHistoryAll.filter((item) => {
@@ -92,7 +106,7 @@ const PartyHistory = (props) => {
         } else {
             setList([...partyHistoryAll]);
         }
-    }, [filterText,partyHistoryAll]);
+    }, [filterText, partyHistoryAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -104,116 +118,46 @@ const PartyHistory = (props) => {
         () => [
             {
                 name: "Sr no.",
-                selector: (row,index) => index+1,
+                selector: (row, index) => index + 1,
                 sortable: false,
                 width: "100px",
             },
-          
-          {
-            name: "Credit",
-            selector: (row) => row.credit,
-            sortable: true,
-         
-        },
-           
-        {
-            name: "Debit",
-            selector: (row) => row.debit,
-            sortable: true,
-         
-        },
-        {
-            name: "Description",
-            selector: (row) => row.description,
-            sortable: true,
-         
-        },
-           
-        {
-            name: "Date",
-            selector: (row) => formatDate(row.date),
-            sortable: true,
-         
-        },
-          
-  
-            // {
-            //     name: "Actions",
-            //     width: "166px",
-            //     selector: (row) => {
-            //         return (
-            //             <ul className="table-drop-down">
 
-            //                 <li>
+            {
+                name: "Date",
+                selector: (row) => formatDate(row.date?.split(" ")[0]),
+                sortable: true,
 
-            //                     <a
-            //                         href=""
-            //                         role="button"
-            //                         id="tableMenu"
-            //                         data-bs-toggle="dropdown"
-            //                         aria-expanded="false"
-            //                         className="action-btn"
-            //                     >
+            },
+
+            {
+                name: "Item",
+                selector: (row) => row.item,
+                sortable: true,
+
+            },
+            {
+                name: "Credit",
+                selector: (row) => row.type === 'Sale' ? <span className='credit'>{totalAmountCalculate(row)}</span> : "",
+                sortable: true,
+                hide: "md",
+            },
+
+            {
+                name: "Debit",
+                    selector: (row) => row.type === 'Buy' ? <span className='debit'>{totalAmountCalculate(row)}</span> : "",
+                sortable: true,
+                hide: "md",
+            },
+            {
+                name: "Type",
+                selector: (row) => row.type === 'Buy' ? <span className='status-label active-label'>Buy</span> : <span className='status-label inactive-label'>Sell</span>,
+                sortable: true,
+                hide: "md",
+            },
 
 
-            //                         <svg width="24px" height="24px" viewBox="0 0 24 24" id="_24x24_On_Light_Dots" data-name="24x24/On Light/Dots" xmlns="http://www.w3.org/2000/svg">
-            //                             <rect id="view-box" width="24" height="24" fill="#141124" opacity="0" />
-            //                             <path id="Shape" d="M12,1.5A1.5,1.5,0,1,1,13.5,3,1.5,1.5,0,0,1,12,1.5Zm-6,0A1.5,1.5,0,1,1,7.5,3,1.5,1.5,0,0,1,6,1.5Zm-6,0A1.5,1.5,0,1,1,1.5,3,1.5,1.5,0,0,1,0,1.5Z" transform="translate(4.5 11)" fill="#141124" />
-            //                         </svg>
 
-
-            //                     </a>
-            //                     <ul className="dropdown-menu" aria-labelledby="tableMenu">
-
-
-            //                         <li>
-                              
-                                 
-            //                             <a onClick={(e) => {
-            //                                 e.preventDefault();
-            //                                 setAccountRow(row);
-            //                                 setId(row.id);
-                                            
-            //                             }}
-            //                                 className="active-user"
-            //                                 data-bs-toggle="modal"
-            //                                 data-bs-target="#editaccountdetails"
-            //                             >
-
-            //                              Edit
-            //                             </a>
-                                        
-            //                         </li>
-
-            //                         <li>
-            //                             <a onClick={(e) => {
-            //                                 e.preventDefault();
-            //                             }}
-            //                                 className="active-user delete-u"
-            //                                 data-bs-toggle="modal"
-            //                                 data-bs-target={`#confirm_${row.id}`}
-            //                             >
-
-            //                               Delete
-            //                             </a>
-            //                         </li>
-
-            //                     </ul>
-            //                 </li>
-            //                 <ConfirmModal
-            //                     id={row.id}
-            //                     name={row.name}
-            //                     yes={(id) => {
-            //                         dispatch(deleteAccountDetails({id:row.id,accountid:partyid,name:row.name,user_id:userId}));
-            //                     }}
-                             
-            //                 />
-            //             </ul>
-
-
-            //         );
-            //     },
-            // },
         ],
         []
     );
@@ -230,19 +174,23 @@ const PartyHistory = (props) => {
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
                     </div>
-                    <div>
-                        {partyDetails.name}
+
+                    <div className='select-filter form-group'>
+                        <Select
+                            options={newListItems}
+                            onChange={(e) => handleSelectChange(e)}
+                            value={valueFilter}
+                        />
                     </div>
-              
                 </div>
             </div>
-  
-            
+
+
             <DataTable
                 columns={columns}
                 data={historyDetails}
                 progressPending={props.pendingData}
-                progressComponent={<CustomLoader/>}
+                progressComponent={<CustomLoader />}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination
                 paginationPerPage={8}

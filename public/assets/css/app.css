@@ -740,6 +740,7 @@ body .css-1s2u09g-control, body .css-1pahdxg-control {
     padding: 4px 10px;
     letter-spacing: 1px;
     line-height: 1.5;
+    display: inline-block;
 }
 
 .active-label {
@@ -1943,6 +1944,9 @@ body .hjBMSB {
     padding: 7px 25px;
     cursor: pointer;
 }
+.report-filter.tabs li:last-child {
+    border-right: 0;
+}
 .filter-item.active {
     background: rgba(var(--themeColor));
     color: #fff;
@@ -1950,10 +1954,11 @@ body .hjBMSB {
 .form-group .css-13cymwt-control, .form-group .css-t3ipsp-control {
     min-height: 46px;
     border-radius: 10px;
-    border-width: 1px;
+    border-width: 0px;
+    box-shadow: inset rgb(0 0 0 / 11%) 0 0 0 1px;
 }
-.form-group .css-t3ipsp-control:hover {
-    border-color: transparent;
+.form-group .css-t3ipsp-control:hover, .form-group .css-t3ipsp-control {
+    box-shadow: inset rgb(var(--themeColor), 0.9) 0 0 0 1px, inset rgb(var(--whiteBg)) 0 0 0 100px !important;
 }
 
 
@@ -1972,4 +1977,10 @@ body .hjBMSB {
     display: flex;
     gap: 25px;
     margin-bottom: 15px;
+}
+.credit {
+    color: rgba(var(--success-color));
+}
+.debit {
+    color: rgba(var(--warning-color));
 }

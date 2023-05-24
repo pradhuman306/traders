@@ -24,7 +24,7 @@ const AddStockDetails = (props) => {
         setFieldValue('item',e.value);
       }
     
-      console.log(e.value);
+    
     } 
 
     useEffect(()=>{
@@ -84,8 +84,8 @@ const AddStockDetails = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 values.stock_id = stockid;
-                props.setBtnPending(true);
-                dispatch(addStockDetails(values,elementRef,props.setBtnPending,itemRef));
+                props.setBtnPending(true); 
+                dispatch(addStockDetails(values,elementRef,props.setBtnPending,resetForm,itemRef));
                 setSubmitting(false);
               }}
             >
@@ -122,6 +122,7 @@ const AddStockDetails = (props) => {
                                 : ""
                             }`} 
                             options={newListItems} 
+                            isSearchable={true}
                             ref={itemRef}
                             name="item" 
                             onChange={(e)=>handleSelectChange(e,setFieldValue)}

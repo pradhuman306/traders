@@ -3,9 +3,8 @@ import React from 'react'
 import { useEffect } from 'react';
 import { useRef } from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getParty, updateParty } from '../../actions/balancesheet';
+import { useDispatch } from 'react-redux';
+import {  updateParty } from '../../actions/balancesheet';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 const EditParty = (props) => {
@@ -75,7 +74,7 @@ const EditParty = (props) => {
                     <div className="form-fields-wrap">
 
                       <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                           <div className="form-group mb-4">
                             <label>
                               Party <span className="error">*</span>
@@ -95,7 +94,7 @@ const EditParty = (props) => {
                             />
                           </div>
                         </div>
-                        <div className="col-md-6">
+                        <div className="col-md-12">
                           <div className="form-group mb-4">
                             <label>
                               Mobile

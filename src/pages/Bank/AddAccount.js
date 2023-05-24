@@ -3,14 +3,12 @@ import React from 'react'
 import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { addAccount } from '../../actions/accounts';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddAccount = (props) => {
     const elementRef = useRef(null);
-    const nav = useNavigate();
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
     const [error, setError] = useState({});

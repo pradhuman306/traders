@@ -2,14 +2,12 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { addTransportRent } from '../../actions/transportrent';
 import Select from 'react-select';
 import { useEffect } from 'react';
 import { getParty } from '../../actions/balancesheet';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
-import { addBuy, addSell, updateBuy, updateSell } from '../../actions/buysell';
+import { updateBuy, updateSell } from '../../actions/buysell';
 
 
 const EditBuySell = (props) => {
@@ -289,6 +287,7 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        placeholder="₹"
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -313,6 +312,8 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        placeholder="₹"
+                                                        
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -334,6 +335,8 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        placeholder="%"
+                                                        
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -354,6 +357,8 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        placeholder="%"
+                                                        
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -471,9 +476,6 @@ const handleChangeCheck = (e,setFieldValue) => {
                                         </div>
                                             </div>
                                             </div>
-
-                                       
-                                  
 
                                 </Form>
                             )}
