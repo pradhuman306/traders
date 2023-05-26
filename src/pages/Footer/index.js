@@ -4,7 +4,7 @@ function Footer() {
   return (
     <div className="footer">
       <p>
-        © 2022 <a href="www.iqb-tool.com">IQB</a> All right reserved.
+        © 2022 <a href="/">Pankaj Traders</a> All right reserved.
       </p>
     </div>
   );

@@ -453,7 +453,7 @@ const AddBuySell = (props) => {
                                                     </label>
 
                                                     <Field
-                                                        type="text"
+                                                        as="textarea"
                                                         name="description"
                                                         className="form-control"
                                                     />

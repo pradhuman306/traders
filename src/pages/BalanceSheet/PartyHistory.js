@@ -39,11 +39,35 @@ const PartyHistory = (props) => {
             return (
                 <>
                     <p>
-                        <b>Account name:</b> {data.account}
+                        <b>Date:</b> {formatDate(data.date)}
+                    </p>
+                    <p>
+                        <b>Credit:</b> {data.type === 'Sale' ? <span className='credit'>{totalAmountCalculate(data)}</span> : ""}
+                    </p>
+                    <p>
+                        <b>Debit:</b> {data.type === 'Buy' ? <span className='debit'>{totalAmountCalculate(data)}</span> : ""}
+                    </p>
+                    <p>
+                        <b>Type:</b> {data.type}
                     </p>
 
                 </>
             );
+        }else if(window.innerWidth <= 991){
+            return(
+                <>
+               
+            <p>
+                <b>Credit:</b> {data.type === 'Sale' ? <span className='credit'>{totalAmountCalculate(data)}</span> : ""}
+            </p>
+            <p>
+                <b>Debit:</b> {data.type === 'Buy' ? <span className='debit'>{totalAmountCalculate(data)}</span> : ""}
+            </p>
+            <p>
+                <b>Type:</b> {data.type}
+            </p>
+            </>
+            )
         }
     };
 
@@ -94,9 +118,9 @@ const PartyHistory = (props) => {
         if (filterText) {
             let tmp = partyHistoryAll.filter((item) => {
                 if (
-                    item.credit?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.debit?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.date?.toLowerCase().includes(filterText.toLowerCase())
+                   formatDate(item.date)?.toLowerCase().includes(filterText.toLowerCase()) ||
+                   item.item.toLowerCase().includes(filterText.toLowerCase()) ||
+                   item.type.toLowerCase().includes(filterText.toLowerCase()) 
                 ) {
                     return true;
                 }
@@ -127,14 +151,14 @@ const PartyHistory = (props) => {
                 name: "Date",
                 selector: (row) => formatDate(row.date?.split(" ")[0]),
                 sortable: true,
-
+                hide:"sm"
             },
 
             {
                 name: "Item",
                 selector: (row) => row.item,
                 sortable: true,
-
+                
             },
             {
                 name: "Credit",
@@ -197,6 +221,7 @@ const PartyHistory = (props) => {
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+                selectableRows
             />
         </div>
     )

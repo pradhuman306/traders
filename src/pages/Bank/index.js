@@ -24,38 +24,9 @@ const Bank = (props) => {
         console.log(column.selector, sortDirection);
     // data provides access to your row data
 
-    const ExpandedComponent = ({ data }) => {
-        // window.innerWidth <= 599 ? <></> : "";
-        if (window.innerWidth <= 599) {
-            return (
-                <>
-                    <p>
-                        <b>Account name:</b> {data.account}
-                    </p>
-                 
-                </>
-            );
-        } 
-    };
-
-    var onresize = function () {
-        //your code here
-        //this is just an example
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
-            setisExpandable(true);
-        } else {
-            setisExpandable(false);
-        }
-    };
-    window.addEventListener("resize", onresize);
-
     useEffect(() => {
         dispatch(getAccountList(userId));
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
-            setisExpandable(true);
-        } else {
-            setisExpandable(false);
-        }
+      
     }, []);
 
     useEffect(() => {
@@ -229,8 +200,8 @@ const Bank = (props) => {
                 pagination
                 paginationPerPage={8}
                 expandableRows={isExpandable}
-                expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+                selectableRows
             />
         </div>
     )

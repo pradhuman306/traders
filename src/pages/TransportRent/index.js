@@ -34,27 +34,37 @@ const TransportRent = (props) => {
             return (
                 <>
                     <p>
-                        <b>Party name:</b> {data.email}
+                        <b>Destination:</b> {data.destination}
                     </p>
                     <p>
-                        <b>Date:</b> {data.date}
+                        <b>Rate:</b> {"₹"+parseInt(data.rate).toLocaleString("en-IN")}
                     </p>
                     <p>
-                        <b>Bill no:</b> {data.bill_no}
+                        <b>Advance:</b> {"₹"+parseInt(data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
-                        <b>Debit:</b> {data.debit}
+                        <b>Remaining amount:</b> {"₹"+parseInt(data.rate - data.advance).toLocaleString("en-IN")}
+                    </p>
+                    <p>
+                        <b>Date:</b> {formatDate(data.date)}
                     </p>
                 </>
             );
         } else if (window.innerWidth <= 959) {
             return (
                 <>
+               
                     <p>
-                        <b>Amount:</b> {data.amount}
+                        <b>Rate:</b> {"₹"+parseInt(data.rate).toLocaleString("en-IN")}
                     </p>
                     <p>
-                    <b>Description:</b> {data.description}
+                        <b>Advance:</b> {"₹"+parseInt(data.advance).toLocaleString("en-IN")}
+                    </p>
+                    <p>
+                        <b>Remaining amount:</b> {"₹"+parseInt(data.rate - data.advance).toLocaleString("en-IN")}
+                    </p>
+                    <p>
+                        <b>Date:</b> {formatDate(data.date)}
                     </p>
                 
                 </>
@@ -90,7 +100,7 @@ const TransportRent = (props) => {
                     item.destination?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.rate?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.advance?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.date?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    formatDate(item.date)?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.description?.toLowerCase().includes(filterText.toLowerCase()) 
                 ) {
                     return true;
@@ -297,6 +307,7 @@ const TransportRent = (props) => {
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+                selectableRows
             />
         </div>
     )

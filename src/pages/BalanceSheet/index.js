@@ -31,7 +31,7 @@ const BalanceSheet = (props) => {
             return (
                 <>
                     <p>
-                        <b>Party name:</b> {data.email}
+                        <b>Mobile:</b> {data.mobile}
                     </p>
             
                 </>
@@ -111,12 +111,12 @@ const BalanceSheet = (props) => {
               name: "Mobile",
               selector: (row) => row.mobile,
               sortable: true,
-            
+              hide:"sm"  
           },
          
             {
                 name: "Actions",
-                width: "10%",
+                width: "100px",
                 selector: (row) => {
                     return (
                         <ul className="table-drop-down">
@@ -236,6 +236,7 @@ const BalanceSheet = (props) => {
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+                selectableRows
             />
         </div>
     )

@@ -23,6 +23,8 @@ const AccountDetails = (props) => {
     const [accountListRow, setAccountRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
+    const [accType,setType] = useState("");
+    const [remainAmount,setRemainAmount] = useState(0);
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
 
@@ -36,12 +38,25 @@ const AccountDetails = (props) => {
             return (
                 <>
                     <p>
-                        <b>Account name:</b> {data.account}
+                        <b>Credit:</b> {data.credit ? <span className='credit'>+ {"₹"+parseInt(data.credit).toLocaleString("en-IN")}</span>:""}
+                    </p>
+                    <p>
+                        <b>Debit:</b> {data.debit ? <span className='debit'>- {"₹"+parseInt(data.debit).toLocaleString("en-IN")}</span>:""}
+                    </p>
+                    <p>
+                        <b>Description:</b> {data.description}
                     </p>
                  
                 </>
             );
-        } 
+        } else if(window.innerWidth <= 991){
+            return (
+            <>
+            <p>
+                <b>Credit:</b> {data.credit ? <span className='credit'>+ {"₹"+parseInt(data.credit).toLocaleString("en-IN")}</span>:""}
+            </p>
+        </>)
+        }
     };
 
     var onresize = function () {
@@ -70,7 +85,8 @@ const AccountDetails = (props) => {
                 if (
                     item.credit?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.debit?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.date?.toLowerCase().includes(filterText.toLowerCase())
+                    formatDate(item.date)?.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.description.toLowerCase().includes(filterText.toLowerCase())
                 ) {
                     return true;
                 }
@@ -80,11 +96,22 @@ const AccountDetails = (props) => {
         } else {
             setList([...accountDetailsAll]);
         }
+        balanceAmount();
     }, [filterText,accountDetailsAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
     };
+
+    const balanceAmount = () => {
+        let totalCredit = 0;
+        let totalDebit = 0;
+        accountDetailsAll.forEach((item,index)=>{
+            totalCredit+=item.credit?parseInt(item.credit):0;  
+            totalDebit+=item.debit?parseInt(item.debit):0;
+        })
+        setRemainAmount(totalCredit-totalDebit);
+    }
 
     // const hideColumns = () => {};
 
@@ -95,36 +122,37 @@ const AccountDetails = (props) => {
                 selector: (row,index) => index+1,
                 sortable: false,
                 width: "100px",
+                hide:"sm"
             },
             
-          
+            {
+                name: "Date",
+                selector: (row) => formatDate(row.date),
+                sortable: true,
+             
+            },
+              
           {
             name: "Credit",
-            selector: (row) => row.credit ? <span className='credit'>{"₹"+parseInt(row.credit).toLocaleString("en-IN")}</span>:"",
+            selector: (row) => row.credit ? <span className='credit'>+ {"₹"+parseInt(row.credit).toLocaleString("en-IN")}</span>:"",
             sortable: true,
-         
+            hide:"md"
         },
            
         {
             name: "Debit",
-            selector: (row) =>  row.debit ? <span className='debit'>{"₹"+parseInt(row.debit).toLocaleString("en-IN")}</span>:"",
+            selector: (row) =>  row.debit ? <span className='debit'>- {"₹"+parseInt(row.debit).toLocaleString("en-IN")}</span>:"",
             sortable: true,
-         
+            hide:"sm"
         },
         {
             name: "Description",
             selector: (row) => row.description,
             sortable: true,
-         
+            hide:"sm"
         },
            
-        {
-            name: "Date",
-            selector: (row) => formatDate(row.date),
-            sortable: true,
-         
-        },
-          
+        
   
             {
                 name: "Actions",
@@ -214,34 +242,44 @@ const AccountDetails = (props) => {
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder="Search account details..."
+                            placeholder="Search..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
                     </div>
-                    {/* <div>
-                        {accountSingle.name}
-                    </div> */}
+                    <div>
+                        Balance amount: {remainAmount >= 0 ? <span className='credit'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</span>:<span className='debit'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</span>}
+                    </div>
                     <div className="datatable-filter-right">
                         <ul className="btn-group">
                         
                             <li>
                                 <button
-                                    className="btn btn-primary"
+                                    className="btn btn-success"
                                     data-bs-toggle="modal"
                                     data-bs-target="#addaccountdetails"
+                                    onClick={()=>setType('Credit')}
                                 >
-                            
-                                  Add Account Details
-                                
-                                
+                                    
+                                Credit
+                                </button>
+                            </li>
+                            <li className='ms-2'>
+                                <button
+                                    className="btn btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#addaccountdetails"
+                                    onClick={()=>setType('Debit')}
+
+                                >
+                                Debit
                                 </button>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <AddAccountDetails {...props} accountid={accountid} />
+            <AddAccountDetails {...props} accountid={accountid} accType={accType} />
             <EditAccountDetails {...props} accountid={accountid} row_id={id} row_data={accountListRow} />
             
             <DataTable
@@ -255,6 +293,7 @@ const AccountDetails = (props) => {
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+                selectableRows
             />
         </div>
     )

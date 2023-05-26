@@ -2,10 +2,8 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getParty } from '../../actions/balancesheet';
-import { addTransportRent, getTransportRentList, updateTransportRent } from '../../actions/transportrent';
+import { useDispatch} from 'react-redux';
+import {  updateTransportRent } from '../../actions/transportrent';
 import Select from 'react-select';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
@@ -14,7 +12,6 @@ import ButtonLoader from '../Customloader/ButtonLoader';
 const EditTransportRent = (props) => {
   const elementRef = useRef(null);
   const user_id = props.auth.userdata.id;
-  const stockid = props.stockid;
   const dispatch = useDispatch();
   const [dataList, setdataList] = useState(props.row_data);
   const [newListParty, setNewListParty] = useState([]);
@@ -82,12 +79,8 @@ const EditTransportRent = (props) => {
                 if (!values.destination) {
                   errors.destination = "Please fill Destination!"
                 }
-                if (!values.rate) {
-                  errors.rate = "Please fill Rate!"
-                }
-                if (!values.advance) {
-                  errors.advance = "Please fill Advance!"
-                }
+           
+           
                 if (!values.date) {
                   errors.date = "Please fill Date!"
                 }
@@ -96,7 +89,7 @@ const EditTransportRent = (props) => {
 
                 return errors;
               }}
-              onSubmit={(values, { setSubmitting, resetForm }) => {
+              onSubmit={(values, { setSubmitting }) => {
                 values.user_id = user_id;
                 values.id = props.row_id;
                 props.setBtnPending(true);
@@ -104,7 +97,7 @@ const EditTransportRent = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
+              {({ values, isSubmitting, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
                   <div className="form-fields-wrap">
                     <div className="row">
@@ -156,7 +149,7 @@ const EditTransportRent = (props) => {
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
-                            Rate <span className="error">*</span>
+                            Rate 
                           </label>
                           <Field
                             type="text"
@@ -166,17 +159,13 @@ const EditTransportRent = (props) => {
                               : ""
                               }`}
                           />
-                          <ErrorMessage
-                            className="error"
-                            name="rate"
-                            component="span"
-                          />
+                      
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
-                            Advance <span className="error">*</span>
+                            Advance 
 
                           </label>
                           <Field
@@ -187,15 +176,28 @@ const EditTransportRent = (props) => {
                               : ""
                               }`}
                           />
-                          <ErrorMessage
-                            className="error"
-                            name="advance"
-                            component="span"
-                          />
+                    
                         </div>
                       </div>
                     </div>
                     <div className="row">
+                    <div className="col-md-6">
+                        <div className="form-group mb-4">
+                          <label>
+                            Remaining amount 
+                            
+                          </label>
+                          <Field
+                            type="text"
+                            name="remainamount"
+                            placeholder="₹"
+                            className={`form-control`}
+                            value={"₹"+parseInt(values.rate-values.advance).toLocaleString("en-IN")}
+                            disabled
+                          />
+                       
+                        </div>
+                      </div>
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
@@ -223,14 +225,14 @@ const EditTransportRent = (props) => {
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             Description
                           </label>
 
                           <Field
-                            type="text"
+                            as="textarea"
                             name="description"
                             className="form-control"
                           />

@@ -3,11 +3,9 @@ import Router from "./routes/index";
 import { BrowserRouter } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
-
-
-import "react-toastify/dist/ReactToastify.css";
 import { SET_LOADED } from "./constants/actionTypes";
 import { useState } from "react";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const auth = useSelector((state) => state.authReducer);

@@ -11,6 +11,7 @@ function LayoutContainer({ children, auth }) {
             <>
               <SideNav
                 role={auth}
+                logo={children.props.logo}
               />
                 <section className="body-main" >
                   {children}

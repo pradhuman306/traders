@@ -38,27 +38,60 @@ const BuySell = (props) => {
             return (
                 <>
                     <p>
-                        <b>Party name:</b> {data.party}
+                        <b>Date:</b> {formatDate(data.date)}
                     </p>
                     <p>
-                        <b>Date:</b> {data.date}
+                        <b>Item:</b> {data.item}
                     </p>
                     <p>
                         <b>Bill no:</b> {data.bill_no}
                     </p>
                     <p>
+                        <b>Amount:</b> {data.amount}
+                    </p>
+                    <p>
                         <b>Debit:</b> {data.debit}
+                    </p>
+                    <p>
+                        <b>Commission:</b> {data.commission}
+                    </p>
+                    <p>
+                        <b>Gst:</b> {data.gst}
+                    </p>
+                    <p>
+                        <b>Total amount:</b> {isActive.buy?
+                data.commission/100 == 0 ? "₹"+(data.amount - data.debit) :
+                "₹"+((data.amount)-[(data.amount - data.debit)*(data.commission/100)]).toLocaleString("en-IN") :data.commission/100 == 0? "₹"+(data.amount - data.debit):
+                "₹"+(parseInt(data.amount)+parseInt([(data.amount - data.debit)*(data.commission/100)])).toLocaleString("en-IN")}
                     </p>
                 </>
             );
         } else if (window.innerWidth <= 959) {
             return (
                 <>
+                   <p>
+                        <b>Date:</b> {formatDate(data.date)}
+                    </p>
                     <p>
+                        <b>Item:</b> {data.item}
+                    </p>
+                      <p>
                         <b>Amount:</b> {data.amount}
                     </p>
                     <p>
-                    <b>Description:</b> {data.description}
+                        <b>Debit:</b> {data.debit}
+                    </p>
+                    <p>
+                        <b>Commission:</b> {data.commission}
+                    </p>
+                    <p>
+                        <b>Gst:</b> {data.gst}
+                    </p>
+                    <p>
+                        <b>Total amount:</b> {isActive.buy?
+                data.commission/100 == 0 ? "₹"+(data.amount - data.debit) :
+                "₹"+((data.amount)-[(data.amount - data.debit)*(data.commission/100)]).toLocaleString("en-IN") :data.commission/100 == 0? "₹"+(data.amount - data.debit):
+                "₹"+(parseInt(data.amount)+parseInt([(data.amount - data.debit)*(data.commission/100)])).toLocaleString("en-IN")}
                     </p>
                 
                 </>
@@ -104,7 +137,7 @@ const BuySell = (props) => {
                 if (
                     item.amount.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.party.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.date.includes(filterText) ||
+                    formatDate(item.date).includes(filterText) ||
                     item.gst.toString().includes(filterText) ||
                     item.item.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.weight.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -168,11 +201,18 @@ const BuySell = (props) => {
                 sortable: true,
                 hide: "md",
             },
+            { 
+                name: "Item",
+                selector: (row) => row.item,
+                sortable: true,
+                hide: "md",
+
+            },
             {
                 name: "Bill no",
                 selector: (row) => row.bill_no,
                 sortable: true,
-                // width: "200px",
+                 width: "100px",
                 hide: "sm",
             },
             {
@@ -197,10 +237,11 @@ const BuySell = (props) => {
                 name: "GST",
                 selector: (row) => row.gst? row.gst+"%":"",
                 sortable: true,
+                width: "80px",
                 hide: "md",
             },
             {
-                name: "Total Amount",
+                name: "₹Total",
                 selector: (row) =>  isActive.buy?
                 row.commission/100 == 0 ? "₹"+(row.amount - row.debit) :
                 "₹"+((row.amount)-[(row.amount - row.debit)*(row.commission/100)]).toLocaleString("en-IN") :row.commission/100 == 0? "₹"+(row.amount - row.debit):
@@ -210,7 +251,7 @@ const BuySell = (props) => {
             },
             {
                 name: "Actions",
-                width: "166px",
+                width: "100px",
                 selector: (row) => {
                     return (
                         <ul className="table-drop-down">
@@ -287,6 +328,9 @@ const BuySell = (props) => {
 
     return (
         <div className="body-content">
+            <div className='main-header'>
+                <h2>Buy Sell</h2>
+            </div>
             <div className="usermanagement-main">
             <div>   <ul id="report-filter" className="report-filter tabs">
                             <li className={`filter-item pending-r ${isActive.buy?'active':""}`} onClick={()=>  {dispatch(getBuyList(user_id))
@@ -340,6 +384,7 @@ const BuySell = (props) => {
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+                selectableRows
             />
         </div>
     )

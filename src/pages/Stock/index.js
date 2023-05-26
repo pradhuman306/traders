@@ -32,7 +32,7 @@ const GoDown = (props) => {
             return (
                 <>
                     <p>
-                        <b>Name:</b> {data.account}
+                        <b>Place:</b> {data.place}
                     </p>
                  
                 </>
@@ -43,7 +43,7 @@ const GoDown = (props) => {
     var onresize = function () {
         //your code here
         //this is just an example
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
+        if (window.innerWidth <= 599) {
             setisExpandable(true);
         } else {
             setisExpandable(false);
@@ -53,7 +53,7 @@ const GoDown = (props) => {
 
     useEffect(() => {
         dispatch(getGoDownList(userId));
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
+        if (window.innerWidth <= 599) {
             setisExpandable(true);
         } else {
             setisExpandable(false);
@@ -111,7 +111,7 @@ const GoDown = (props) => {
             name: "Place",
             selector: (row) => row.place,
             sortable: true,
-         
+            hide:"sm"
         },
           
   
@@ -240,6 +240,7 @@ const GoDown = (props) => {
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+                selectableRows
             />
         </div>
     )

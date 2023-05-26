@@ -7,7 +7,7 @@
 
 :root {
   /* --themeColor: 0, 92, 230; */
-    --themeColor: 236, 105, 35;
+    --themeColor: 51, 51, 255;
   /* --themeColor: 0, 102, 255; old */
   --baseColor: 0, 0, 0;
   /* --acentColor: 244, 157, 137; */
@@ -17,7 +17,7 @@
   --whiteBg: 255, 255, 255;
   --blackBg: 0, 0, 0;
   --purple: 102, 51, 153;
-  --border-color: 216, 216, 218;
+  --border-color: 204, 209, 226;
   --success-color: 92, 184, 92;
   --success-color: 76, 175, 80;
   --warning-color: 220, 53, 69;
@@ -108,8 +108,13 @@ input[type="color"]::-webkit-color-swatch {
   cursor: pointer;
   display: inline-block;
   color: rgba(var(--baseColor));
-  font-weight: 400;
+  font-weight: 500;
   font-size: var(--baseFontsize);
+  line-height: 20px;
+}
+
+input[type="checkbox"]:checked+label, [type="radio"]:checked+label {
+  color: rgb(var(--themeColor));
 }
 .react-form-builder .form-group label {
   margin-bottom: 10px;
@@ -331,7 +336,7 @@ ul {
 
 .form-control {
   /* border: 1px solid rgba(var(--border-color)); */
-  box-shadow: inset rgb(0 0 0 / 11%) 0 0 0 1px;
+  box-shadow: inset #ccd1e2 0 0 0 1px;
   border: 0;
   box-sizing: border-box;
   border-radius: 10px;
@@ -381,16 +386,6 @@ select.form-control {
   line-height: 0px;
   color: rgba(var(--baseColor));
   cursor: no-drop;
-}
-
-.colorValueInput {
-  border: 0;
-  max-width: 100px;
-}
-
-.colorValueInput:focus {
-  box-shadow: var(--none);
-  outline: none;
 }
 
 .form-group a {
@@ -456,9 +451,7 @@ body .sidebar-footer .css-1pahdxg-control {
   position: inherit;
   border-radius: 14px;
 }
-#viewquestionnaire .modal-body {
-  min-height: 310px;
-}
+
 body .sidebar-footer .css-tlfecz-indicatorContainer{
 color: rgba(var(--blackBg));
 }
@@ -503,17 +496,7 @@ body .css-xb97g8 {
 body .eKwPae:hover:not(:disabled) {
   background-color: transparent;
 }
-.btn-success {
-  background: rgba(237, 247, 237);
-  border: 1px solid rgba(var(--success-color));
-  box-sizing: border-box;
-  border-radius: 8px;
-  font-weight: 400;
-  font-size: var(--baseFontsize);
-  line-height: 17px;
-  color: rgba(var(--success-color));
-  /* width: 100%; */
-}
+
 
 .btn-secondary {
   background: rgba(var(--selectBg));
@@ -612,11 +595,7 @@ body .eKwPae:hover:not(:disabled) {
   border-color: rgba(var(--themeColor));
 }
 
-.btn-success:hover {
-  background: #dcf0dc;
-  color: rgba(var(--success-color));
-  border: 1px solid rgba(var(--success-color));
-}
+
 
 .btn-secondary:hover,
 .btn-check:focus+.btn-secondary,
@@ -870,9 +849,11 @@ button.btn.sml-btn.btn-border.text-danger {
   font-weight: 600;
   left: 7px;
 }
-
+.main-header h2 {
+  margin-bottom: 30px;
+}
 .dropdown-menu a:hover {
-  background: rgba(var(--baseColor), 0.05);
+  background: rgb(70 70 254 / 10%);
 }
 
 .alert-secondary {
@@ -1313,31 +1294,6 @@ table tbody tr:hover {
     width: 100%;
   }
 
-  .responsive-menu>.dropdown>.dropdown-menu {
-    display: initial !important;
-    width: 250px;
-    position: fixed !important;
-    right: 0 !important;
-    left: initial !important;
-    top: 0;
-    height: 100%;
-    border-radius: 0 !important;
-    border: 0 !important;
-    -webkit-transform-origin: 0% 0%;
-    transform-origin: 0% 0%;
-    -webkit-transform: translate(120%, 0) !important;
-    transform: translate(120%, 0) !important;
-    -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-    transition: -webkit-transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-    transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-  }
-
-  .responsive-menu>.dropdown>.dropdown-menu.show {
-    -webkit-transform: translate(0%, 0) !important;
-    transform: translate(0%, 0) !important;
-  }
-
   div.dataTables_wrapper div.dataTables_paginate ul.pagination {
     justify-content: center;
     margin-top: 15px;
@@ -1348,21 +1304,6 @@ table tbody tr:hover {
   }
 .dropdown-menu a:hover {
     background: rgb(var(--blackBg), 3%);
-  }
-
-  .r-customer-menu .arrow-icon {
-    position: absolute;
-    right: 25px;
-  }
-
-  .r-customer-menu {
-    position: relative;
-  }
-
-  .r-customer-menu .dropdown-menu {
-    width: 100%;
-    top: 40px !important;
-    transform: none !important;
   }
 
   .table> :not(:last-child)> :last-child>* {
@@ -1515,10 +1456,6 @@ textarea.form-control {
   min-height: 100px;
 }
 
-.section_break input[type="date"] {
-  width: 100%;
-}
-
 .SortableItem .form-group span,
 .DraftEditor-editorContainer span,
 .static span {
@@ -1537,21 +1474,6 @@ textarea.form-control {
   text-align: inherit;
   font-size: inherit;
   padding: initial;
-}
-
-.model-xl .fml-list {
-  padding: 0 20px;
-}
-
-body .react-form-builder-preview p {
-  word-break: break-all;
-}
-
-.option-list input+label+label {
-  margin: 10px 0 10px 30px;
-  display: block;
-  width: 100%;
-  max-width: 310px;
 }
 
 #page-loader {

@@ -455,7 +455,7 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                     </label>
 
                                                     <Field
-                                                        type="text"
+                                                        as="textarea"
                                                         name="description"
                                                         className="form-control"
                                                     />

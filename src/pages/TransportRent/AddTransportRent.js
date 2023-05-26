@@ -250,7 +250,7 @@ dispatch(getParty(user_id));
                           </label>
                        
                           <Field
-                            type="text"
+                            as="textarea"
                             name="description"
                             className="form-control"
                           />

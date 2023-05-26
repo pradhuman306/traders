@@ -3,14 +3,12 @@ import React from 'react'
 import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { addParty } from '../../actions/balancesheet';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddParty = (props) => {
   const elementRef = useRef(null);
-  const nav = useNavigate();
   const user_id = props.auth.userdata.id;
   const dispatch = useDispatch();
   const [error, setError] = useState({});

@@ -49,7 +49,19 @@ const StockDetails = (props) => {
             return (
                 <>
                     <p>
-                        <b>Account name:</b> {data.account}
+                        <b>Quantity:</b> {data.quantity}
+                    </p>
+                    <p>
+                        <b>Weight:</b> {data.weight}
+                    </p>
+                    <p>
+                        <b>Date:</b> {data.date}
+                    </p>
+                    <p>
+                        <b>Vehicle:</b> {data.vehicle_no}
+                    </p>
+                    <p>
+                        <b>Firm:</b> {data.firm}
                     </p>
                  
                 </>
@@ -57,11 +69,18 @@ const StockDetails = (props) => {
         } else if (window.innerWidth <= 959) {
             return (
                 <>
+                    
                     <p>
-                        <b>Amount:</b> {data.amount}
+                        <b>Weight:</b> {data.weight}
                     </p>
                     <p>
-                    <b>Description:</b> {data.description}
+                        <b>Date:</b> {data.date}
+                    </p>
+                    <p>
+                        <b>Vehicle:</b> {data.vehicle_no}
+                    </p>
+                    <p>
+                        <b>Firm:</b> {data.firm}
                     </p>
                 
                 </>
@@ -98,7 +117,7 @@ const StockDetails = (props) => {
                     item.quantity?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.weight?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.vehicle_no?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.date?.toLowerCase().includes(filterText.toLowerCase()) 
+                    formatDate(item.date)?.toLowerCase().includes(filterText.toLowerCase()) 
                 ) {
                     return true;
                 }
@@ -123,6 +142,7 @@ const StockDetails = (props) => {
                 selector: (row,index) => index+1,
                 sortable: false,
                 width: "100px",
+                hide:'sm'
             },
         
      
@@ -131,30 +151,35 @@ const StockDetails = (props) => {
             name: "Item",
             selector: (row) => row.item,
             sortable: true,
+           
          
         },
         {
             name: "Quantity",
             selector: (row) => row.quantity,
             sortable: true,
+            hide:'sm'
          
         },
         {
             name: "Weight",
             selector: (row) => row.weight,
             sortable: true,
+            hide:'md'
          
         },
         {
             name: "Date",
             selector: (row) => formatDate(row.date),
             sortable: true,
+            hide:'md'
          
         },
         {
             name: "Vehicle no.",
             selector: (row) => row.vehicle_no,
             sortable: true,
+            hide:'md'
          
         },
            
@@ -162,6 +187,7 @@ const StockDetails = (props) => {
             name: "Firm",
             selector: (row) => row.firm,
             sortable: true,
+            hide:'md'
          
         },
     
@@ -296,6 +322,7 @@ const StockDetails = (props) => {
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+                selectableRows
             />
         </div>
     )

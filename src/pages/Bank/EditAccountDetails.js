@@ -19,6 +19,7 @@ const EditAccountDetails = (props) => {
     useEffect(()=>{
       setdataList({...props.row_data});
   },[props.row_id])
+  console.log(dataList);
   return (
     <div
     className="modal right fade"
@@ -30,7 +31,7 @@ const EditAccountDetails = (props) => {
     <div className="modal-dialog">
       <div className="modal-content right-modal">
         <div className="modal-head">
-          <h4>Edit Account Details</h4>
+          <h4>{dataList.debit != '' ? 'Debit' : dataList.credit != "" ? "Credit" :"" }</h4>
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -50,6 +51,7 @@ const EditAccountDetails = (props) => {
                 credit:dataList.credit,
                 debit:dataList.debit,
                 description:dataList.description,
+                amount:dataList.credit != "" ? dataList.credit : dataList.debit != "" ? dataList.debit :""
              
               }}
               validate={(values) => {
@@ -57,6 +59,9 @@ const EditAccountDetails = (props) => {
           
                if(!values.date){
                 errors.date = "Please fill date !"
+               }
+               if(!values.amount){
+                errors.amount = "Please fill amount !"
                }
            
                 setError({ ...errors });
@@ -66,6 +71,8 @@ const EditAccountDetails = (props) => {
                 values.user_id = user_id;
                 values.id = props.row_id;
                 values.accountid = accountid;
+                values.credit = dataList.credit != '' ? values.amount:"";
+                values.debit = dataList.debit != '' ? values.amount :"";
                 props.setBtnPending(true);
                 dispatch(updateAccountDetails(values,elementRef,props.setBtnPending));
                 setSubmitting(false);
@@ -80,46 +87,25 @@ const EditAccountDetails = (props) => {
                         <div className="form-group mb-4">
                           <label>
                             
-                          Credit
+                          Amount
                           </label>
                           <Field
                             type="text"
-                            name="credit"
+                            name="amount"
                             className={`form-control ${
-                              touched.credit && error.credit
+                              touched.amount && error.amount
                                 ? "input-error"
                                 : ""
                             }`}
                           />
                           <ErrorMessage
                             className="error"
-                            name="credit"
+                            name="amount"
                             component="span"
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
-                        <div className="form-group mb-4">
-                          <label>
-                            
-                          Debit
-                          </label>
-                          <Field
-                            type="text"
-                            name="debit"
-                            className={`form-control ${
-                              touched.debit && error.debit
-                                ? "input-error"
-                                : ""
-                            }`}
-                          />
-                          <ErrorMessage
-                            className="error"
-                            name="debit"
-                            component="span"
-                          />
-                        </div>
-                      </div>
+                 
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
@@ -142,14 +128,14 @@ const EditAccountDetails = (props) => {
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             
                           Description
                           </label>
                           <Field
-                            type="text"
+                            as="textarea"
                             name="description"
                             className={`form-control`}
                           />

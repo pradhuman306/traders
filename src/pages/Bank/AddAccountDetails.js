@@ -24,7 +24,7 @@ const AddAccountDetails = (props) => {
     <div className="modal-dialog">
       <div className="modal-content right-modal">
         <div className="modal-head">
-          <h4>Add New Account Details</h4>
+          <h4>{props.accType}</h4>
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -40,6 +40,7 @@ const AddAccountDetails = (props) => {
     <Formik
               initialValues={{
                 date:"",
+                amount:"",
                 credit:"",
                 debit:"",
                 description:""
@@ -51,6 +52,9 @@ const AddAccountDetails = (props) => {
                if(!values.date){
                 errors.date = "Please fill date !"
                }
+               if(!values.amount){
+                errors.amount = "Please fill amount !"
+               }
            
                 setError({ ...errors });
                 return errors;
@@ -58,6 +62,8 @@ const AddAccountDetails = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 values.account_id = accountid;
+                values.credit = props.accType === 'Credit' ? values.amount:"";
+                values.debit = props.accType === 'Debit' ? values.amount :"";
                 props.setBtnPending(true);
                 dispatch(addAccountDetails(values,elementRef,props.setBtnPending,resetForm));
                 setSubmitting(false);
@@ -72,48 +78,26 @@ const AddAccountDetails = (props) => {
                         <div className="form-group mb-4">
                           <label>
                             
-                          Credit
+                          Amount
                           </label>
                           <Field
                             type="text"
-                            name="credit"
+                            name="amount"
                             placeholder="₹"
                             className={`form-control ${
-                              touched.credit && error.credit
+                              touched.amount && error.amount
                                 ? "input-error"
                                 : ""
                             }`}
                           />
                           <ErrorMessage
                             className="error"
-                            name="credit"
+                            name="amount"
                             component="span"
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
-                        <div className="form-group mb-4">
-                          <label>
-                            
-                          Debit
-                          </label>
-                          <Field
-                            type="text"
-                            name="debit"
-                            placeholder="₹"
-                            className={`form-control ${
-                              touched.debit && error.debit
-                                ? "input-error"
-                                : ""
-                            }`}
-                          />
-                          <ErrorMessage
-                            className="error"
-                            name="debit"
-                            component="span"
-                          />
-                        </div>
-                      </div>
+                  
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
@@ -136,14 +120,14 @@ const AddAccountDetails = (props) => {
                           />
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
                             
                           Description
                           </label>
                           <Field
-                            type="text"
+                            as="textarea"
                             name="description"
                             className={`form-control`}
                           />

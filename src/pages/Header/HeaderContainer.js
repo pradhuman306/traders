@@ -47,8 +47,8 @@ function HeaderContainer(props) {
         }}
       ></div>
       <nav>
-        <div className="navbar-header">
-          <div className="navbar-left">
+        <div className="navbar-headers">
+          {/* <div className="navbar-left">
               <Link to="/">
               <img
               src={props.logo}
@@ -56,30 +56,28 @@ function HeaderContainer(props) {
               alt=""
             />
               </Link>
-          </div>
-              <div className=""><h4>{params.stockid || params.accountid || params.partyid ? singleDetails.name:""}</h4></div>
+          </div> */}
+              {/* <div className=""><h4>{params.stockid || params.accountid || params.partyid ? singleDetails.name:""}</h4></div> */}
           <div className="navbar-right">
        
             <div className="divider"></div>
             <div className="divider"></div>
             <div className="account-info-wrapper">
-            <div className="account-info">
-            <span>{name[0].toUpperCase()}</span>
-          </div>
+           
           <div className="drop-down">
             <div className="drop-down-body">
           { <div className="sidebar-header">
-          <figure>
+          {/* <figure>
             <img
               src={props.logo}
               alt=""
             />
-          </figure>
-          <label>
+          </figure> */}
+          {/* <label>
             <span>{name}</span>
-          </label>
+          </label> */}
         </div> }
-             {<ul className="side-foot-menus">
+             {/* {<ul className="side-foot-menus">
               <li>
               <div className="sub-divider"></div>
               </li>
@@ -138,7 +136,7 @@ function HeaderContainer(props) {
                 <span>Log out</span>
               </a>
             </li>
-          </ul> }
+          </ul> } */}
           </div>
           </div>
             </div>
