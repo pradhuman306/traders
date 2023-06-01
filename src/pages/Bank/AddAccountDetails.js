@@ -15,29 +15,15 @@ const AddAccountDetails = (props) => {
     const [error, setError] = useState({});
   return (
     <div
-    className="modal right fade"
+    className="modal fade"
     id="addaccountdetails"
     tabIndex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
   >
     <div className="modal-dialog">
-      <div className="modal-content right-modal">
-        <div className="modal-head">
-          <h4>{props.accType}</h4>
-          <a
-            onClick={(e) => e.preventDefault()}
-            type="button"
-            className="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            ref={elementRef}
-          >
-            <img src="/assets/images/icon-close.svg" alt="" />
-          </a>
-        </div>
-        <div className="modal-body">
-    <Formik
+      <div className="modal-content">
+      <Formik
               initialValues={{
                 date:"",
                 amount:"",
@@ -50,10 +36,10 @@ const AddAccountDetails = (props) => {
                 const errors = {};
           
                if(!values.date){
-                errors.date = "Please fill date !"
+                errors.date = "Please enter date!"
                }
                if(!values.amount){
-                errors.amount = "Please fill amount !"
+                errors.amount = "Please enter amount!"
                }
            
                 setError({ ...errors });
@@ -71,6 +57,21 @@ const AddAccountDetails = (props) => {
             >
               {({  isSubmitting, touched }) => (
                 <Form action="" id="newcustomer">
+        <div className="modal-head">
+          <h4>{props.accType}</h4>
+          <a
+            onClick={(e) => e.preventDefault()}
+            type="button"
+            className="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ref={elementRef}
+          >
+            <img src="/assets/images/close.svg" alt="" />
+          </a>
+        </div>
+        <div className="modal-body">
+    
                   <div className="form-fields-wrap">
                  
                     <div className="row">
@@ -81,9 +82,10 @@ const AddAccountDetails = (props) => {
                           Amount
                           </label>
                           <Field
+
                             type="text"
                             name="amount"
-                            placeholder="₹"
+                            placeholder="Please enter amount"
                             className={`form-control ${
                               touched.amount && error.amount
                                 ? "input-error"
@@ -102,7 +104,7 @@ const AddAccountDetails = (props) => {
                         <div className="form-group mb-4">
                           <label>
                             
-                          Date <span className="error">*</span>
+                          Date <span className="error-badge">*</span>
                           </label>
                           <Field
                             type="date"
@@ -121,7 +123,7 @@ const AddAccountDetails = (props) => {
                         </div>
                       </div>
                       <div className="col-md-12">
-                        <div className="form-group mb-4">
+                        <div className="form-group">
                           <label>
                             
                           Description
@@ -143,23 +145,21 @@ const AddAccountDetails = (props) => {
                 
                   
                   </div>
-                  <div className='frm-btn-wrap'>
-                    <div className='row'>
-                    <div className="col-md-12 text-center mt-4">
-                        <button
+                 
+              
+            </div>
+            <div className='modal-footer'>
+            <button
                           type="submit"
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
                          {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
-                      </div>
-                    </div>
-                  </div>
-                </Form>
+            </div>
+            </Form>
               )}
             </Formik>
-            </div>
         </div>
       </div>
     </div>

@@ -17,29 +17,15 @@ const AddGoDown = (props) => {
     const [error, setError] = useState({});
   return (
     <div
-    className="modal right fade"
+    className="modal fade"
     id="addaccount"
     tabIndex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
   >
     <div className="modal-dialog">
-      <div className="modal-content right-modal">
-        <div className="modal-head">
-          <h4>Add Godown</h4>
-          <a
-            onClick={(e) => e.preventDefault()}
-            type="button"
-            className="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            ref={elementRef}
-          >
-            <img src="/assets/images/icon-close.svg" alt="" />
-          </a>
-        </div>
-        <div className="modal-body">
-    <Formik
+      <div className="modal-content">
+      <Formik
               initialValues={{
                 name:"",
                 place:""
@@ -48,7 +34,7 @@ const AddGoDown = (props) => {
               validate={(values) => {
                 const errors = {};
                if(!values.name){
-                errors.name = "Please fill godown name !"
+                errors.name = "Please enter godown name!"
                }
                
                 setError({ ...errors });
@@ -63,6 +49,21 @@ const AddGoDown = (props) => {
             >
               {({ values, isSubmitting, dirty, handleReset, touched }) => (
                 <Form action="" id="newcustomer">
+        <div className="modal-head">
+          <h4>Add Godown</h4>
+          <a
+            onClick={(e) => e.preventDefault()}
+            type="button"
+            className="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ref={elementRef}
+          >
+            <img src="/assets/images/close.svg" alt="" />
+          </a>
+        </div>
+        <div className="modal-body">
+    
                   <div className="form-fields-wrap">
                  
                     <div className="row">
@@ -70,9 +71,10 @@ const AddGoDown = (props) => {
                         <div className="form-group mb-4">
                           <label>
                             
-                          Godown Name <span className="error">*</span>
+                          Godown Name <span className="error-badge">*</span>
                           </label>
                           <Field
+                          placeholder="Enter godown name"
                             type="text"
                             name="name"
                             className={`form-control ${
@@ -89,12 +91,13 @@ const AddGoDown = (props) => {
                         </div>
                       </div>
                       <div className="col-md-12">
-                        <div className="form-group mb-4">
+                        <div className="form-group">
                           <label>
                             
                           Place 
                           </label>
                           <Field
+                          placeholder="Enter godown destination"
                             type="text"
                             name="place"
                             className={`form-control ${
@@ -116,24 +119,22 @@ const AddGoDown = (props) => {
                 
                    
                   </div>
-                  <div className='frm-btn-wrap'>
-                    <div className='row'>
-                    <div className="col-md-12 text-center mt-4">
-                        <button
+                  
+              
+              
+            </div>
+            <div className='modal-footer'>
+            <button
                           type="submit"
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
                           {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
-                      </div>
-                    </div>
-                  </div>
-              
-                </Form>
+            </div>
+            </Form>
               )}
             </Formik>
-            </div>
         </div>
       </div>
     </div>

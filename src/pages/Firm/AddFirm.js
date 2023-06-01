@@ -1,67 +1,53 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import React from 'react'
 import { useRef } from 'react';
-import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addAccount, updateAccount } from '../../actions/accounts';
-import { updateGoDown } from '../../actions/godown';
+import { addFirm } from '../../actions/firm';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
-const EditGoDown = (props) => {
+const AddFirm = (props) => {
     const elementRef = useRef(null);
     const nav = useNavigate();
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
-    const [dataList, setdataList] = useState(props.row_data);
     const [error, setError] = useState({});
-    useEffect(()=>{
-        setdataList({...props.row_data});
- 
-    },[props.row_id])
   return (
     <div
-    className="modal fade"
-    id="editaccount"
+    className="modal  fade"
+    id="addfirm"
     tabIndex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
   >
     <div className="modal-dialog">
       <div className="modal-content">
-       
-         {Object.keys(dataList).length != 0 ? 
-         <div>
-            <Formik
-    enableReinitialize
+      <Formik
               initialValues={{
-                name:dataList.name,
-                place:dataList.place
+                name:"",
              
               }}
               validate={(values) => {
                 const errors = {};
                if(!values.name){
-                errors.name = "Please enter account name!"
+                errors.name = "Please enter firm name!"
                }
                 setError({ ...errors });
                 return errors;
               }}
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
-                values.id = dataList.id;
                 props.setBtnPending(true);
-                dispatch(updateGoDown(values,elementRef,props.setBtnPending));
-                console.log(values);
+                dispatch(addFirm(values,elementRef,props.setBtnPending,resetForm));
                 setSubmitting(false);
               }}
             >
               {({ values, isSubmitting, dirty, handleReset, touched }) => (
                 <Form action="" id="newcustomer">
-          <div className="modal-head">
-          <h4>Edit GoDown</h4>
+        <div className="modal-head">
+          <h4>Add new firm</h4>
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -73,19 +59,19 @@ const EditGoDown = (props) => {
             <img src="/assets/images/close.svg" alt="" />
           </a>
         </div>
-         <div className="modal-body">
-  
+        <div className="modal-body">
+    
                   <div className="form-fields-wrap">
                  
                     <div className="row">
                       <div className="col-md-12">
-                        <div className="form-group mb-4">
+                        <div className="form-group">
                           <label>
                             
-                          Godown name <span className="error-badge">*</span>
+                          Firm <span className="error-badge">*</span>
                           </label>
                           <Field
-                          placeholder="Enter godown name"
+                          placeholder="Please enter firm name"
                             type="text"
                             name="name"
                             className={`form-control ${
@@ -101,36 +87,15 @@ const EditGoDown = (props) => {
                           />
                         </div>
                       </div>
-                      <div className="col-md-12">
-                        <div className="form-group">
-                          <label>
-                            
-                          Place 
-                          </label>
-                          <Field
-                          placeholder="Enter godown destination"
-                            type="text"
-                            name="place"
-                            className={`form-control ${
-                              touched.place && error.place
-                                ? "input-error"
-                                : ""
-                            }`}
-                          />
-                          <ErrorMessage
-                            className="error"
-                            name="place"
-                            component="span"
-                          />
-                        </div>
-                      </div>
+                
                     </div>
                   
                 
-                  
-                  </div>
-                
               
+                  </div>
+             
+             
+               
             </div>
             <div className='modal-footer'>
             <button
@@ -138,17 +103,16 @@ const EditGoDown = (props) => {
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
-                                {props.btnPending?<ButtonLoader/>:"Update"}
+                           {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
             </div>
-                </Form>
+            </Form>
               )}
-            </Formik> </div> : ""}
-      
+            </Formik>
         </div>
       </div>
     </div>
   )
 }
 
-export default EditGoDown;
+export default AddFirm;

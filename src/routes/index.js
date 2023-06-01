@@ -23,6 +23,10 @@ import Items from "../pages/Items";
 import GoDown from "../pages/Stock";
 import StockDetails from "../pages/Stock/StockDetails";
 import PartyHistory from "../pages/BalanceSheet/PartyHistory";
+import TransportDetails from "../pages/TransportRent/TransportDetails";
+import Firm from "../pages/Firm";
+import AccountInfo from "../component/AccountInfo";
+import UpdatePass from "../component/UpdatePass";
 
 function Router(props) {
   const auth = props.auth;
@@ -96,6 +100,19 @@ function Router(props) {
                 <LayoutContainer
                   auth={auth}
                   children={<Items {...props} />}
+                />
+              </PrivateRoute>
+            }
+          />
+
+<Route
+            key="firm"
+            path="firm"
+            element={
+              <PrivateRoute>
+                <LayoutContainer
+                  auth={auth}
+                  children={<Firm {...props} />}
                 />
               </PrivateRoute>
             }
@@ -229,6 +246,19 @@ function Router(props) {
             }
           />
 
+        <Route
+            key="transportdetails"
+            path="transportdetails/:transid"
+            element={
+              <PrivateRoute>
+                <LayoutContainer
+                  auth={auth}
+                  children={<TransportDetails {...props} />}
+                />
+              </PrivateRoute>
+            }
+          />
+
 
           <Route
             key="settings"
@@ -241,7 +271,55 @@ function Router(props) {
                 />
               </PrivateRoute>
             }
+          >
+            <Route
+            key="accountInfo"
+            path="accountinfo"
+            element={
+              <PrivateRoute>
+              <AccountInfo {...props} />
+              </PrivateRoute>
+            }
           />
+              <Route
+            key="updatePass"
+            path="updatepass"
+            element={
+              <PrivateRoute>
+              <UpdatePass {...props} />
+              </PrivateRoute>
+            }
+          />
+              <Route
+            key="items"
+            path="items"
+            element={
+              <PrivateRoute>
+              <Items {...props} />
+              </PrivateRoute>
+            }
+          />
+              <Route
+            key="firm"
+            path="firm"
+            element={
+              <PrivateRoute>
+              <Firm {...props} />
+              </PrivateRoute>
+            }
+          />
+               <Route
+            key="goDown"
+            path="godown"
+            element={
+              <PrivateRoute>
+              <GoDown {...props} />
+              </PrivateRoute>
+            }
+          />
+          </Route>
+
+
         </>
       )}
       <>

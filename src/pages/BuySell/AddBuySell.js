@@ -83,25 +83,11 @@ const AddBuySell = (props) => {
         >
             <div className="modal-dialog">
                 <div className="modal-content right-modal">
-                    <div className="modal-head">
-                        <h4>Add Buy Sell</h4>
-
-                        <a
-                            onClick={(e) => e.preventDefault()}
-                            type="button"
-                            className="close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            ref={elementRef}
-                        >
-                            <img src="/assets/images/icon-close.svg" alt="" />
-                        </a>
-                    </div>
-                    <div className="modal-body">
-                        <Formik
+                <Formik
                             initialValues={{
                                 party: "",
                                 bill_no: "",
+                                rate: "",
                                 amount: "",
                                 debit: "",
                                 gst: "",
@@ -116,13 +102,13 @@ const AddBuySell = (props) => {
                             validate={(values) => {
                                 const errors = {};
                                 if (!values.party) {
-                                    errors.party = "Please select party !"
+                                    errors.party = "Please select party!"
                                 }
                                 if (!values.item) {
-                                    errors.item = "Please select item !"
+                                    errors.item = "Please select item!"
                                 }
                                 if (!values.date) {
-                                    errors.date = "Please select Date !"
+                                    errors.date = "Please select date!"
                                 }
 
 
@@ -148,44 +134,54 @@ const AddBuySell = (props) => {
                         >
                             {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                                 <Form action="" id="newcustomer">
+                    <div className="modal-head">
+                        <h4>Add Entry</h4>
+
+                        <a
+                            onClick={(e) => e.preventDefault()}
+                            type="button"
+                            className="close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                            ref={elementRef}
+                        >
+                            <img src="/assets/images/close.svg" alt="" />
+                        </a>
+                    </div>
+                    <div className="modal-body">
+                       
                                     <div className="form-fields-wrap">
                                         <div className='row'>
                                             <div className='col-md-12'>
                                                 <div className='group-field'>
-                                                    <div>
-                                                        <Field type="radio" id="buy" name="picked" value="buy" onClick={(e) => handleRadioChange("buy")} checked={isActive.buy} />
-                                                        <label htmlFor='buy'>
-                                                            Buy
-                                                        </label>
+                                                    <div className='gf-in'>
+                                                        <div className='form-check'>
+                                                            <Field className="form-check-input" type="radio" id="buy" name="picked" value="buy" onClick={(e) => handleRadioChange("buy")} checked={isActive.buy} />
+                                                            <label htmlFor='buy' className='form-check-label'>
+                                                                Buy
+                                                            </label>
+                                                        </div>
+
+                                                        <div className='form-check'>
+                                                            <Field className="form-check-input" type="radio" id="sell" name="picked" value="sell" onClick={(e) => handleRadioChange("sell")} checked={isActive.sell} />
+                                                            <label htmlFor='sell' className='form-check-label'>
+                                                                Sell
+                                                            </label>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <Field type="radio" id="sell" name="picked" value="sell" onClick={(e) => handleRadioChange("sell")} checked={isActive.sell} />
-                                                        <label htmlFor='sell'>
-                                                            Sell
+                                                    <div className="form-check">
+                                                        <Field
+                                                            type="checkbox"
+                                                            name="URD"
+                                                            className='form-check-input'
+                                                            id="URD"
+                                                        />
+                                                        <label htmlFor='URD' className='form-check-label'>
+                                                            <span>Unregisterd Dealer</span>
                                                         </label>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <div className="form-group mb-4">
 
-
-                                                    <Field
-                                                        type="checkbox"
-                                                        name="URD"
-                                                        className={`form-control ${touched.URD && error.URD
-                                                            ? "input-error"
-                                                            : ""
-                                                            }`}
-                                                        id="URD"
-                                                    />
-                                                    <label htmlFor='URD'>
-                                                        Unregisterd Dealer
-                                                    </label>
-
-                                                </div>
                                             </div>
 
                                         </div>
@@ -195,7 +191,7 @@ const AddBuySell = (props) => {
                                                 <div className="form-group mb-4">
                                                     <label>
 
-                                                        Party <span className="error">*</span>
+                                                        Party <span className="error-badge">*</span>
                                                     </label>
 
                                                     <Select
@@ -209,6 +205,15 @@ const AddBuySell = (props) => {
                                                         isClearable={true}
                                                         ref={partySelectRef}
                                                         onChange={(e) => handleSelectChange(e, setFieldValue)}
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            borderRadius: 8,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary25: 'rgba(5,131,107,0.1)',
+                                                                primary: '#05836b',
+                                                            },
+                                                        })}
                                                     />
 
                                                     <ErrorMessage
@@ -222,10 +227,11 @@ const AddBuySell = (props) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        Bill no
+                                                        Bill no.
 
                                                     </label>
                                                     <Field
+                                                    placeholder="Enter bill number"
                                                         type="text"
                                                         name="bill_no"
                                                         className={`form-control ${touched.bill_no && error.bill_no
@@ -246,7 +252,7 @@ const AddBuySell = (props) => {
                                                 <div className="form-group mb-4">
                                                     <label>
 
-                                                        Item <span className="error">*</span>
+                                                        Item <span className="error-badge">*</span>
                                                     </label>
 
                                                     <Select
@@ -260,6 +266,15 @@ const AddBuySell = (props) => {
                                                         name="item"
                                                         ref={itemSelectRef}
                                                         onChange={(e) => handleSelectChangeItem(e, setFieldValue)}
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            borderRadius: 8,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary25: 'rgba(5,131,107,0.1)',
+                                                                primary: '#05836b',
+                                                            },
+                                                        })}
                                                     />
 
                                                     <ErrorMessage
@@ -272,7 +287,45 @@ const AddBuySell = (props) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        Amount
+
+                                                        Weight <span className='badge rounded-pill text-bg-primary'>in Quintal</span>
+                                                    </label>
+
+                                                    <Field
+                                                    placeholder="Enter item weight"
+                                                        type="number"
+                                                        name="weight"
+                                                        className={`form-control ${touched.weight && error.weight
+                                                            ? "input-error"
+                                                            : ""
+                                                            }`}
+                                                    />
+
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="form-group mb-4">
+                                                    <label>
+                                                    ₹ Rate
+                                                    </label>
+                                                    <Field
+                                                        type="text"
+                                                        name="rate"
+                                                        className={`form-control ${touched.rate && error.rate
+                                                            ? "input-error"
+                                                            : ""
+                                                            }`}
+                                                        placeholder="₹"
+
+
+                                                    />
+
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="form-group mb-4">
+                                                    <label>
+                                                    ₹ Amount
                                                     </label>
                                                     <Field
                                                         type="text"
@@ -281,8 +334,9 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        value={values.amount = values.rate * values.weight}
                                                         placeholder="₹"
-                                                    //  onChange={(e)=>handleChangeValues('amount',e,setFieldValue,values)}
+                                                        disabled
 
                                                     />
                                                     {/* <ErrorMessage
@@ -321,7 +375,7 @@ const AddBuySell = (props) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        commission
+                                                        commission %
 
                                                     </label>
                                                     <Field
@@ -331,8 +385,8 @@ const AddBuySell = (props) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
-                                                            placeholder="%"
-                                            
+                                                        placeholder="%"
+
 
                                                     />
                                                     {/* <ErrorMessage
@@ -345,7 +399,7 @@ const AddBuySell = (props) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        GST
+                                                        GST %
                                                     </label>
                                                     <Field
                                                         type="text"
@@ -364,7 +418,7 @@ const AddBuySell = (props) => {
                                                 </div>
                                             </div>
                                             <div className="col-md-6">
-                                                <div className="form-group mb-4">
+                                                <div className="form-group">
                                                     <label>
                                                         Total Amount
 
@@ -381,8 +435,8 @@ const AddBuySell = (props) => {
                                                                     "₹" + ((values.amount) - [(values.amount - values.debit) * (values.commission / 100)]).toLocaleString("en-IN") : values.commission / 100 == 0 ? "₹" + (values.amount - values.debit) :
                                                                     "₹" + (parseInt(values.amount) + parseInt([(values.amount - values.debit) * (values.commission / 100)])).toLocaleString("en-IN")
 
-                                                        } 
-                                                    /> 
+                                                        }
+                                                    />
                                                     {/* <ErrorMessage
                                                         className="error"
                                                         name="commision"
@@ -394,32 +448,12 @@ const AddBuySell = (props) => {
                                         </div>
                                         <div className="row">
 
-                                            <div className="col-md-6">
+
+
+                                            <div className="col-md-12">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        Weight
-
-                                                    </label>
-                                                    <Field
-                                                        type="text"
-                                                        name="weight"
-                                                        className={`form-control ${touched.weight && error.weight
-                                                            ? "input-error"
-                                                            : ""
-                                                            }`}
-                                                    />
-                                                    {/* <ErrorMessage
-                                                        className="error"
-                                                        name="weight"
-                                                        component="span"
-                                                    /> */}
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6">
-                                                <div className="form-group mb-4">
-                                                    <label>
-                                                        Date <span className="error">*</span>
+                                                        Date <span className="error-badge">*</span>
 
                                                     </label>
 
@@ -464,9 +498,11 @@ const AddBuySell = (props) => {
 
 
                                     </div>
-                                    <div className='frm-btn-wrap'>
-                                        <div className='row'>
-                                            <div className="col-md-12 text-center mt-4">
+                                   
+
+                             
+                    </div>
+                    <div className='modal-footer'>
                                                 <button
                                                     type="submit"
                                                     disabled={isSubmitting}
@@ -474,14 +510,10 @@ const AddBuySell = (props) => {
                                                 >
                                                     {props.btnPending ? <ButtonLoader /> : "Add"}
                                                 </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </Form>
+                    </div>
+                    </Form>
                             )}
                         </Formik>
-                    </div>
                 </div>
             </div>
         </div>

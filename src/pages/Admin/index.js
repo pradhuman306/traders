@@ -1,7 +1,10 @@
 import React from "react";
+import Header from "../Header/Header";
 function Admin(props) {
   return (
     <>
+
+            <Header heading="Dashboard" {...props} />
       <div className="body-content">
         <div className="body-content-wrap">
         <h1 className="mt-0 mb-1">

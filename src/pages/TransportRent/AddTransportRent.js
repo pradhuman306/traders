@@ -12,6 +12,7 @@ import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddTransportRent = (props) => {
+  console.log(props);
     const elementRef = useRef(null);
     const partyRef = useRef(null);
     const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
@@ -19,6 +20,7 @@ const AddTransportRent = (props) => {
     const dispatch = useDispatch();
     const [error, setError] = useState({});
     const [partyListOpt, setPartyListOptions] = useState([]);
+    
     useEffect(()=>{
 dispatch(getParty(user_id));
     },[])
@@ -31,12 +33,14 @@ dispatch(getParty(user_id));
     },[partyList])
 
     const handleSelectChange = (e,setFieldValue) => {
+
       if(e){
         setFieldValue('party',e.value);
-        console.log(e.value);
       }
     
     } 
+
+    
   return (
     <div
     className="modal right fade"
@@ -47,39 +51,26 @@ dispatch(getParty(user_id));
   >
     <div className="modal-dialog">
       <div className="modal-content right-modal">
-        <div className="modal-head">
-          <h4>Add Transport Rent</h4>
-          <a
-            onClick={(e) => e.preventDefault()}
-            type="button"
-            className="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            ref={elementRef}
-          >
-            <img src="/assets/images/icon-close.svg" alt="" />
-          </a>
-        </div>
-        <div className="modal-body">
-    <Formik
+      <Formik
               initialValues={{
                 party:"",
                 destination:"",
                 rate:"",
                 advance:"",
+                weight:"",
                 date:"",
                 description:""
               }}
               validate={(values) => {
                 const errors = {};
                if(!values.party){
-                errors.party = "Please select Party !"
+                errors.party = "Please select party!"
                }
                if(!values.destination){
-                errors.destination = "Please fill Destination !"
+                errors.destination = "Please enter destination!"
                }
                if(!values.date){
-                errors.date = "Please fill Date !"
+                errors.date = "Please enter date!"
                }
               
                 setError({ ...errors });
@@ -89,12 +80,28 @@ dispatch(getParty(user_id));
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 props.setBtnPending(true);
                 values.user_id = user_id;
-                dispatch(addTransportRent(values,elementRef,props.setBtnPending,resetForm,partyRef));
+                dispatch(addTransportRent(values,elementRef,props.setBtnPending,resetForm,partyRef,props.transportRow));
+                
                 setSubmitting(false);
               }}
             >
               {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
+        <div className="modal-head">
+          <h4>Add Transport</h4>
+          <a
+            onClick={(e) => e.preventDefault()}
+            type="button"
+            className="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ref={elementRef}
+          >
+            <img src="/assets/images/close.svg" alt="" />
+          </a>
+        </div>
+        <div className="modal-body">
+    
                   <div className="form-fields-wrap">
                  
                     <div className="row">
@@ -102,17 +109,9 @@ dispatch(getParty(user_id));
                         <div className="form-group mb-4">
                           <label>
                             
-                          Party <span className="error">*</span>
+                          Party <span className="error-badge">*</span>
                           </label>
-                          {/* <Field
-                            type="text"
-                            name="party"
-                            className={`form-control ${
-                              touched.party && error.party
-                                ? "input-error"
-                                : ""
-                            }`}
-                          /> */}
+                       
                            <Select 
                            className={`${
                               touched.party && error.party
@@ -124,6 +123,15 @@ dispatch(getParty(user_id));
                             ref={partyRef}
                             name="party" 
                             onChange={(e)=>handleSelectChange(e,setFieldValue)}
+                            theme={(theme) => ({
+                              ...theme,
+                              borderRadius: 8,
+                              colors: {
+                                ...theme.colors,
+                                primary25: 'rgba(5,131,107,0.1)',
+                                primary: '#05836b',
+                              },
+                            })}
                             />
                           
                           <ErrorMessage
@@ -137,7 +145,7 @@ dispatch(getParty(user_id));
                         <div className="form-group mb-4">
                           <label>
                             Destination
-                            <span className="error">*</span>
+                            <span className="error-badge">*</span>
                           </label>
                           <Field
                             type="text"
@@ -157,6 +165,25 @@ dispatch(getParty(user_id));
                       </div>
                     </div>
                     <div className="row">
+                
+                      <div className="col-md-6">
+                        <div className="form-group mb-4">
+                          <label>
+                          Weight <span className='badge rounded-pill text-bg-primary'>in quintal</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="weight"
+                            placeholder="qt"
+                            className={`form-control ${
+                              touched.weight && error.weight
+                                ? "input-error"
+                                : ""
+                            }`}
+                          />
+                       
+                        </div>
+                      </div>
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
@@ -179,20 +206,20 @@ dispatch(getParty(user_id));
                         <div className="form-group mb-4">
                           <label>
                             Advance 
-                            
+
                           </label>
                           <Field
                             type="text"
                             name="advance"
                             placeholder="₹"
-                            className={`form-control ${
-                              touched.advance && error.advance
-                                ? "input-error"
-                                : ""
-                            }`}
+                            className={`form-control ${touched.advance && error.advance
+                              ? "input-error"
+                              : ""
+                              }`}
                           />
-                       
+                    
                         </div>
+                     
                       </div>
                       <div className="col-md-6">
                         <div className="form-group mb-4">
@@ -205,17 +232,17 @@ dispatch(getParty(user_id));
                             name="remainamount"
                             placeholder="₹"
                             className={`form-control`}
-                            value={"₹"+parseInt(values.rate-values.advance).toLocaleString("en-IN")}
+                            value={"₹"+parseInt((values.weight*values.rate)-values.advance).toLocaleString("en-IN")}
                             disabled
                           />
                        
                         </div>
                       </div>
                      
-                      <div className="col-md-6">
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
-                            Date <span className="error">*</span>
+                            Date <span className="error-badge">*</span>
                             
                           </label>
                        
@@ -260,24 +287,22 @@ dispatch(getParty(user_id));
                 
                    
                   </div>
-                  <div className='frm-btn-wrap'>
-                      <div className='row'>
-                      <div className="col-md-12 text-center mt-4">
-                        <button
+                
+              
+              
+            </div>
+            <div className='modal-footer'>
+            <button
                           type="submit"
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
                           {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
-                      </div>
-                        </div>
-                      </div>
-              
-                </Form>
+            </div>
+            </Form>
               )}
             </Formik>
-            </div>
         </div>
       </div>
     </div>

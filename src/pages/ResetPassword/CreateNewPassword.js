@@ -14,15 +14,12 @@ function CreateNewPassword(props) {
   return (
     <>
       <section className="login-main">
+      <div className="column">
         <div className="column after-layer before-layer">
-          <div className="login-head text-center mb-4">
-            <a href="">
-              <img src="/assets/images/logo.svg" className="image" />
-            </a>
-          </div>
           <div className="c-card">
             <div className="c-card-wrap">
-              <div className="form-header text-center mb-4">
+              <div className="form-header">
+               <img src="/assets/images/icon.svg" className="image" />
                 <h1>Reset Password</h1>
               </div>
               <div className="login-form">
@@ -31,17 +28,17 @@ function CreateNewPassword(props) {
                   validate={(values) => {
                     const errors = {};
                     if (!values.password) {
-                      errors.password = "Enter Password";
+                      errors.password = "Please enter your password";
                     }
                     if(!values.password_confirmation) {
-                      errors.password_confirmation = "Enter Confirm Password";
+                      errors.password_confirmation = "Please enter confirm password";
                     }
                     if (
                       values.password &&
                       values.password_confirmation &&
                       values.password != values.password_confirmation
                     ) {
-                      errors.password_confirmation = "Password does not match";
+                      errors.password_confirmation = "Password does not match!";
                       // errors.password = "Password does not match ";
                     }
                     setError({...errors})
@@ -57,7 +54,7 @@ function CreateNewPassword(props) {
                   {({ isSubmitting, dirty, handleReset, touched }) => (
                     <Form action="" id="loginForm">
                       <div className="form-group mb-3">
-                        <label>Password</label>
+                        <label>Password <span className="error-badge">*</span></label>
                         <Field
                           type="password"
                           name="password"
@@ -67,7 +64,7 @@ function CreateNewPassword(props) {
                         <ErrorMessage className="error" name="password" component="span" />
                       </div>
                       <div className="form-group mb-3">
-                        <label>Confirm Password</label>
+                        <label>Confirm Password <span className="error-badge">*</span></label>
                         <Field
                           type="password"
                           name="password_confirmation"
@@ -88,13 +85,25 @@ function CreateNewPassword(props) {
                            {props.btnPending?<ButtonLoader/>:"Submit"}
                         </button>
                       </div>
-                      <div className="form-group">
-                        <p className="text-center">Back to <Link to="/">Login</Link></p>
-                      </div>
+                     
                     </Form>
                   )}
                 </Formik>
               </div>
+            </div>
+            <p className="extra-stuff"><Link to="/signin"> <img
+                    src="/assets/images/back.svg" alt=""
+                 
+                  />Back to Login </Link></p>
+          </div>
+
+        </div>
+        <div className="login-head text-center">
+            <div className="login-in">
+              <div className="login-logo">
+                <img src="/assets/images/logo.svg" alt="" />
+              </div>
+              <Footer />
             </div>
           </div>
         </div>

@@ -1,421 +1,67 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useDispatch } from "react-redux";
-import AuthContext from "../../context/authContext";
-import { UpdateProfile, UpdatePassword, updateLogo, getLogo } from "../../actions/auth";
-import ButtonLoader from "../Customloader/ButtonLoader";
+import React, { useEffect } from "react";
+import Header from "../Header/Header";
+import { Link , Outlet ,useLocation} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getItems } from "../../actions/items";
+import { getFirm } from "../../actions/firm";
+import { getGoDownList } from "../../actions/godown";
 function Setting(props) {
-  console.log(props);
-  const auth = useContext(AuthContext);
   const dispatch = useDispatch();
-  const [error, setError] = useState({});
-  const [img, setImg] = useState(props.logo);
+  const pathname = useLocation().pathname;
+  const itemListAll = useSelector((state)=>state.itemReducer).itemList;
+  const firmListAll = useSelector((state)=>state.firmReducer).firmList;
+  const godownListAll = useSelector((state)=>state.godownReducer).godownList;
+  const userId = props.auth.userdata.id;
+  useEffect(() => {
+    dispatch(getItems(userId));
+    dispatch(getFirm(userId));
+    dispatch(getGoDownList(userId));
+}, []);
 
-  var { name, mobile, email, id } =
-    auth && auth.userdata ? auth.userdata : undefined;
-
-  const handleChange = (e,setFieldValue) => {
-    setFieldValue("logo", e.currentTarget.files[0]);
-    setImg(URL.createObjectURL(e.currentTarget.files[0]));
-  }
-useEffect(()=>{
-dispatch(getLogo());
-},[])
   return (
     <>
+      <Header heading="Settings" {...props} />
 
       <div className="body-content">
         <div className="setting-form row">
 
-          <div className="col-md-3">
-            <div className="nav card">
-            
-              <a
-                className="active"
-                id="nav-customer-tab"
-                data-bs-toggle="tab"
-                href="#customer"
-                role="tab"
-                aria-controls="nav-customer"
-                aria-selected="true"
-        
-              >
-                Basic info
-              </a>
-
-              <a
-                className=""
-                id="nav-user-tab"
-                data-bs-toggle="tab"
-                href="#user"
-                role="tab"
-                aria-controls="nav-profile"
-                aria-selected="false"
-              >
-            Change password
-              </a>
-
-              <a
-                className=""
-                id="nav-logo-tab"
-                data-bs-toggle="tab"
-                href="#logo"
-                role="tab"
-                aria-controls="nav-logo"
-                aria-selected="false"
-              >
-            Update Logo
-              </a>
-
-            </div>
-          </div>
-
-          <div className="col-md-9">
-
-            <div className="tab-content">
-             
-           
-              <div
-                className="tab-pane show active"
-                id="customer"
-                aria-labelledby="nav-customer-tab"
-              >
-                 <Formik
-              initialValues={{
-                email,
-                name,
-                mobile,
-              }}
-              validate={(values) => {
-                const errors = {};
-                if (
-                  values.email &&
-                  !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                ) {
-                  errors.email = "Please enter valid email address";
-                }
-
-                if (!values.name) {
-                  errors.name =
-                   "Please enter name";
-                }
-
-            
-
-                if (
-                  !values.mobile
-                ) {
-                  errors.mobile =
-                   "Please enter mobile number";
-                }
-                setError({ ...errors });
-                return errors;
-              }}
-              onSubmit={(values, { setSubmitting }) => {
-                values.user_id = id;
-                props.setBtnPending(true);
-                dispatch(UpdateProfile(values,props.setBtnPending));
-                setSubmitting(false);
-              }}
-            >
-              {({ isSubmitting, dirty, handleReset, touched }) => (
-                <Form action="" id="profile-form">
-
-                  <h2 className="mb-4">Basic info</h2>
-                  <div className="row">
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                        <label htmlFor="">First name</label>
-                        <Field
-                          type="text"
-                          name="name"
-                          className={`form-control icon ${touched.name && error.name
-                              ? "input-error"
-                              : ""
-                            }`}
-                          placeholder="Enter your name"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="name"
-                          component="span"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                        <label htmlFor="">Mobile No</label>
-                        <Field
-                          type="number"
-                          className={`form-control icon ${touched.mobile && error.mobile ? "input-error" : ""
-                            }`}
-                          placeholder="Enter your number"
-                          name="mobile"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="mobile"
-                          component="span"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                        <label htmlFor="">Email address</label>
-                        <Field
-                          type="email"
-                          className={`form-control icon ${touched.email && error.email ? "input-error" : ""
-                            }`}
-                          placeholder="Enter your email"
-                          name="email"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="email"
-                          component="span"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row mt-2">
-                    <div className="col-12">
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="btn btn-primary"
-                      >
-                           {props.btnPending?<ButtonLoader/>:"Update"}
-                      </button>
-                    </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-
-              </div>
-              <div
-                      className="tab-pane"
-                      id="user"
-                      aria-labelledby="nav-user-tab"
-                    >
-                      <Formik
-              initialValues={{
-                current_password: "",
-                new_password: "",
-                confirm_password: "",
-              }}
-              validate={(values) => {
-                const errors = {};
-                if (!values.current_password) {
-                  errors.current_password =
-                    "Enter current Password"
-                }
-                if (!values.new_password) {
-                  errors.new_password = "Enter new Password";
-                } 
-                if (
-                  values.new_password &&
-                  values.confirm_password &&
-                  values.new_password != values.confirm_password
-                ) {
-                  errors.confirm_password = "Password does not match";
-                }
-                setError({ ...errors });
-                return errors;
-              }}
-              onSubmit={(values, { setSubmitting,resetForm }) => {
-                values.user_id = id;
-                props.setBtnPending(true);
-                dispatch(UpdatePassword(values,resetForm,props.setBtnPending));
-                setSubmitting(false);
-              }}
-            >
-              {({ isSubmitting, dirty, handleReset, touched }) => (
-                <Form>
-                  <h2 className="mb-4">Change password</h2>
-                  <div className="row">
-
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                        <label htmlFor="">Current password</label>
-                        <Field
-                          type="password"
-                          className={`form-control icon icon-lock ${touched.current_password && error.current_password
-                              ? "input-error"
-                              : ""
-                            }`}
-                          placeholder="Enter current password"
-                          name="current_password"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="current_password"
-                          component="span"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                        <label htmlFor="">New password</label>
-                        <Field
-                          type="password"
-                          className={`form-control icon icon-lock ${touched.new_password && error.new_password
-                              ? "input-error"
-                              : ""
-                            }`}
-                          placeholder="Enter new password"
-                          name="new_password"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="new_password"
-                          component="span"
-                        />
-                      </div>
-                    </div>
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                        <label htmlFor="">Confirm new password</label>
-                        <Field
-                          type="password"
-                          className={`form-control icon icon-lock ${touched.confirm_password && error.confirm_password
-                              ? "input-error"
-                              : ""
-                            }`}
-                          placeholder="Enter confirm password"
-                          name="confirm_password"
-                        />
-                        <ErrorMessage
-                          className="error"
-                          name="confirm_password"
-                          component="span"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="row mt-2">
-                    <div className="col-12">
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="btn btn-primary"
-                      >
-                    {props.btnPending?<ButtonLoader/>:"Update"}
-                      </button>
-                    </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-                      </div>
-
-                      <div
-                      className="tab-pane"
-                      id="logo"
-                      aria-labelledby="nav-logo-tab"
-                    >
-                      <Formik
-              initialValues={{
-                logo:"",
-              }}
-              validate={(values) => {
-                const errors = {};
-             
-                if (!values.logo || !img) {
-                  errors.logo =
-                    "Please select logo"
-                }
-       
-                setError({ ...errors });
-                return errors;
-              }}
-              onSubmit={(values, { setSubmitting,resetForm }) => {
-                values.user_id = id;
-                props.setBtnPending(true);
-                // dispatch(UpdatePassword(values,resetForm,props.setBtnPending));
-                dispatch(updateLogo(values,props.setBtnPending));
-                if (!values.logo) {
-                  values.old_logo = img;
-                  delete values.logo;
-                }
-                console.log(values);
-                setSubmitting(false);
-              }}
-            >
-              {({ isSubmitting, dirty, handleReset, touched,setFieldValue }) => (
-                <Form>
-                  <h2 className="mb-4">Update Logo</h2>
-                  <div className="row">
-
-                    <div className="col-md-6 col-sm-6">
-                      <div className="form-group mb-3">
-                    
-                      
-                      <div className="row">
-   <div className="col-md-9">
-                <div
-                  className="image-input"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  data-bs-original-title="Upload image"
+          <div className="col-md-12">
+            <ul className="report-filter tabs">
+            <li className={`${pathname === "/settings/accountinfo" ? "active" : ""}`}>
+                <Link to="/settings/accountinfo"
                 >
-                  <input
-                    type="file"
-                    name="letter_pad"
-                    id="letter_pad"
-                    className=""
-                    placeholder="Enter letter_pad"
-                    onChange={(e) => handleChange(e,setFieldValue)}
-                  />
-                  <input
-                    type="hidden"
-                    name="old_letter_pad"
-                    id="old_letter_pad"
-                    value=""
-                  />
-                  <label htmlFor="letter_pad" className="image-button">
-                    <img src="/assets/images/icon-image.svg" alt="" />
-                    {"Upload logo here"}
-                  </label>
-                </div>
-                <ErrorMessage
-                          className="error"
-                          name="logo"
-                          component="span"
-                        />
-                        </div>
-                <div className="col-md-3">
-                <div className="logo-wrapper">
-                  {img && <img className="preview-img" src={img} alt="" />}
-                </div>
-              </div>
-              </div>
-
-                      </div>
-                    </div>
-              
-                  </div>
-                  <div className="row mt-2">
-                    <div className="col-12">
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="btn btn-primary"
-                      >
-                    {props.btnPending?<ButtonLoader/>:"Update"}
-                      </button>
-                    </div>
-                  </div>
-                </Form>
-              )}
-            </Formik>
-                      </div>
-            </div>
-
-           
-
-
-            
+                  Basic Information
+                </Link>
+              </li>
+          
+              <li className={`${pathname === "/settings/updatepass" ? "active" : ""}`}>
+              <Link to="/settings/updatepass"
+                >
+                  Update Password
+                </Link>
+              </li>
+              <li className={`${pathname === "/settings/items" ? "active" : ""}`}>
+              <Link to="/settings/items"
+                >
+                 Items {itemListAll.length?itemListAll.length:""}
+                </Link>
+              </li>
+              <li className={`${pathname === "/settings/firm" ? "active" : ""}`}>
+              <Link to="/settings/firm"
+                >
+                 Firm {firmListAll.length?firmListAll.length:""}
+                </Link>
+              </li>
+              <li className={`${pathname === "/settings/godown" ? "active" : ""}`}>
+              <Link to="/settings/godown"
+                >
+                 Godown {godownListAll.length?godownListAll.length:""}
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className="col-md-12">
+          <Outlet />
           </div>
         </div>
       </div>

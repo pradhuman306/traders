@@ -4,99 +4,39 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useParams } from 'react-router-dom';
-import {  deleteAccountDetails, getAccountById, getAccountDetails, getAccountList } from '../../actions/accounts';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
-import AddAccountDetails from './AddAccountDetails';
-import { formatDate } from '../../actions/common';
-import EditAccountDetails from './EditAccountDetails';
-import DeleteSelected from '../../component/DeleteSelected';
 import Header from '../Header/Header';
+import AddFirm from './AddFirm';
+import EditFirm from './EditFirm';
+import { deleteFirm, getFirm } from '../../actions/firm';
 
-const AccountDetails = (props) => {
-    const {accountid} = useParams();
-    console.log(accountid);
+const Firm = (props) => {
     const userId = props.auth.userdata.id;
-    const accountDetailsAll = useSelector((state)=>state.accountReducer).accountDetails;
-    const accountSingle = useSelector((state)=>state.accountReducer).accountSingle;
+    const firmListAll = useSelector((state)=>state.firmReducer).firmList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
-    const [accountDetails, setList] = useState([...accountDetailsAll]);
-    const [accountSingleDetails, setSingleDetails] = useState({...accountSingle});
-    const [accountListRow, setAccountRow] = useState({});
+    const [firmList, setList] = useState([...firmListAll]);
+    const [firmListRow, setItemRow] = useState({});
     const [id, setId] = useState("");
-    const [isExpandable, setisExpandable] = useState(false);
-    const [accType,setType] = useState("");
-    const [remainAmount,setRemainAmount] = useState(0);
+
 
 
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
+    // data provides access to your row data
 
-    useEffect(()=>{
-        dispatch(getAccountDetails({user_id:userId,id:accountid}));
-        dispatch(getAccountById(accountid));
-    },[accountid])
-
-    useEffect(()=>{
-        setSingleDetails({...accountSingle})
-    },[accountSingle])
-
-    const ExpandedComponent = ({ data }) => {
-        if (window.innerWidth <= 599) {
-            return (
-                <>
-                    <p>
-                        <b>Credit:</b> {data.credit ? <span className='credit'>+ {"₹"+parseInt(data.credit).toLocaleString("en-IN")}</span>:""}
-                    </p>
-                    <p>
-                        <b>Debit:</b> {data.debit ? <span className='debit'>- {"₹"+parseInt(data.debit).toLocaleString("en-IN")}</span>:""}
-                    </p>
-                    <p>
-                        <b>Description:</b> {data.description}
-                    </p>
-                 
-                </>
-            );
-        } else if(window.innerWidth <= 991){
-            return (
-            <>
-            <p>
-                <b>Credit:</b> {data.credit ? <span className='credit'>+ {"₹"+parseInt(data.credit).toLocaleString("en-IN")}</span>:""}
-            </p>
-        </>)
-        }
-    };
-
-    var onresize = function () {
-        //your code here
-        //this is just an example
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
-            setisExpandable(true);
-        } else {
-            setisExpandable(false);
-        }
-    };
-    window.addEventListener("resize", onresize);
 
     useEffect(() => {
-        dispatch(getAccountList(userId));
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
-            setisExpandable(true);
-        } else {
-            setisExpandable(false);
-        }
+        dispatch(getFirm(userId));
+   
     }, []);
 
     useEffect(() => {
         if (filterText) {
-            let tmp = accountDetailsAll.filter((item) => {
+            let tmp = firmListAll.filter((item) => {
                 if (
-                    item.credit?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.debit?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    formatDate(item.date)?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.description?.toLowerCase().includes(filterText.toLowerCase())
+                    item.name?.toLowerCase().includes(filterText.toLowerCase()) 
                 ) {
                     return true;
                 }
@@ -104,58 +44,40 @@ const AccountDetails = (props) => {
             });
             setList([...tmp]);
         } else {
-            setList([...accountDetailsAll]);
+            setList([...firmListAll]);
         }
-        balanceAmount();
-    }, [filterText,accountDetailsAll]);
+    }, [filterText,firmListAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
     };
 
-    const balanceAmount = () => {
-        let totalCredit = 0;
-        let totalDebit = 0;
-        accountDetailsAll.forEach((item,index)=>{
-            totalCredit+=item.credit?parseInt(item.credit):0;  
-            totalDebit+=item.debit?parseInt(item.debit):0;
-        })
-        setRemainAmount(totalCredit-totalDebit);
-    }
-
     // const hideColumns = () => {};
 
     const columns = useMemo(
         () => [
-           
-            
-            {
-                name: "Date",
-                selector: (row) => formatDate(row.date),
-                sortable: true,
-             
-            },
-              
+          
           {
-            name: "Credit",
-            selector: (row) => row.credit ? <span className='credit'>+ {"₹"+parseInt(row.credit).toLocaleString("en-IN")}</span>:"",
+            name: "Firm",
+            selector: (row) => {
+                let newName = row.name.split(" ");
+                let firstC = newName[0][0];
+                let lastC = "";
+                if (newName[1]) {
+                    lastC = newName[1][0].toUpperCase();
+                }
+                return (
+         
+                    <div className="user-wrap">
+                        <div className="user-detail">{row.name}</div>
+                    </div>
+                 
+                );
+            },
             sortable: true,
-            hide:"md"
+         
         },
-           
-        {
-            name: "Debit",
-            selector: (row) =>  row.debit ? <span className='debit'>- {"₹"+parseInt(row.debit).toLocaleString("en-IN")}</span>:"",
-            sortable: true,
-            hide:"sm"
-        },
-        {
-            name: "Description",
-            selector: (row) => row.description,
-            sortable: true,
-            hide:"sm"
-        },
-           
+
             {
                 name: "Actions",
                 width: "150px",
@@ -166,13 +88,13 @@ const AccountDetails = (props) => {
                                 <li>
                                 <a onClick={(e) => {
                                               e.preventDefault();
-                                              setAccountRow(row);
+                                              setItemRow(row);
                                               setId(row.id);
 
                                         }}
                                             className="btn-sml"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editaccountdetails"
+                                            data-bs-target="#editaccount"
                                         >
 
                                         <svg class="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -207,7 +129,7 @@ const AccountDetails = (props) => {
                                 id={row.id}
                                 name={row.name}
                                 yes={(id) => {
-                                    dispatch(deleteAccountDetails({id:row.id,accountid:accountid,name:"",user_id:userId}));
+                                    dispatch(deleteFirm({id:row.id,name:row.name,user_id:userId}));
                                 }}
                              
                             />
@@ -224,71 +146,57 @@ const AccountDetails = (props) => {
         []
     );
 
-    return (
+    return ( <>
+       
+        
         <div className="body-content">
-            <Header heading={accountSingleDetails.name} {...props} />
             <div className="usermanagement-main">
                 <div className="datatable-filter-wrap">
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder="Search..."
+                            placeholder="Search firm..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
-                    </div>
-                    <div>
-                        Balance amount: {remainAmount >= 0 ? <span className='credit'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</span>:<span className='debit'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</span>}
                     </div>
                     <div className="datatable-filter-right">
                         <ul className="btn-group">
                         
                             <li>
                                 <button
-                                    className="btn btn-success"
+                                    className="btn btn-primary"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#addaccountdetails"
-                                    onClick={()=>setType('Credit')}
+                                    data-bs-target="#addfirm"
                                 >
-                                    
-                                Credit
+                            
+                                  Add Firm
+                                
+                                
                                 </button>
                             </li>
-                            <li className='ms-2'>
-                                <button
-                                    className="btn btn-danger"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addaccountdetails"
-                                    onClick={()=>setType('Debit')}
+                           
 
-                                >
-                                Debit
-                                </button>
-                            </li>
-
-                            
-
-                            
                         </ul>
                     </div>
                 </div>
             </div>
-            <AddAccountDetails {...props} accountid={accountid} accType={accType} />
-            <EditAccountDetails {...props} accountid={accountid} row_id={id} row_data={accountListRow} />
-           
+            <AddFirm {...props}/>
+            <EditFirm {...props} row_id={id} row_data={firmListRow} />
+            
             <DataTable
                 columns={columns}
-                data={accountDetails}
+                data={firmList}
                 progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination
                 paginationPerPage={8}
-                expandableRows={isExpandable}
-                expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+               
             />
         </div>
+        </>
     )
 }
-export default AccountDetails;
+export default Firm;

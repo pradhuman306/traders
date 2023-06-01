@@ -16,17 +16,17 @@ function ResetPassword(props) {
     <>
       <section className="login-main">
         <div className="login-main-wrapper">
+        <div className="column">
         <div className="column after-layer before-layer">
-          <div className="login-head text-center mb-4">
-            <a href="">
-              <img src="/assets/images/logo.svg" className="image" />
-            </a>
-          </div>
           <div className="c-card">
             <div className="c-card-wrap">
-              <div className="form-header text-center mb-4">
+              <div className="form-header ">
+              <img
+                    src="/assets/images/icon.svg" alt=""
+                    className="image"
+                  />
                 <h1>Reset Password</h1>
-                <div>Enter the email address and we'll send you a link to reset password.</div>
+                <h4>Enter the email address and we'll send you a link to reset password.</h4>
               </div>
               <div className="login-form">
                 <Formik
@@ -40,7 +40,7 @@ function ResetPassword(props) {
                         values.email
                       )
                     ) {
-                      errors.email = "Invalid email address";
+                      errors.email = "Invalid email address!";
                     }
                     setError({ ...errors });
                     return errors;
@@ -54,7 +54,7 @@ function ResetPassword(props) {
                   {({ isSubmitting, dirty, handleReset }) => (
                     <Form action="" id="loginForm">
                       <div className="form-group mb-3">
-                        <label>Email Address</label>
+                        <label>Email Address <span className="error-badge">*</span></label>
                         <Field
                           type="text"
                           name="email"
@@ -84,11 +84,24 @@ function ResetPassword(props) {
                   )}
                 </Formik>
               </div>
+              
             </div>
+            <p className="extra-stuff"><Link to="/signin"> <img
+                    src="/assets/images/back.svg" alt=""
+                 
+                  />Back to Login </Link></p>
           </div>
-          <p className="extra-stuff">Back to<Link to="/signin">Login</Link></p>
+          
         </div>
-        <Footer />
+        <div className="login-head text-center">
+              <div className="login-in">
+               <div className="login-logo">
+               <img  src="/assets/images/logo.svg" alt=""/>
+               </div>
+               <Footer />
+              </div>
+            </div>
+       </div>
         </div>
       </section>
     </>

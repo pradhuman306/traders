@@ -6,32 +6,72 @@ import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import CustomLoader from '../Customloader';
-import { getPartyById } from '../../actions/balancesheet';
-import { formatDate, totalAmountCalculate } from '../../actions/common';
+import { getAllPartyHistory, getPartyById } from '../../actions/balancesheet';
+import { formatDate, totalAmountCalculate, totalAmountCalculateRaw } from '../../actions/common';
 import Select from 'react-select';
+import Header from '../Header/Header';
+import PaySlip from './PaySlip';
+
 
 
 const PartyHistory = (props) => {
     const { partyid } = useParams();
 
-    const userId = props.auth.userdata.id;
     const partyHistoryAll = useSelector((state) => state.balanceSheetReducer).partyHistory;
+    const partyHistoryAllData = useSelector((state) => state.balanceSheetReducer).partyHistoryAll;
+
+    const partySingle = useSelector((state) => state.balanceSheetReducer).partySingle;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [historyDetails, setList] = useState([...partyHistoryAll]);
+    const [historyDetailsAll, setHistoryAll] = useState([...partyHistoryAllData]);
+    const [partyDetails, setPartyDetails] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
     const [newListItems, setNewListItems] = useState([]);
     const [valueFilter,setValueFilter] = useState({});
+    const [rowData,setRowData] = useState({});
+    const [totalAmount,setTotalAmount] = useState(0);
+    const [totalPaidAmount,setTotalPaid] = useState(0);
+
+    
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
 
 
     useEffect(() => {
-        dispatch(getPartyById(partyid));
+        dispatch(getPartyById(partyid,"1y"));
+        dispatch(getAllPartyHistory(partyid,"all"));
+        
+    }, [partyid]);
 
-    }, [partyid])
+    useEffect(() => {
+        setPartyDetails({});
+    }, []);
+
+    
+    useEffect(() => {
+        let totalAmount = 0; 
+        let totalPaid = 0; 
+        historyDetailsAll.forEach((row)=>{
+            totalAmount+=parseInt(totalAmountCalculateRaw(row)+(totalAmountCalculateRaw(row)*parseInt(row.gst)/100))
+            if(row.paid){
+                let paidAmountData = JSON.parse(row.paid);
+                paidAmountData.forEach((item)=>{
+                    totalPaid+= parseInt(item.amount);
+                })
+            }
+        })  
+       setTotalAmount(totalAmount);
+       setTotalPaid(totalPaid);
+    }, [historyDetailsAll]);
+
+  
+
+    useEffect(() => {
+        setPartyDetails({...partySingle});
+    }, [partySingle])
 
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
@@ -106,7 +146,7 @@ const PartyHistory = (props) => {
             value: "1y"
         }]
         setNewListItems([...newFilterItems]);
-        setValueFilter(newFilterItems[0]);
+        setValueFilter(newFilterItems[4]);
     }, []);
     const handleSelectChange = (e) => {
         if(e){
@@ -130,7 +170,8 @@ const PartyHistory = (props) => {
         } else {
             setList([...partyHistoryAll]);
         }
-    }, [filterText, partyHistoryAll]);
+        setHistoryAll([...partyHistoryAllData])
+    }, [filterText, partyHistoryAll,partyHistoryAllData]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -140,46 +181,111 @@ const PartyHistory = (props) => {
 
     const columns = useMemo(
         () => [
-            {
-                name: "Sr no.",
-                selector: (row, index) => index + 1,
-                sortable: false,
-                width: "100px",
-            },
-
-            {
-                name: "Date",
-                selector: (row) => formatDate(row.date?.split(" ")[0]),
-                sortable: true,
-                hide:"sm"
-            },
-
+           
             {
                 name: "Item",
-                selector: (row) => row.item,
+                width: "500px",
                 sortable: true,
+                selector: (row) => {
+                    return (
+                        <>
+                            <div className="user-detail xl-text">{row.item} <div className='bysellopt'>{row.type === 'Buy' ? <span className='badge rounded-pill text-bg-primary'>Buy</span> : <span className='badge rounded-pill text-bg-danger'>Sell</span>}</div></div>
+                            <div className='c-date'>{formatDate(row.date?.split(" ")[0])}</div>
+                        </>
+                     
+                    );
+                },
                 
             },
+            
             {
                 name: "Credit",
-                selector: (row) => row.type === 'Sale' ? <span className='credit'>{totalAmountCalculate(row)}</span> : "",
                 sortable: true,
                 hide: "md",
+                width: "150px",
+                selector: (row) =>{
+                    return (
+                        
+                        <span className="">
+                        {row.type === 'Sale' ? <span className='credit'>{totalAmountCalculate(row)}</span> : ""}
+                        </span>
+                    );
+                },
             },
 
             {
                 name: "Debit",
-                    selector: (row) => row.type === 'Buy' ? <span className='debit'>{totalAmountCalculate(row)}</span> : "",
                 sortable: true,
+                width: "150px",
                 hide: "md",
-            },
-            {
-                name: "Type",
-                selector: (row) => row.type === 'Buy' ? <span className='status-label active-label'>Buy</span> : <span className='status-label inactive-label'>Sell</span>,
-                sortable: true,
-                hide: "md",
+                selector: (row) =>{
+                    return (
+                        
+                        <span className="">
+                        {row.type === 'Buy' ? <span className='debit'>{totalAmountCalculate(row)}</span> : ""}
+                        </span>
+                    );
+                },
             },
 
+            {
+                name: "GST amount",
+                sortable: true,
+                width: "150px",
+                hide: "md",
+                selector: (row) =>{
+                    return (
+                        
+                        <span className="">
+                        {"₹"+parseInt(totalAmountCalculateRaw(row)+(totalAmountCalculateRaw(row)*parseInt(row.gst)/100)).toLocaleString("en-IN")}
+                          </span>
+                    );
+                },
+            },
+
+            {
+                name: "Pending amount",
+                sortable: true,
+                width: "150px",
+                hide: "md",
+                selector: (row) =>{
+                    let toalPaid = 0;
+                    let totalAmount  = totalAmountCalculateRaw(row)+(totalAmountCalculateRaw(row)*parseInt(row.gst)/100);
+                    if(row.paid){
+                        let paidData =  JSON.parse(row.paid); 
+                        paidData.map(element => {
+                            toalPaid+=parseInt(element.amount);
+                        }
+                        );
+                    }
+                    return (
+                     
+                        <span className="badge rounded-pill text-bg-warning">
+                      {"₹"+parseInt(totalAmount-toalPaid).toLocaleString("en-IN")}
+                        </span>
+                    );
+                },
+            },
+
+            {
+                name: "Pay",
+                sortable: true,
+                width: "150px",
+                hide: "md",
+                selector: (row) =>{
+                    return (
+                        
+                        <a 
+                        className='anchor'  
+                        onClick={()=>setRowData(row)}
+                        data-bs-toggle="modal"
+                        data-bs-target="#paySlip"
+                        >
+                            Pay
+                        </a>
+                    );
+                },
+            },
 
 
         ],
@@ -188,6 +294,7 @@ const PartyHistory = (props) => {
 
     return (
         <div className="body-content">
+            <Header heading={!props.pendingData?partyDetails.name:""} {...props}  />
             <div className="usermanagement-main">
                 <div className="datatable-filter-wrap">
                     <div className="datatable-search">
@@ -198,17 +305,32 @@ const PartyHistory = (props) => {
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
                     </div>
-
+        <div className=''>
+        {!props.pendingData?<>   <p>Total Amount: ₹{parseInt(totalAmount).toLocaleString("en-IN")}</p>
+            <p>Pending Amount: ₹{parseInt(totalAmount-totalPaidAmount).toLocaleString("en-IN")}</p></>:""}
+         
+        </div>
                     <div className='select-filter form-group'>
                         <Select
                             options={newListItems}
                             onChange={(e) => handleSelectChange(e)}
                             value={valueFilter}
+                            theme={(theme) => ({
+                                ...theme,
+                                borderRadius: 8,
+                                colors: {
+                                  ...theme.colors,
+                                  primary25: 'rgba(5,131,107,0.1)',
+                                  primary: '#05836b',
+                                },
+                              })}
                         />
                     </div>
+               
+
                 </div>
             </div>
-
+                    <PaySlip {...props} rowData={rowData} filterValue={valueFilter.value} partyid={partyid} />
 
             <DataTable
                 columns={columns}
@@ -221,7 +343,8 @@ const PartyHistory = (props) => {
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
-                selectableRows
+     
+
             />
         </div>
     )

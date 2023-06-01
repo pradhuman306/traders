@@ -5,6 +5,7 @@ import transportRentReducer from "./transportRentReducer";
 import balanceSheetReducer from "./balanceSheetReducer";
 import accountReducer from "./accountReducer";
 import itemReducer from "./itemReducer";
+import firmReducer from "./firmReducer";
 import godownReducer from "./godownReducer";
 import loaderReducer from "./loaderReducer";
 import logoReducer from "./logoReducer";
@@ -20,7 +21,8 @@ const appReducer = combineReducers({
   itemReducer,
   godownReducer,
   loaderReducer,
-  logoReducer
+  logoReducer,
+  firmReducer
 });
 
 export default function (state, action) {

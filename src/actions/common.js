@@ -29,3 +29,9 @@ export const totalAmountCalculate = (row) => {
       "₹" + ((row.amount) - [(row.amount - row.debit) * (row.commission / 100)]).toLocaleString("en-IN") : row.commission / 100 == 0 ? "₹" + (row.amount - row.debit) :
       "₹" + (parseInt(row.amount) + parseInt([(row.amount - row.debit) * (row.commission / 100)])).toLocaleString("en-IN")
 }
+export const totalAmountCalculateRaw = (row) => {
+  return row.type === 'Buy' ?
+    row.commission / 100 == 0 ?  (row.amount - row.debit) :
+       ((row.amount) - [(row.amount - row.debit) * (row.commission / 100)]) : row.commission / 100 == 0 ? "₹" + (row.amount - row.debit) :
+       (parseInt(row.amount) + parseInt([(row.amount - row.debit) * (row.commission / 100)]))
+}

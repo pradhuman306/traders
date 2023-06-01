@@ -129,6 +129,11 @@ export const UpdateProfile = (payload,setBtnPending) => (dispatch) => {
             type: actionTypes.SUCCESS_MESSAGE,
             payload: "User updated successfully!",
           });
+          dispatch({
+            type: actionTypes.SET_USER_DATA,
+            payload: payload,
+          });
+          
         }
       }
     })
@@ -150,15 +155,12 @@ export const updateLogo = (payload,setBtnPending) => (dispatch) => {
       if (response.status == 200) {
         // localstorage.set("userdata", JSON.stringify(payload));
         if (response.data.status === 1) {
-          dispatch({
-            type: actionTypes.SUCCESS_MESSAGE,
-            payload: "Logo updated successfully!",
-          });
+      
           dispatch({
             type: actionTypes.SET_LOGO,
             payload: response.data.data.logo,
           });
-          localstorage.set("sitelogo", JSON.stringify(response.data.data.logo));
+          localstorage.set("userprofile", JSON.stringify(response.data.data.logo));
         }
       }
     })
@@ -182,7 +184,7 @@ export const getLogo = () => (dispatch) => {
           type: actionTypes.SET_LOGO,
           payload: response.data.data.logo,
         });
-        localstorage.set("sitelogo", JSON.stringify(response.data.data.logo));
+        localstorage.set("userprofile", JSON.stringify(response.data.data.logo));
       }
     })
     .catch((error) => {

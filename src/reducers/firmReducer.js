@@ -1,18 +1,22 @@
+
 import {
-    SET_LOGO,
+    SET_FIRM_LIST
 } from "../constants/actionTypes";
 const initialState = {
-  logo: localStorage.getItem("userprofile") ? JSON.parse(localStorage.getItem("userprofile")) : ""
+    firmList: [],
+    pending: false,
 }
 
 
 export default function (state = initialState, action) {
     switch (action.type) {
-        case SET_LOGO:
+        case SET_FIRM_LIST:
             return {
                 ...state,
-                logo: action.payload
+                firmList: action.payload
             };
+
+
 
         default:
             return state;

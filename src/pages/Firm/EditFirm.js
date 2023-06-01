@@ -5,11 +5,12 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { updateFirm } from '../../actions/firm';
 import { updateItems } from '../../actions/items';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
-const EditItems = (props) => {
+const EditFirm = (props) => {
   const elementRef = useRef(null);
   const nav = useNavigate();
   const user_id = props.auth.userdata.id;
@@ -18,7 +19,7 @@ const EditItems = (props) => {
   const [error, setError] = useState({});
   useEffect(() => {
     setdataList({ ...props.row_data });
-
+    console.log(props.row_data);
   }, [props.row_id])
   return (
     <div
@@ -36,13 +37,13 @@ const EditItems = (props) => {
               <Formik
                   enableReinitialize
                   initialValues={{
-                    item: dataList.item
+                    name: dataList.name
 
                   }}
                   validate={(values) => {
                     const errors = {};
-                    if (!values.item) {
-                      errors.item = "Please enter item name!"
+                    if (!values.name) {
+                      errors.name = "Please enter firm name!"
                     }
                     setError({ ...errors });
                     return errors;
@@ -51,7 +52,7 @@ const EditItems = (props) => {
                     values.user_id = user_id;
                     values.id = dataList.id;
                     props.setBtnPending(true);
-                    dispatch(updateItems(values, elementRef, props.setBtnPending));
+                    dispatch(updateFirm(values, elementRef, props.setBtnPending));
                     console.log(values);
                     setSubmitting(false);
                   }}
@@ -59,7 +60,7 @@ const EditItems = (props) => {
                   {({ values, isSubmitting, dirty, handleReset, touched }) => (
                     <Form action="" id="newcustomer">
               <div className="modal-head">
-                <h4>Edit Item</h4>
+                <h4>Edit Firm</h4>
                 <a
                   onClick={(e) => e.preventDefault()}
                   type="button"
@@ -79,20 +80,20 @@ const EditItems = (props) => {
                             <div className="form-group mb-4">
                               <label>
 
-                                Item <span className="error-badge">*</span>
+                                Firm <span className="error-badge">*</span>
                               </label>
                               <Field
-                              placeholder="Please enter item name"
+                              placeholder="Please enter firm name"
                                 type="text"
-                                name="item"
-                                className={`form-control ${touched.item && error.item
+                                name="name"
+                                className={`form-control ${touched.name && error.name
                                     ? "input-error"
                                     : ""
                                   }`}
                               />
                               <ErrorMessage
                                 className="error"
-                                name="item"
+                                name="name"
                                 component="span"
                               />
                             </div>
@@ -126,4 +127,4 @@ const EditItems = (props) => {
   )
 }
 
-export default EditItems;
+export default EditFirm;

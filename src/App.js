@@ -11,7 +11,7 @@ function App() {
   const auth = useSelector((state) => state.authReducer);
   const message = useSelector((state) => state.toasterReducer);
   const pendingData = useSelector((state) => state.loaderReducer).pending;
-  const logo = useSelector((state) => state.logoReducer).logo;
+  const profilePic = useSelector((state) => state.logoReducer).logo;
   const [btnPending,setBtnPending] = useState(false);
   const dispatch = useDispatch();
 
@@ -46,11 +46,12 @@ function App() {
     dispatch({type:SET_LOADED});
   }, [message]);
 
+  console.log(auth);
 
   return (
     <>
       <BrowserRouter>
-        <Router auth={auth} setBtnPending={setBtnPending} btnPending={btnPending} pendingData={pendingData} logo={logo} />
+        <Router auth={auth} setBtnPending={setBtnPending} btnPending={btnPending} pendingData={pendingData} profilePic={profilePic} />
         <ToastContainer limit={2} autoClose={1000}  />
       </BrowserRouter>
     </>

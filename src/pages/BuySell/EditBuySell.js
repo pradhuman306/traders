@@ -24,7 +24,7 @@ const EditBuySell = (props) => {
     const [valueParty, setValueParty] = useState({});
     const [valueItem, setValueItem] = useState({});
     const [rowData, setRowData] = useState(props.row_data);
-    const [checkedURD,setCheckedURD]=useState({});
+    const [checkedURD, setCheckedURD] = useState({});
     const handleSelectChangeItem = (e, setFieldValue) => {
         setFieldValue('item', e.value);
         setValueItem(e);
@@ -34,10 +34,10 @@ const EditBuySell = (props) => {
         dispatch(getParty(user_id));
     }, [])
     useEffect(() => {
-        setRowData({...props.row_data})
-        setValueParty({label:props.row_data.party,value:props.row_data.party_id});
-        setValueItem({label:props.row_data.item,value:props.row_data.item_id});
-        setCheckedURD(props.row_data.URD == 1?true:false);
+        setRowData({ ...props.row_data })
+        setValueParty({ label: props.row_data.party, value: props.row_data.party_id });
+        setValueItem({ label: props.row_data.item, value: props.row_data.item_id });
+        setCheckedURD(props.row_data.URD == 1 ? true : false);
         console.log(props.row_data);
     }, [props.row_data])
     useEffect(() => {
@@ -79,11 +79,11 @@ const EditBuySell = (props) => {
         setIsActive({ ...newActive });
     }
 
-const handleChangeCheck = (e,setFieldValue) => {
-    console.log(e.target.checked);
-    setFieldValue('URD',e.target.checked)
-    setCheckedURD(e.target.checked);
-}
+    const handleChangeCheck = (e, setFieldValue) => {
+        console.log(e.target.checked);
+        setFieldValue('URD', e.target.checked)
+        setCheckedURD(e.target.checked);
+    }
     return (
         <div
             className="modal right fade"
@@ -94,118 +94,116 @@ const handleChangeCheck = (e,setFieldValue) => {
         >
             <div className="modal-dialog">
                 <div className="modal-content right-modal">
-                    <div className="modal-head">
-                        <h4>Edit Buy Sell</h4>
-
-                        <a
-                            onClick={(e) => e.preventDefault()}
-                            type="button"
-                            className="close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            ref={elementRef}
-                        >
-                            <img src="/assets/images/icon-close.svg" alt="" />
-                        </a>
-                    </div>
-                    <div className="modal-body">
                     {Object.keys(rowData).length != 0 ? <Formik
-                            enableReinitialize
-                            initialValues={{
-                                party: rowData.party_id,
-                                bill_no: rowData.bill_no,
-                                amount: rowData.amount,
-                                debit: rowData.debit,
-                                gst: rowData.gst,
-                                item: rowData.item_id,
-                                weight: rowData.weight,
-                                commission: rowData.commission,
-                                URD: rowData.URD,
-                                description: rowData.description,
-                                date: rowData.date?rowData.date.split(" ")[0]:""
-                            }}
-                            validate={(values) => {
-                                const errors = {};
-                                if (!values.party) {
-                                    errors.party = "Please select party !"
-                                }
-                                if (!values.item) {
-                                    errors.item = "Please select item !"
-                                }
-                                if (!values.date) {
-                                    errors.date = "Please select Date !"
-                                }
+                        enableReinitialize
+                        initialValues={{
+                            party: rowData.party_id,
+                            bill_no: rowData.bill_no,
+                            amount: rowData.amount,
+                            debit: rowData.debit,
+                            gst: rowData.gst,
+                            item: rowData.item_id,
+                            weight: rowData.weight,
+                            commission: rowData.commission,
+                            URD: rowData.URD,
+                            rate: rowData.rate,
+                            description: rowData.description,
+                            date: rowData.date ? rowData.date.split(" ")[0] : ""
+                        }}
+                        validate={(values) => {
+                            const errors = {};
+                            if (!values.party) {
+                                errors.party = "Please select party !"
+                            }
+                            if (!values.item) {
+                                errors.item = "Please select item !"
+                            }
+                            if (!values.date) {
+                                errors.date = "Please select Date !"
+                            }
 
-                                setError({ ...errors });
+                            setError({ ...errors });
 
-                                return errors;
-                            }}
-                            onSubmit={(values, { setSubmitting, resetForm }) => {
-                                props.setBtnPending(true);
-                                values.user_id = user_id;
-                                values.id = props.row_id;
-                                console.log(values);
-                                if (isActive.buy) {
-                       
-                                    dispatch(updateBuy(values, elementRef, props.setBtnPending));
-                                } else {
-                               
-                                    dispatch(updateSell(values, elementRef, props.setBtnPending));
-                                }
-                 
-                                setSubmitting(false);
-                            }}
-                        >
-                            {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
-                                <Form action="" id="newcustomer">
+                            return errors;
+                        }}
+                        onSubmit={(values, { setSubmitting, resetForm }) => {
+                            props.setBtnPending(true);
+                            values.user_id = user_id;
+                            values.id = props.row_id;
+                            values.amount = values.rate * values.weight;
+                            console.log(values);
+                            if (isActive.buy) {
+
+                                dispatch(updateBuy(values, elementRef, props.setBtnPending));
+                            } else {
+
+                                dispatch(updateSell(values, elementRef, props.setBtnPending));
+                            }
+
+                            setSubmitting(false);
+                        }}
+                    >
+                        {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
+                            <Form action="" id="newcustomer">
+                                <div className="modal-head">
+                                    <h4>Edit Entry</h4>
+
+                                    <a
+                                        onClick={(e) => e.preventDefault()}
+                                        type="button"
+                                        className="close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                        ref={elementRef}
+                                    >
+                                        <img src="/assets/images/close.svg" alt="" />
+                                    </a>
+                                </div>
+                                <div className="modal-body">
+
                                     <div className="form-fields-wrap">
                                         <div className='row'>
                                             <div className='col-md-12'>
                                                 <div className='group-field'>
-                                                    <div>
-                                                        <Field type="radio" id="buy1" name="picked1" value="buy" onClick={(e) => handleRadioChange("buy")} checked={isActive.buy} />
+                                                    <div className='gf-in'>
+                                                    <div className='form-check'>
+                                                        <Field className="form-check-input" type="radio" id="buy1" name="picked1" value="buy" onClick={(e) => handleRadioChange("buy")} checked={isActive.buy} />
                                                         <label htmlFor='buy1'>
                                                             Buy
                                                         </label>
                                                     </div>
-                                                    <div>
-                                                        <Field type="radio" id="sell1" name="picked1" value="sell" onClick={(e) => handleRadioChange("sell")} checked={isActive.sell} />
+                                                    <div className='form-check'>
+                                                        <Field className="form-check-input" type="radio" id="sell1" name="picked1" value="sell" onClick={(e) => handleRadioChange("sell")} checked={isActive.sell} />
                                                         <label htmlFor='sell1'>
                                                             Sell
                                                         </label>
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col-md-12">
-                                                <div className="form-group mb-4">
+                                                    </div>
+                                                    <div className='form-check'>
                                                     <input
                                                         type="checkbox"
                                                         name="URD1"
-                                                        className={`form-control ${touched.URD && error.URD
-                                                            ? "input-error"
-                                                            : ""
-                                                            }`}
+                                                        className='form-check-input'
                                                         id="URD1"
-                                                        onClick={(e)=>handleChangeCheck(e,setFieldValue)}
+                                                        onClick={(e) => handleChangeCheck(e, setFieldValue)}
                                                         checked={checkedURD}
                                                     />
-                                                    <label htmlFor='URD1'>
+                                                    <label className='form-check-label' htmlFor='URD1'>
                                                         Unregisterd Dealer
                                                     </label>
 
+                                                    </div>
                                                 </div>
                                             </div>
-
                                         </div>
+                                       
                                         <div className="row">
                                             <div className="col-md-6">
 
                                                 <div className="form-group mb-4">
                                                     <label>
 
-                                                        Party <span className="error">*</span>
+                                                        Party <span className="error-badge">*</span>
                                                     </label>
 
                                                     <Select
@@ -217,6 +215,15 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                         value={valueParty}
                                                         name="party"
                                                         onChange={(e) => handleSelectChange(e, setFieldValue)}
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            borderRadius: 8,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary25: 'rgba(5,131,107,0.1)',
+                                                                primary: '#05836b',
+                                                            },
+                                                        })}
                                                     />
 
                                                     <ErrorMessage
@@ -234,6 +241,7 @@ const handleChangeCheck = (e,setFieldValue) => {
 
                                                     </label>
                                                     <Field
+                                                    placeholder="Enter bill number"
                                                         type="text"
                                                         name="bill_no"
                                                         className={`form-control ${touched.bill_no && error.bill_no
@@ -254,7 +262,7 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                 <div className="form-group mb-4">
                                                     <label>
 
-                                                        Item <span className="error">*</span>
+                                                        Item <span className="error-badge">*</span>
                                                     </label>
 
                                                     <Select
@@ -264,8 +272,17 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             }`}
                                                         options={newListItems}
                                                         name="item"
-                                                        value={valueItem}    
+                                                        value={valueItem}
                                                         onChange={(e) => handleSelectChangeItem(e, setFieldValue)}
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            borderRadius: 8,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary25: 'rgba(5,131,107,0.1)',
+                                                                primary: '#05836b',
+                                                            },
+                                                        })}
                                                     />
 
                                                     <ErrorMessage
@@ -278,7 +295,45 @@ const handleChangeCheck = (e,setFieldValue) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        Amount
+
+                                                        Weight <span className='badge rounded-pill text-bg-primary'>in Quintal</span>
+                                                    </label>
+
+                                                    <Field
+                                                    placeholder="Enter item weight"
+                                                        type="number"
+                                                        name="weight"
+                                                        className={`form-control ${touched.weight && error.weight
+                                                            ? "input-error"
+                                                            : ""
+                                                            }`}
+                                                    />
+
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="form-group mb-4">
+                                                    <label>
+                                                    ₹   Rate
+                                                    </label>
+                                                    <Field
+                                                        type="text"
+                                                        name="rate"
+                                                        className={`form-control ${touched.rate && error.rate
+                                                            ? "input-error"
+                                                            : ""
+                                                            }`}
+                                                        placeholder="₹"
+
+
+                                                    />
+
+                                                </div>
+                                            </div>
+                                            <div className="col-md-6">
+                                                <div className="form-group mb-4">
+                                                    <label>
+                                                    ₹ Amount
                                                     </label>
                                                     <Field
                                                         type="text"
@@ -287,6 +342,8 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             ? "input-error"
                                                             : ""
                                                             }`}
+                                                        value={values.rate * values.weight}
+                                                        disabled
                                                         placeholder="₹"
                                                     />
                                                     {/* <ErrorMessage
@@ -303,7 +360,6 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         Debit Note
-
                                                     </label>
                                                     <Field
                                                         type="text"
@@ -313,7 +369,7 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             : ""
                                                             }`}
                                                         placeholder="₹"
-                                                        
+
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -325,7 +381,7 @@ const handleChangeCheck = (e,setFieldValue) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        commission
+                                                        commission %
 
                                                     </label>
                                                     <Field
@@ -336,7 +392,7 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             : ""
                                                             }`}
                                                         placeholder="%"
-                                                        
+
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -348,7 +404,7 @@ const handleChangeCheck = (e,setFieldValue) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        GST
+                                                        GST %
                                                     </label>
                                                     <Field
                                                         type="text"
@@ -358,7 +414,7 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                             : ""
                                                             }`}
                                                         placeholder="%"
-                                                        
+
                                                     />
                                                     {/* <ErrorMessage
                                                         className="error"
@@ -380,9 +436,9 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                         disabled={true}
                                                         value={
                                                             isActive.buy?
-                                                            values.commission/100 == 0 ? "₹"+(values.amount - values.debit) :
-                                                            "₹"+((values.amount)-[(values.amount - values.debit)*(values.commission/100)]).toLocaleString("en-IN") :values.commission/100 == 0? "₹"+(values.amount - values.debit):
-                                                            "₹"+(parseInt(values.amount)+parseInt([(values.amount - values.debit)*(values.commission/100)])).toLocaleString("en-IN")
+                                                            values.commission/100 == 0 ? "₹"+(values.rate*values.weight - values.debit) :
+                                                            "₹"+((values.rate*values.weight)-[(values.rate*values.weight - values.debit)*(values.commission/100)]).toLocaleString("en-IN") :values.commission/100 == 0? "₹"+(values.rate*values.weight - values.debit):
+                                                            "₹"+(parseInt(values.rate*values.weight)+parseInt([(values.rate*values.weight - values.debit)*(values.commission/100)])).toLocaleString("en-IN")
                                                             
                                                         }
                                                     />
@@ -396,32 +452,11 @@ const handleChangeCheck = (e,setFieldValue) => {
                                         </div>
                                         <div className="row">
 
-                                            <div className="col-md-6">
+
+                                            <div className="col-md-12">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                        Weight
-
-                                                    </label>
-                                                    <Field
-                                                        type="text"
-                                                        name="weight"
-                                                        className={`form-control ${touched.weight && error.weight
-                                                            ? "input-error"
-                                                            : ""
-                                                            }`}
-                                                    />
-                                                    {/* <ErrorMessage
-                                                        className="error"
-                                                        name="weight"
-                                                        component="span"
-                                                    /> */}
-                                                </div>
-                                            </div>
-
-                                            <div className="col-md-6">
-                                                <div className="form-group mb-4">
-                                                    <label>
-                                                        Date <span className="error">*</span>
+                                                        Date <span className="error-badge">*</span>
 
                                                     </label>
 
@@ -444,12 +479,12 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                     />
                                                 </div>
                                             </div>
-                                        
+
                                         </div>
                                         <div className="row">
-                                           
+
                                             <div className="col-md-12">
-                                                <div className="form-group mb-4">
+                                                <div className="form-group">
                                                     <label>
                                                         Description
                                                     </label>
@@ -462,28 +497,30 @@ const handleChangeCheck = (e,setFieldValue) => {
                                                 </div>
                                             </div>
                                         </div>
-                                        </div>
-                                        <div className='frm-btn-wrap'>
-                                        <div className='row'>
-                                        <div className="col-md-12 text-center mt-4">
-                                            <button
-                                                type="submit"
-                                                disabled={isSubmitting}
-                                                className="btn btn-primary m-auto"
-                                            >
-                                                {props.btnPending ? <ButtonLoader /> : "Update"}
-                                            </button>
-                                        </div>
-                                            </div>
-                                            </div>
+                                    </div>
 
-                                </Form>
-                            )}
-                        </Formik>: ""}
-                    </div>
+
+
+                                </div>
+                                <div className='modal-footer'>
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="btn btn-primary m-auto"
+                                    >
+                                        {props.btnPending ? <ButtonLoader /> : "Update"}
+                                    </button>
+
+                                </div>
+                            </Form>
+                        )}
+                    </Formik> : ""}
                 </div>
+
             </div>
+
         </div>
+
     )
 }
 

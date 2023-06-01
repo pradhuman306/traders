@@ -6,11 +6,13 @@ import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { formatDate } from '../../actions/common';
-import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
+import { deleteTransportRentList, getRentHistoryByParty, getTransportRentList, setEmptyTransDetails } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
+import Header from '../Header/Header';
 import AddTransportRent from './AddTransportRent';
 import EditTransportRent from './EditTransportRent';
+import TransportDetails from './TransportDetails';
 
 const TransportRent = (props) => {
     const userId = props.auth.userdata.id;
@@ -20,14 +22,17 @@ const TransportRent = (props) => {
     const [filterText, setFilter] = useState("");
     const [transportRentList, setList] = useState([...transRentList]);
     const [transportRow,setTransportRow]= useState({});
+    const [partyDetails,setPartyDetails]= useState({});
     const [id,setId]= useState({});
     const [isExpandable, setisExpandable] = useState(false);
-
+  
     
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
-
+    useEffect(()=>{
+        dispatch(setEmptyTransDetails());
+    },[])
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
         if (window.innerWidth <= 599) {
@@ -72,6 +77,30 @@ const TransportRent = (props) => {
         }
     };
 
+    useEffect(()=>{
+        let tmp = partyList.filter((item)=>item.id.toString() === transportRow.party_id);
+        console.log(tmp,'partyFilter');
+        if(tmp.length){
+            setPartyDetails(tmp[0]); 
+        }
+        if(Object.keys(transportRow).length){
+            let transList = transRentList.filter((item)=>item.party_id.toString() === transportRow.party_id);
+            if(transList.length){
+                setTransportRow(transList[0]); 
+             
+            }
+        }else{
+            if(transRentList.length){
+  setTransportRow(transRentList[0]); 
+  dispatch(getRentHistoryByParty(transRentList[0].party_id));
+            }
+          
+
+        }
+     
+  
+    },[transportRow,partyList,transRentList])
+
     var onresize = function () {
         //your code here
         //this is just an example
@@ -85,11 +114,14 @@ const TransportRent = (props) => {
 
     useEffect(() => {
         dispatch(getTransportRentList(userId));
+ 
+
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
             setisExpandable(true);
         } else {
             setisExpandable(false);
         }
+      
     }, []);
 
     useEffect(() => {
@@ -133,183 +165,56 @@ const TransportRent = (props) => {
                         lastC = newName[1][0].toUpperCase();
                     }
                     return (
-                        <div className="user-wrap">
-                            <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
+        
+                    <a className={`anchor ${transportRow.party_id === row.party_id ? 'active':""}`} onClick={
+                        ()=>{
+                        dispatch(getRentHistoryByParty(row.party_id));
+                        setTransportRow(row);
+                   
+                        }
+                    }>
+                        <div className={`user-wrap`}>
+                        <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
                             <div className="user-detail">{row.party}</div>
                         </div>
+                        </a>
                     );
                 },
                 sortable: true,
-                width: "250px",
+              
             },
-            {
-                name: "Destination",
-                selector: (row) => row.destination,
-                sortable: true,
-                // width: "200px",
-                hide: "sm",
-            },
-          
-            {
-                name: "Rate",
-                selector: (row) =>"₹"+parseInt(row.rate).toLocaleString("en-IN"),
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Advance",
-                selector: (row) => "₹"+parseInt(row.advance).toLocaleString("en-IN"),
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Remaining Amount",
-                selector: (row) => "₹"+parseInt(row.rate - row.advance).toLocaleString("en-IN"),
-                sortable: true,
-                hide: "md",
-            },
-            {
-                name: "Date",
-                selector: (row) => formatDate(row.date),
-                sortable: true,
-                hide: "md",
-            },
-            {
-              name: "Description",
-              selector: (row) => row.description,
-              sortable: true,
-              hide: "md",
-          },
-            {
-                name: "Actions",
-                width: "166px",
-                selector: (row) => {
-                    return (
-                        <ul className="table-drop-down">
-
-                            <li>
-
-                                <a
-                                    href=""
-                                    role="button"
-                                    id="tableMenu"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                    className="action-btn"
-                                >
-
-
-                                    <svg width="24px" height="24px" viewBox="0 0 24 24" id="_24x24_On_Light_Dots" data-name="24x24/On Light/Dots" xmlns="http://www.w3.org/2000/svg">
-                                        <rect id="view-box" width="24" height="24" fill="#141124" opacity="0" />
-                                        <path id="Shape" d="M12,1.5A1.5,1.5,0,1,1,13.5,3,1.5,1.5,0,0,1,12,1.5Zm-6,0A1.5,1.5,0,1,1,7.5,3,1.5,1.5,0,0,1,6,1.5Zm-6,0A1.5,1.5,0,1,1,1.5,3,1.5,1.5,0,0,1,0,1.5Z" transform="translate(4.5 11)" fill="#141124" />
-                                    </svg>
-
-
-                                </a>
-                                <ul className="dropdown-menu" aria-labelledby="tableMenu">
-
-
-                                    <li>
-                              
-                                 
-                                        <a onClick={(e) => {
-                                            e.preventDefault();
-                                            setTransportRow(row);
-                                            setId(row.id);
-                                            
-                                        }}
-                                            className="active-user"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#edittransportrent"
-                                        >
-
-                                         Edit
-                                        </a>
-                                           {/* <Link to={`/edittransportrent/${row.id}`}>
-                                            Edit
-                                    </Link> */}
-                                    </li>
-
-                                    <li>
-                                        <a onClick={(e) => {
-                                            e.preventDefault();
-                                        }}
-                                            className="active-user delete-u"
-                                            data-bs-toggle="modal"
-                                            data-bs-target={`#confirm_${row.id}`}
-                                        >
-
-                                          Delete
-                                        </a>
-                                    </li>
-
-                                </ul>
-                            </li>
-                            <ConfirmModal
-                                id={row.id}
-                                name={row.party}
-                                yes={(id) => {
-                                    dispatch(deleteTransportRentList({id:row.id,name:row.party,user_id:userId}));
-                                }}
-                             
-                            />
-                        </ul>
-
-
-                    );
-                },
-            },
+            
+    
+        
         ],
-        []
+        [transportRow]
     );
 
     return (
+        <>
+            <Header heading="Transport Management" {...props} />
+       <div className='row'>
+        <div className='col-md-3'>
         <div className="body-content">
-            <div className="usermanagement-main">
-                <div className="datatable-filter-wrap">
-                    <div className="datatable-search">
-                        <input
-                            type="text"
-                            placeholder="Search transport rent..."
-                            className="form-control"
-                            onChange={(e) => hanndleSearch(e.target.value)}
-                        />
-                    </div>
-                    <div className="datatable-filter-right">
-                        <ul className="btn-group">
-                        
-                            <li>
-                                <button
-                                    className="btn btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addtransportrent"
-                                >
-                         
-                                  Add Transport Rent
-                                 
-                                
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <AddTransportRent {...props} partyList={partyList} />
-            <EditTransportRent {...props} row_data={transportRow} row_id={id} partyList={partyList} />
+            
+            <AddTransportRent {...props} partyList={partyList} transportRow={transportRow} setTransportRow={setTransportRow}  />
+
+    
             <DataTable
                 columns={columns}
                 data={transportRentList}
-                progressPending={props.pendingData}
-                progressComponent={<CustomLoader/>}
-                paginationRowsPerPageOptions={[8, 25, 50, 100]}
-                pagination
-                paginationPerPage={8}
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
-                selectableRows
+           
             />
         </div>
+        </div>
+        <div className='col-md-9'>
+            <TransportDetails partyDetails={partyDetails} {...props} transportRow={transportRow}  />
+        </div>
+       </div>
+        </>
     )
 }
 export default TransportRent;

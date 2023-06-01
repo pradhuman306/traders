@@ -3,11 +3,11 @@ import React from 'react'
 import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addParty } from '../../actions/balancesheet';
+import { addParty, payAmount } from '../../actions/balancesheet';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
-const AddParty = (props) => {
+const PaySlip= (props) => {
   const elementRef = useRef(null);
   const user_id = props.auth.userdata.id;
   const dispatch = useDispatch();
@@ -16,7 +16,7 @@ const AddParty = (props) => {
   return (
     <div
       className="modal fade"
-      id="addparty"
+      id="paySlip"
       tabIndex="-1"
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
@@ -25,14 +25,13 @@ const AddParty = (props) => {
         <div className="modal-content ">
         <Formik
               initialValues={{
-                name: "",
-                mobile: ""
+              amount:""
 
               }}
               validate={(values) => {
                 const errors = {};
-                if (!values.name) {
-                  errors.name = "Please enter party name!"
+                if (!values.amount) {
+                  errors.amount = "Please enter amount!"
                 }
 
 
@@ -43,8 +42,10 @@ const AddParty = (props) => {
               }}
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
+                values.id = props.rowData.id;
                 setBtnPending(true);
-                dispatch(addParty(values, elementRef, setBtnPending, resetForm));
+                console.log(values);
+                dispatch(payAmount(values, elementRef, setBtnPending, resetForm, props.rowData.type,props.filterValue,props.partyid));
                 setSubmitting(false);
 
               }}
@@ -52,7 +53,7 @@ const AddParty = (props) => {
               {({ values, isSubmitting, dirty, handleReset, touched }) => (
                 <Form action="" id="newcustomer">
           <div className="modal-head">
-            <h4>Add New Party</h4>
+            <h4>Pay amount</h4>
             <a
               onClick={(e) => e.preventDefault()}
               type="button"
@@ -72,38 +73,25 @@ const AddParty = (props) => {
                       <div className="col-md-12">
                         <div className="form-group mb-3">
                           <label>
-                            Party Name <span className="error-badge">*</span>
+                            Amount<span className="error-badge">*</span>
                           </label>
                           <Field
-                          placeholder="Enter party name"
+                          placeholder="₹"
                             type="text"
-                            name="name"
-                            className={`form-control ${touched.name && error.name
+                            name="amount"
+                            className={`form-control ${touched.amount && error.amount
                                 ? "input-error"
                                 : ""
                               }`}
                           />
                           <ErrorMessage
                             className="error"
-                            name="name"
+                            name="amount"
                             component="span"
                           />
                         </div>
                       </div>
-                      <div className="col-md-12">
-                        <div className="form-group mb-4">
-                          <label>
-                            Mobile
-                          </label>
-                          <Field
-                          placeholder="Enter party mobile number"
-                            type="number"
-                            name="mobile"
-                            className={`form-control`}
-                          />
-
-                        </div>
-                      </div>
+                 
                     </div>
 
 
@@ -118,7 +106,7 @@ const AddParty = (props) => {
                             disabled={isSubmitting}
                             className="btn btn-primary m-auto"
                           >
-                            {btnPending ? <ButtonLoader /> : "Add"}
+                            {btnPending ? <ButtonLoader /> : "Pay"}
 
                           </button>
           </div>
@@ -131,4 +119,4 @@ const AddParty = (props) => {
   )
 }
 
-export default AddParty;
+export default PaySlip;

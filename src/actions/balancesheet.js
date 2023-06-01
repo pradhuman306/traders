@@ -2,6 +2,7 @@ import config from "../config";
 import * as ajaxCall from "../common/ajaxCall";
 import * as actionTypes from "../constants/actionTypes";
 import { setLoadedData, setPendingData } from "./common";
+import { getTransportRentList } from "./transportrent";
 
 
 
@@ -48,6 +49,25 @@ export const getPartyById = (payload,param) => (dispatch) => {
     });
 }
 
+export const getAllPartyHistory = (payload,param) => (dispatch) => {
+  setPendingData(dispatch);
+    ajaxCall
+    .get(`${config.BASE_URL}getparty/${payload}?f=${param}`)
+    .then((res) => {
+      setLoadedData(dispatch);
+          dispatch({
+            type: actionTypes.SET_ALL_PARTY_HISTORY,
+            payload: res.data.history,
+          });
+    })
+    .catch((error) => {
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    });
+}
+
 export const addParty = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}createparty`,payload)
@@ -76,6 +96,7 @@ export const updateParty = (payload,elementRef,setBtnPending) => (dispatch) => {
     .then((res) => {
       setBtnPending(false);
         dispatch(getParty(payload.user_id));
+        dispatch(getTransportRentList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
             payload: "Party Updated successfully!",
@@ -108,6 +129,30 @@ export const deleteParty = (payload) => (dispatch) => {
         payload: error.response.data.message,
       });
     });
+}
+
+export const payAmount = (payload, elementRef, setBtnPending, resetForm, type, filterValue,partyid) => (dispatch) => {
+  ajaxCall
+  .post(`${config.BASE_URL}${type=='Buy'?'paidforbuy':'paidforsale'}`,payload)
+  .then((res) => {
+    setBtnPending(false);
+    dispatch(getPartyById(partyid,filterValue));
+    dispatch(getAllPartyHistory(partyid,"all"));
+    
+      resetForm();
+      elementRef.current.click();
+      dispatch({
+          type: actionTypes.SUCCESS_MESSAGE,
+          payload: `₹${payload.amount} Paid successfully!`,
+        });
+  })
+  .catch((error) => {
+    setBtnPending(false);
+    dispatch({
+      type: actionTypes.ERROR_MESSAGE,
+      payload: error.response.data.message,
+    });
+  });
 }
 
 

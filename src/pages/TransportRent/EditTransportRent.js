@@ -7,18 +7,21 @@ import {  updateTransportRent } from '../../actions/transportrent';
 import Select from 'react-select';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
+import { useNavigate } from 'react-router-dom';
 
 
 const EditTransportRent = (props) => {
+  const nav = useNavigate();
   const elementRef = useRef(null);
   const user_id = props.auth.userdata.id;
   const dispatch = useDispatch();
   const [dataList, setdataList] = useState(props.row_data);
   const [newListParty, setNewListParty] = useState([]);
+  const [valueParty, setValueParty] = useState({});
   const [error, setError] = useState({});
   useEffect(() => {
     setdataList({ ...props.row_data });
-    setValueParty({ label: props.row_data.party, value: props.row_data.id });
+    setValueParty({ label: props.row_data.party_name, value: props.row_data.party });
     console.log(props.row_data);
   }, [props.row_id])
   useEffect(() => {
@@ -35,7 +38,7 @@ const EditTransportRent = (props) => {
     setValueParty(e);
     console.log(e.value);
   }
-  const [valueParty, setValueParty] = useState({});
+
 
   return (
     <div
@@ -47,42 +50,32 @@ const EditTransportRent = (props) => {
     >
       <div className="modal-dialog">
         <div className="modal-content right-modal">
-          <div className="modal-head">
-            <h4>Edit Transport Rent</h4>
-            <a
-              onClick={(e) => e.preventDefault()}
-              type="button"
-              className="close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              ref={elementRef}
-            >
-              <img src="/assets/images/icon-close.svg" alt="" />
-            </a>
-          </div>
-          <div className="modal-body">
-            {Object.keys(dataList).length != 0 ? <Formik
+        {Object.keys(dataList).length != 0 ? 
+            <>
+            
+            <Formik
               enableReinitialize
               initialValues={{
-                party: dataList.party_id,
+                party: dataList.party,
                 destination: dataList.destination,
                 rate: dataList.rate,
                 advance: dataList.advance,
                 date: dataList.date,
+                weight:dataList.weight,
                 description: dataList.description
               }}
               validate={(values) => {
                 const errors = {};
                 if (!values.party) {
-                  errors.party = "Please select Party!"
+                  errors.party = "Please select party!"
                 }
                 if (!values.destination) {
-                  errors.destination = "Please fill Destination!"
+                  errors.destination = "Please enter destination!"
                 }
            
            
                 if (!values.date) {
-                  errors.date = "Please fill Date!"
+                  errors.date = "Please enter date!"
                 }
 
                 setError({ ...errors });
@@ -93,18 +86,33 @@ const EditTransportRent = (props) => {
                 values.user_id = user_id;
                 values.id = props.row_id;
                 props.setBtnPending(true);
-                dispatch(updateTransportRent(values, elementRef, props.setBtnPending));
+                dispatch(updateTransportRent(values, elementRef, props.setBtnPending, props.row_data));
                 setSubmitting(false);
               }}
             >
               {({ values, isSubmitting, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
+          <div className="modal-head">
+            <h4>Edit Transport</h4>
+            <a
+              onClick={(e) => e.preventDefault()}
+              type="button"
+              className="close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              ref={elementRef}
+            >
+              <img src="/assets/images/close.svg" alt="" />
+            </a>
+          </div>
+          <div className="modal-body">
+           
                   <div className="form-fields-wrap">
                     <div className="row">
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
-                            Party <span className="error">*</span>
+                            Party <span className="error-badge">*</span>
                           </label>
                           <Select
                             className={`${touched.party && error.party
@@ -115,6 +123,15 @@ const EditTransportRent = (props) => {
                             name="party"
                             onChange={(e) => handleSelectChange(e, setFieldValue)}
                             value={valueParty}
+                            theme={(theme) => ({
+                              ...theme,
+                              borderRadius: 8,
+                              colors: {
+                                ...theme.colors,
+                                primary25: 'rgba(5,131,107,0.1)',
+                                primary: '#05836b',
+                              },
+                            })}
                           />
                           <ErrorMessage
                             className="error"
@@ -127,7 +144,7 @@ const EditTransportRent = (props) => {
                         <div className="form-group mb-4">
                           <label>
                             Destination
-                            <span className="error">*</span>
+                            <span className="error-badge">*</span>
                           </label>
                           <Field
                             type="text"
@@ -146,6 +163,24 @@ const EditTransportRent = (props) => {
                       </div>
                     </div>
                     <div className="row">
+                    <div className="col-md-6">
+                        <div className="form-group mb-4">
+                          <label>
+                          Weight <span className='badge rounded-pill text-bg-primary'>in quintal</span>
+                          </label>
+                          <Field
+                            type="text"
+                            name="weight"
+                            placeholder="qt"
+                            className={`form-control ${
+                              touched.weight && error.weight
+                                ? "input-error"
+                                : ""
+                            }`}
+                          />
+                       
+                        </div>
+                      </div>
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
@@ -179,9 +214,7 @@ const EditTransportRent = (props) => {
                     
                         </div>
                       </div>
-                    </div>
-                    <div className="row">
-                    <div className="col-md-6">
+                      <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
                             Remaining amount 
@@ -192,16 +225,19 @@ const EditTransportRent = (props) => {
                             name="remainamount"
                             placeholder="₹"
                             className={`form-control`}
-                            value={"₹"+parseInt(values.rate-values.advance).toLocaleString("en-IN")}
+                            value={"₹"+parseInt((values.weight*values.rate)-values.advance).toLocaleString("en-IN")}
                             disabled
                           />
                        
                         </div>
                       </div>
-                      <div className="col-md-6">
+                    </div>
+                    <div className="row">
+                 
+                      <div className="col-md-12">
                         <div className="form-group mb-4">
                           <label>
-                            Date <span className="error">*</span>
+                            Date <span className="error-badge">*</span>
 
                           </label>
 
@@ -242,24 +278,22 @@ const EditTransportRent = (props) => {
 
 
                   </div>
-                  <div className='frm-btn-wrap'>
-                    <div className='row'>
-                      <div className="col-md-12 text-center mt-4">
-                        <button
+                  
+
+                
+          </div>
+          <div className='modal-footer'>
+          <button
                           type="submit"
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
                           {props.btnPending ? <ButtonLoader /> : "Update"}
                         </button>
-                      </div>
-                    </div>
-                  </div>
-
-                </Form>
-              )}
-            </Formik> : ""}
           </div>
+          </Form>
+              )}
+            </Formik></> : ""}
         </div>
       </div>
     </div>

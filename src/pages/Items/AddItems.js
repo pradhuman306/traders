@@ -17,29 +17,15 @@ const AddItems = (props) => {
     const [error, setError] = useState({});
   return (
     <div
-    className="modal right fade"
+    className="modal  fade"
     id="addaccount"
     tabIndex="-1"
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
   >
     <div className="modal-dialog">
-      <div className="modal-content right-modal">
-        <div className="modal-head">
-          <h4>Add new Item</h4>
-          <a
-            onClick={(e) => e.preventDefault()}
-            type="button"
-            className="close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-            ref={elementRef}
-          >
-            <img src="/assets/images/icon-close.svg" alt="" />
-          </a>
-        </div>
-        <div className="modal-body">
-    <Formik
+      <div className="modal-content">
+      <Formik
               initialValues={{
                 item:"",
              
@@ -47,7 +33,7 @@ const AddItems = (props) => {
               validate={(values) => {
                 const errors = {};
                if(!values.item){
-                errors.item = "Please fill item name !"
+                errors.item = "Please enter item name!"
                }
                 setError({ ...errors });
                 return errors;
@@ -61,16 +47,32 @@ const AddItems = (props) => {
             >
               {({ values, isSubmitting, dirty, handleReset, touched }) => (
                 <Form action="" id="newcustomer">
+        <div className="modal-head">
+          <h4>Add new Item</h4>
+          <a
+            onClick={(e) => e.preventDefault()}
+            type="button"
+            className="close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+            ref={elementRef}
+          >
+            <img src="/assets/images/close.svg" alt="" />
+          </a>
+        </div>
+        <div className="modal-body">
+    
                   <div className="form-fields-wrap">
                  
                     <div className="row">
                       <div className="col-md-12">
-                        <div className="form-group mb-4">
+                        <div className="form-group">
                           <label>
                             
-                          Item <span className="error">*</span>
+                          Item <span className="error-badge">*</span>
                           </label>
                           <Field
+                          placeholder="Please enter item name"
                             type="text"
                             name="item"
                             className={`form-control ${
@@ -93,23 +95,21 @@ const AddItems = (props) => {
               
                   </div>
              
-                      <div className='frm-btn-wrap'>
-                    <div className='row'>
-                    <div className="col-md-12 text-center mt-4">
-                        <button
+             
+               
+            </div>
+            <div className='modal-footer'>
+            <button
                           type="submit"
                           disabled={isSubmitting}
                           className="btn btn-primary m-auto"
                         >
                            {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>
-                      </div>
-                    </div>
-                  </div>
-                </Form>
+            </div>
+            </Form>
               )}
             </Formik>
-            </div>
         </div>
       </div>
     </div>

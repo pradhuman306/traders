@@ -2,10 +2,12 @@ import {
     SET_PARTY,
     SET_PARTY_HISTORY,
     SET_SINGLE_PARTY,
+    SET_ALL_PARTY_HISTORY
 } from "../constants/actionTypes";
 const initialState = {
     partyList: [],
     partyHistory:[],
+    partyHistoryAll:[],
     partySingle:{},
     pending: true,
 }
@@ -33,6 +35,15 @@ export default function (state = initialState, action) {
                     partyHistory: action.payload,
                     pending:false
                 };
+
+                case SET_ALL_PARTY_HISTORY:
+                    return {
+                        ...state,
+                        partyHistoryAll: action.payload,
+                        pending:false
+                    };
+
+                
     
         default:
             return state;

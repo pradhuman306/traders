@@ -3,14 +3,14 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Footer from "../Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { getLogo, login } from "../../actions/auth";
-import {  Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as Cokkie from "../../common/Cookies";
 import ButtonLoader from "../Customloader/ButtonLoader";
 const Signin = (props) => {
 
   const dispatch = useDispatch();
   const message = useSelector((state) => state.toasterReducer);
-  const logo = useSelector((state) => state.logoReducer).logo;
+  // const logo = useSelector((state) => state.logoReducer).logo;
   const email = Cokkie.getCookie("email") ? Cokkie.getCookie("email") : "";
   const password = Cokkie.getCookie("password")
     ? Cokkie.getCookie("password")
@@ -33,25 +33,22 @@ const Signin = (props) => {
     setPendingLogin(false);
   }, [message]);
 
- 
+
   return (
     <>
       <section className="login-main">
-      <div className="login-main-wrapper">
+        <div className="login-main-wrapper">
           <div className="column">
-            <div className="login-head text-center mb-4">
-              <a href="#">
-                <img
-                  src={logo}
-                  className="image"
-                />
-              </a>
-            </div>
+
             <div className="c-card  after-layer before-layer">
               <div className="c-card-wrap">
-                <div className="form-header text-center mb-4">
+                <div className="form-header">
+                  <img
+                    src="/assets/images/icon.svg" alt=""
+                    className="image"
+                  />
                   <h1>Login</h1>
-                  <div>Welcome to Pankaj Traders</div>
+                  <h4>Welcome to Pankaj Traders</h4>
                 </div>
                 <div className="login-form">
                   <Formik
@@ -70,7 +67,7 @@ const Signin = (props) => {
                           values.email
                         )
                       ) {
-                        errors.email = "Invalid email address";
+                        errors.email = "Invalid email address!";
                       }
 
                       if (!values.password) {
@@ -88,13 +85,12 @@ const Signin = (props) => {
                     {({ isSubmitting, dirty, handleReset, touched }) => (
                       <Form action="" id="loginForm">
                         <div className="form-group mb-3">
-                          <label>Email Address</label>
+                          <label>Email Address <span className="error-badge">*</span></label>
                           <Field
                             type="text"
                             name="email"
-                            className={`form-control icon icon-email ${
-                              touched.email && error.email ? "input-error" : ""
-                            }`}
+                            className={`form-control icon icon-email ${touched.email && error.email ? "input-error" : ""
+                              }`}
                             placeholder="Enter your email"
                           />
                           <ErrorMessage
@@ -104,15 +100,14 @@ const Signin = (props) => {
                           />
                         </div>
                         <div className="form-group">
-                          <label>Password</label>
+                          <label>Password <span className="error-badge">*</span></label>
                           <Field
                             type="password"
                             name="password"
-                            className={`form-control icon icon-lock ${
-                              touched.password && error.password
-                                ? "input-error"
-                                : ""
-                            }`}
+                            className={`form-control icon icon-lock ${touched.password && error.password
+                              ? "input-error"
+                              : ""
+                              }`}
                             placeholder="Enter your password"
                           />
                           <ErrorMessage
@@ -122,9 +117,9 @@ const Signin = (props) => {
                           />
                         </div>
                         <div>
-                     
-                      </div>
-                        <div className="form-group d-flex align-items-center justify-content-between cus-pd">
+
+                        </div>
+                        <div className="mb-3 mt-3 form-group d-flex align-items-center justify-content-between cus-pd">
                           <div className="form-check">
                             <Field
                               className="form-check-input"
@@ -139,11 +134,11 @@ const Signin = (props) => {
                               Remember me
                             </label>
                           </div>
-                          <Link to="/reset-password">Forgot Password</Link>
+                          <Link to="/reset-password" className="f-name">Forgot Password?</Link>
                         </div>
-                       
+
                         <div className="form-group">
-      
+
                           <button
                             type="submit"
                             disabled={isSubmitting}
@@ -158,12 +153,20 @@ const Signin = (props) => {
                 </div>
               </div>
             </div>
+            <div className="login-head text-center">
+              <div className="login-in">
+               <div className="login-logo">
+               <img  src="/assets/images/logo.svg" alt=""/>
+               </div>
+               <Footer />
+              </div>
+            </div>
           </div>
-      
-        <Footer />
+
+         
         </div>
       </section>
-      
+
     </>
   );
 };

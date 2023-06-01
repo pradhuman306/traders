@@ -22,7 +22,26 @@ export const getTransportRentList = (payload) => (dispatch) => {
     });
 }
 
-export const addTransportRent = (payload,elementRef,setBtnPending,resetForm,partyRef) => (dispatch) => {
+export const getRentHistoryByParty = (payload) => (dispatch) => {
+  setPendingData(dispatch);
+    ajaxCall
+    .get(`${config.BASE_URL}getrenthistorybyparty/${payload}`)
+    .then((res) => {
+      setLoadedData(dispatch);
+        dispatch({
+            type: actionTypes.SET_SINGLE_TRANS_RENT,
+            payload: res.data.data,
+          });
+    })
+    .catch((error) => {
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    });
+}
+
+export const addTransportRent = (payload,elementRef,setBtnPending,resetForm,partyRef,transportRow) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createrent`,payload)
@@ -30,7 +49,9 @@ export const addTransportRent = (payload,elementRef,setBtnPending,resetForm,part
       setBtnPending(false);
       resetForm();  
       partyRef.current.clearValue();
+        dispatch(getRentHistoryByParty(transportRow.party_id));
         dispatch(getTransportRentList(payload.user_id));
+ 
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
             payload: "Rent created successfully!",
@@ -46,18 +67,21 @@ export const addTransportRent = (payload,elementRef,setBtnPending,resetForm,part
     });
 }
 
-export const updateTransportRent = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const updateTransportRent = (payload,elementRef,setBtnPending,transportRow) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}updaterent`,payload)
     .then((res) => {
       setBtnPending(false);
-        dispatch(getTransportRentList(payload.user_id));
+      console.log(transportRow);
+        dispatch(getRentHistoryByParty(transportRow.party));
+      dispatch(getTransportRentList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
             payload: "Rent Updated successfully!",
           });
           elementRef.current.click();
+       
     })
     .catch((error) => {
       setBtnPending(false);
@@ -73,6 +97,7 @@ export const deleteTransportRentList = (payload) => (dispatch) => {
     .post(`${config.BASE_URL}deleterent/${payload.id}`)
     .then((res) => {
         console.log(payload);
+        dispatch(getRentHistoryByParty(payload.party_id));
         dispatch(getTransportRentList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
@@ -85,4 +110,10 @@ export const deleteTransportRentList = (payload) => (dispatch) => {
         payload: error.response.data.message,
       });
     });
+}
+
+export const setEmptyTransDetails = () => (dispatch) => {
+  dispatch({
+    type: actionTypes.SET_EMPTY_TRANS_LIST,
+  });
 }

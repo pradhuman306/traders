@@ -1,7 +1,8 @@
 
 import {
     SET_TRANSPORT_RENT,
-    SET_SINGLE_TRANS_RENT
+    SET_SINGLE_TRANS_RENT,
+    SET_EMPTY_TRANS_LIST
 } from "../constants/actionTypes";
 const initialState = {
     transportRentList: [],
@@ -22,6 +23,12 @@ export default function (state = initialState, action) {
                     ...state,
                     singletransportRent: action.payload
                 };
+                case SET_EMPTY_TRANS_LIST:
+                    return {
+                        ...state,
+                        singletransportRent: []
+                    };
+                
 
         default:
             return state;

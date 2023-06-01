@@ -21,29 +21,15 @@ const EditParty = (props) => {
 
   return (
     <div
-      className="modal right fade"
+      className="modal fade"
       id="editparty"
       tabIndex="-1"
       aria-labelledby="exampleModalLabel"
       aria-hidden="true"
     >
       <div className="modal-dialog">
-        <div className="modal-content right-modal">
-          <div className="modal-head">
-            <h4>Edit Party</h4>
-            <a
-              onClick={(e) => e.preventDefault()}
-              type="button"
-              className="close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-              ref={elementRef}
-            >
-              <img src="/assets/images/icon-close.svg" alt="" />
-            </a>
-          </div>
-          <div className="modal-body">
-            {Object.keys(dataList).length != 0 ?
+        <div className="modal-content">
+        {Object.keys(dataList).length != 0 ?
               <Formik
                 enableReinitialize
                 initialValues={{
@@ -53,7 +39,7 @@ const EditParty = (props) => {
                 validate={(values) => {
                   const errors = {};
                   if (!values.name) {
-                    errors.name = "Please fill Party !"
+                    errors.name = "Please enter party name!"
                   }
 
 
@@ -71,15 +57,31 @@ const EditParty = (props) => {
               >
                 {({ values, isSubmitting, dirty, handleReset, touched }) => (
                   <Form action="" id="newcustomer">
+          <div className="modal-head">
+            <h4>Edit Party</h4>
+            <a
+              onClick={(e) => e.preventDefault()}
+              type="button"
+              className="close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+              ref={elementRef}
+            >
+              <img src="/assets/images/close.svg" alt="" />
+            </a>
+          </div>
+          <div className="modal-body">
+            
                     <div className="form-fields-wrap">
 
                       <div className="row">
                         <div className="col-md-12">
                           <div className="form-group mb-4">
                             <label>
-                              Party <span className="error">*</span>
+                              Party Name <span className="error-badge">*</span>
                             </label>
                             <Field
+                              placeholder="Enter party name"
                               type="text"
                               name="name"
                               className={`form-control ${touched.name && error.name
@@ -95,11 +97,12 @@ const EditParty = (props) => {
                           </div>
                         </div>
                         <div className="col-md-12">
-                          <div className="form-group mb-4">
+                          <div className="form-group">
                             <label>
                               Mobile
                             </label>
                             <Field
+                            placeholder="Enter party mobile number"
                               type="number"
                               name="mobile"
                               className={`form-control`}
@@ -111,26 +114,22 @@ const EditParty = (props) => {
                       </div>
 
                     </div>
-                    <div className='frm-btn-wrap'>
-                      <div className='row'>
-
-                        <div className="col-md-12 text-center mt-4">
-                          <button
+                   
+</div>
+<div className='modal-footer'>
+<button
                             type="submit"
                             disabled={isSubmitting}
                             className="btn btn-primary m-auto"
                           >
                             {btnPending ? <ButtonLoader /> : "Update"}
                           </button>
-                        </div>
-                      </div>
-                    </div>
-
+</div>
                   </Form>
                 )}
               </Formik> : ""}
 
-          </div>
+          
         </div>
       </div>
     </div>

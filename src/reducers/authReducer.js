@@ -1,7 +1,7 @@
 import {
   USER_LOADED,
   AUTH_ERROR,
-  ZIPCODE_VALIDATE,
+  SET_USER_DATA
 } from "../constants/actionTypes";
 import * as localStorage from "../common/localStorage";
 import { Navigate } from "react-router";
@@ -30,6 +30,11 @@ export default function (state = initialState, action) {
         userdata: action.payload.data,
         pending: false,
       };
+      case SET_USER_DATA:
+        return {
+          ...state,
+          userdata: action.payload,
+        };  
     case AUTH_ERROR:
       <Navigate to="/signin" />;
       return {
