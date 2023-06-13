@@ -12,7 +12,6 @@ import Resetlink from "../pages/ResetPassword/Resetlink";
 import BuySell from "../pages/BuySell";
 import BalanceSheet from "../pages/BalanceSheet";
 import TransportRent from "../pages/TransportRent";
-import Stock from "../pages/Stock";
 import Bank from "../pages/Bank";
 import AddTransportRent from "../pages/TransportRent/AddTransportRent";
 import EditTransportRent from "../pages/TransportRent/EditTransportRent";
@@ -20,13 +19,15 @@ import AddParty from "../pages/BalanceSheet/AddParty";
 import EditParty from "../pages/BalanceSheet/EditParty";
 import AccountDetails from "../pages/Bank/AccountDetails";
 import Items from "../pages/Items";
-import GoDown from "../pages/Stock";
 import StockDetails from "../pages/Stock/StockDetails";
 import PartyHistory from "../pages/BalanceSheet/PartyHistory";
 import TransportDetails from "../pages/TransportRent/TransportDetails";
 import Firm from "../pages/Firm";
 import AccountInfo from "../component/AccountInfo";
 import UpdatePass from "../component/UpdatePass";
+import Invoice from "../pages/Invoice";
+import Stocks from "../pages/Stock/Stocks";
+import StocksGodown from "../pages/Stock/StocksGodown";
 
 function Router(props) {
   const auth = props.auth;
@@ -201,7 +202,7 @@ function Router(props) {
               <PrivateRoute>
                 <LayoutContainer
                   auth={auth}
-                  children={<GoDown {...props} />}
+                  children={<Stocks {...props} />}
                 />
               </PrivateRoute>
             }
@@ -215,6 +216,16 @@ function Router(props) {
                   auth={auth}
                   children={<Bank {...props} />}
                 />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            key="Invoice"
+            path="invoice/:partyid/:id"
+            element={
+              <PrivateRoute>
+                <Invoice {...props}/>
               </PrivateRoute>
             }
           />
@@ -313,7 +324,7 @@ function Router(props) {
             path="godown"
             element={
               <PrivateRoute>
-              <GoDown {...props} />
+              <StocksGodown {...props} />
               </PrivateRoute>
             }
           />

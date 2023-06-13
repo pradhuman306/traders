@@ -178,20 +178,24 @@ export const getLogo = () => (dispatch) => {
     .get(`${config.BASE_URL}getsitelogo`)
     .then((response) => {
       if (response.status == 200) {
-        console.log(response.data.data.logo);
-        
+        console.log(response.data);
+
         dispatch({
           type: actionTypes.SET_LOGO,
           payload: response.data.data.logo,
         });
         localstorage.set("userprofile", JSON.stringify(response.data.data.logo));
-      }
+      
+    }
     })
     .catch((error) => {
+    if(error.response){
       dispatch({
         type: actionTypes.ERROR_MESSAGE,
         payload: error.response.data.message,
       });
+    }
+ 
     });
 };
 

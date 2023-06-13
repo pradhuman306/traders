@@ -4,19 +4,19 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useParams } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 import {  deleteAccountDetails, getAccountById, getAccountDetails, getAccountList } from '../../actions/accounts';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
 import AddAccountDetails from './AddAccountDetails';
-import { formatDate } from '../../actions/common';
+import { formatDate, makePositive, priceFormatter } from '../../actions/common';
 import EditAccountDetails from './EditAccountDetails';
 import DeleteSelected from '../../component/DeleteSelected';
 import Header from '../Header/Header';
 
 const AccountDetails = (props) => {
     const {accountid} = useParams();
-    console.log(accountid);
+    const navigate = useNavigate();
     const userId = props.auth.userdata.id;
     const accountDetailsAll = useSelector((state)=>state.accountReducer).accountDetails;
     const accountSingle = useSelector((state)=>state.accountReducer).accountSingle;
@@ -154,8 +154,7 @@ const AccountDetails = (props) => {
             selector: (row) => row.description,
             sortable: true,
             hide:"sm"
-        },
-           
+        },          
             {
                 name: "Actions",
                 width: "150px",
@@ -168,14 +167,12 @@ const AccountDetails = (props) => {
                                               e.preventDefault();
                                               setAccountRow(row);
                                               setId(row.id);
-
                                         }}
                                             className="btn-sml"
                                             data-bs-toggle="modal"
                                             data-bs-target="#editaccountdetails"
                                         >
-
-                                        <svg class="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <svg className="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <mask id="path-1-outside-1_1154_12363" maskUnits="userSpaceOnUse" x="3" y="4" width="17" height="17" fill="black">
                                                 <rect fill="white" x="3" y="4" width="17" height="17"></rect>
                                                 <path d="M13.5858 7.41421L6.39171 14.6083C6.19706 14.8029 6.09974 14.9003 6.03276 15.0186C5.96579 15.1368 5.93241 15.2704 5.86564 15.5374L5.20211 18.1915C5.11186 18.5526 5.06673 18.7331 5.16682 18.8332C5.2669 18.9333 5.44742 18.8881 5.80844 18.7979L5.80845 18.7979L8.46257 18.1344C8.72963 18.0676 8.86316 18.0342 8.98145 17.9672C9.09974 17.9003 9.19706 17.8029 9.39171 17.6083L16.5858 10.4142L16.5858 10.4142C17.2525 9.74755 17.5858 9.41421 17.5858 9C17.5858 8.58579 17.2525 8.25245 16.5858 7.58579L16.4142 7.41421C15.7475 6.74755 15.4142 6.41421 15 6.41421C14.5858 6.41421 14.2525 6.74755 13.5858 7.41421Z"></path>
@@ -193,14 +190,11 @@ const AccountDetails = (props) => {
                                             data-bs-toggle="modal"
                                             data-bs-target={`#confirm_${row.id}`}
                                         >
-
-
-                                       
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M10 15L10 12" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M14 15L14 12" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M3 7H21V7C20.0681 7 19.6022 7 19.2346 7.15224C18.7446 7.35523 18.3552 7.74458 18.1522 8.23463C18 8.60218 18 9.06812 18 10V16C18 17.8856 18 18.8284 17.4142 19.4142C16.8284 20 15.8856 20 14 20H10C8.11438 20 7.17157 20 6.58579 19.4142C6 18.8284 6 17.8856 6 16V10C6 9.06812 6 8.60218 5.84776 8.23463C5.64477 7.74458 5.25542 7.35523 4.76537 7.15224C4.39782 7 3.93188 7 3 7V7Z" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M10.0681 3.37059C10.1821 3.26427 10.4332 3.17033 10.7825 3.10332C11.1318 3.03632 11.5597 3 12 3C12.4403 3 12.8682 3.03632 13.2175 3.10332C13.5668 3.17033 13.8179 3.26427 13.9319 3.37059" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
+                                            <path d="M10 15L10 12" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M14 15L14 12" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M3 7H21V7C20.0681 7 19.6022 7 19.2346 7.15224C18.7446 7.35523 18.3552 7.74458 18.1522 8.23463C18 8.60218 18 9.06812 18 10V16C18 17.8856 18 18.8284 17.4142 19.4142C16.8284 20 15.8856 20 14 20H10C8.11438 20 7.17157 20 6.58579 19.4142C6 18.8284 6 17.8856 6 16V10C6 9.06812 6 8.60218 5.84776 8.23463C5.64477 7.74458 5.25542 7.35523 4.76537 7.15224C4.39782 7 3.93188 7 3 7V7Z" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M10.0681 3.37059C10.1821 3.26427 10.4332 3.17033 10.7825 3.10332C11.1318 3.03632 11.5597 3 12 3C12.4403 3 12.8682 3.03632 13.2175 3.10332C13.5668 3.17033 13.8179 3.26427 13.9319 3.37059" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
                                         </svg>
                                     </a>
                                     <ConfirmModal
@@ -209,14 +203,10 @@ const AccountDetails = (props) => {
                                 yes={(id) => {
                                     dispatch(deleteAccountDetails({id:row.id,accountid:accountid,name:"",user_id:userId}));
                                 }}
-                             
                             />
                                 </li>
                             </ul>
-
-
                         </>
-
                     );
                 },
             },
@@ -227,7 +217,21 @@ const AccountDetails = (props) => {
     return (
         <div className="body-content">
             <Header heading={accountSingleDetails.name} {...props} />
+            <div className='mr-minus'>
+                <div className="usermanagement-main">
+                    <p class="extra-stuff"><a className='anchor-link' onClick={()=>navigate(-1)}> <img src="/assets/images/back.svg" alt="" /> Back </a>
+
+                        <div className='amount-dtl'>
+                            <p className='total-am'><span>Balance Amount : </span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</label></p>
+                        </div>
+                    </p>
+                    
+
+
+                </div>
+            </div>
             <div className="usermanagement-main">
+           
                 <div className="datatable-filter-wrap">
                     <div className="datatable-search">
                         <input
@@ -236,9 +240,6 @@ const AccountDetails = (props) => {
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
-                    </div>
-                    <div>
-                        Balance amount: {remainAmount >= 0 ? <span className='credit'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</span>:<span className='debit'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</span>}
                     </div>
                     <div className="datatable-filter-right">
                         <ul className="btn-group">

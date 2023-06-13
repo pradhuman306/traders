@@ -4,14 +4,10 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { formatDate } from '../../actions/common';
-import { deleteTransportRentList, getRentHistoryByParty, getTransportRentList, setEmptyTransDetails } from '../../actions/transportrent';
-import ConfirmModal from '../../common/confirmModal';
-import CustomLoader from '../Customloader';
+import { formatDate, priceFormatter } from '../../actions/common';
+import { getRentHistoryByParty, getTransportRentList, setEmptyTransDetails } from '../../actions/transportrent';
 import Header from '../Header/Header';
 import AddTransportRent from './AddTransportRent';
-import EditTransportRent from './EditTransportRent';
 import TransportDetails from './TransportDetails';
 
 const TransportRent = (props) => {
@@ -25,6 +21,8 @@ const TransportRent = (props) => {
     const [partyDetails,setPartyDetails]= useState({});
     const [id,setId]= useState({});
     const [isExpandable, setisExpandable] = useState(false);
+    const [totalPending,setTotalPending] = useState(0);
+    const [totalAllPaid,setTotalAllPaid] = useState(0);
   
     
     const handleSort = (column, sortDirection) =>
@@ -48,7 +46,7 @@ const TransportRent = (props) => {
                         <b>Advance:</b> {"₹"+parseInt(data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
-                        <b>Remaining amount:</b> {"₹"+parseInt(data.rate - data.advance).toLocaleString("en-IN")}
+                        <b>Pending amount:</b> {"₹"+parseInt(data.rate - data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
                         <b>Date:</b> {formatDate(data.date)}
@@ -66,7 +64,7 @@ const TransportRent = (props) => {
                         <b>Advance:</b> {"₹"+parseInt(data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
-                        <b>Remaining amount:</b> {"₹"+parseInt(data.rate - data.advance).toLocaleString("en-IN")}
+                        <b>Pending amount:</b> {"₹"+parseInt(data.rate - data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
                         <b>Date:</b> {formatDate(data.date)}
@@ -84,18 +82,10 @@ const TransportRent = (props) => {
             setPartyDetails(tmp[0]); 
         }
         if(Object.keys(transportRow).length){
-            let transList = transRentList.filter((item)=>item.party_id.toString() === transportRow.party_id);
+            let transList = transRentList.filter((item)=>item.party_id.toString() == transportRow.party_id);
             if(transList.length){
                 setTransportRow(transList[0]); 
-             
             }
-        }else{
-            if(transRentList.length){
-  setTransportRow(transRentList[0]); 
-  dispatch(getRentHistoryByParty(transRentList[0].party_id));
-            }
-          
-
         }
      
   
@@ -143,7 +133,21 @@ const TransportRent = (props) => {
         } else {
             setList([...transRentList]);
         }
-
+        let total = 0;
+        let totalPaid = 0;
+        transRentList.map((item)=>{
+            total+=item.total_rent;
+     
+            if(item.rent_paid){
+              
+                let rent_paid = JSON.parse(item.rent_paid);
+                rent_paid.map((paid)=>{
+                    totalPaid+=parseInt(paid.amount)
+            })
+            }
+        })
+        setTotalPending(total);
+        setTotalAllPaid(totalPaid);
     }, [filterText,transRentList]);
 
     const hanndleSearch = (value) => {
@@ -168,13 +172,13 @@ const TransportRent = (props) => {
         
                     <a className={`anchor ${transportRow.party_id === row.party_id ? 'active':""}`} onClick={
                         ()=>{
-                        dispatch(getRentHistoryByParty(row.party_id));
+                        dispatch(getRentHistoryByParty(row.party_id,"1m"));
                         setTransportRow(row);
                    
                         }
                     }>
                         <div className={`user-wrap`}>
-                        <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
+                        {/* <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5> */}
                             <div className="user-detail">{row.party}</div>
                         </div>
                         </a>
@@ -184,7 +188,25 @@ const TransportRent = (props) => {
               
             },
             
-    
+            {
+                name: "Total Amount",
+                selector: (row) => {
+                    let totalPaid = 0;
+                if(row.rent_paid){
+                    let rent_paid = JSON.parse(row.rent_paid);
+                    totalPaid = rent_paid.reduce((accumulator, object) => {
+                        return accumulator + parseInt(object.amount);
+                      }, 0);
+                }
+              return(
+                <span class="badge rounded-pill bg-text text-bg-warning">{priceFormatter(row.total_rent-totalPaid)}</span>
+              )
+                  
+                },
+                sortable: true,
+              
+            },
+            
         
         ],
         [transportRow]
@@ -193,13 +215,21 @@ const TransportRent = (props) => {
     return (
         <>
             <Header heading="Transport Management" {...props} />
+            
        <div className='row'>
         <div className='col-md-3'>
-        <div className="body-content">
-            
-            <AddTransportRent {...props} partyList={partyList} transportRow={transportRow} setTransportRow={setTransportRow}  />
-
-    
+        <div className="body-content st-fixed">
+        <div className="datatable-filter-wrap">
+                    <div className="datatable-search w-100">
+                        <input
+                            type="text"
+                            placeholder="Search parties..."
+                            className="form-control"
+                            onChange={(e) => hanndleSearch(e.target.value)}
+                        />
+                    </div>
+                 
+                </div>
             <DataTable
                 columns={columns}
                 data={transportRentList}
@@ -211,9 +241,10 @@ const TransportRent = (props) => {
         </div>
         </div>
         <div className='col-md-9'>
-            <TransportDetails partyDetails={partyDetails} {...props} transportRow={transportRow}  />
+            <TransportDetails transRentList={transRentList} partyDetails={partyDetails} {...props} transportRow={transportRow} totalPending={totalPending} totalAllPaid={totalAllPaid}  />
         </div>
        </div>
+       <AddTransportRent {...props} partyList={partyList} transportRow={transportRow} setTransportRow={setTransportRow}  />
         </>
     )
 }

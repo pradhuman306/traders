@@ -125,7 +125,7 @@ export const getStockById = (payload) => (dispatch) => {
 }
 
 
-export const addStockDetails = (payload,elementRef,setBtnPending,resetForm,itemRef) => (dispatch) => {
+export const addStockDetails = (payload,elementRef,setBtnPending,resetForm,itemRef,id) => (dispatch) => {
 
     ajaxCall
     .post(`${config.BASE_URL}createstockrecord`,payload)
@@ -134,7 +134,8 @@ export const addStockDetails = (payload,elementRef,setBtnPending,resetForm,itemR
       elementRef.current.click();
       itemRef.current.clearValue();
       setBtnPending(false);
-        dispatch(getStockDetails({user_id:payload.user_id,id:payload.stock_id}));
+        dispatch(getStockDetails({user_id:payload.user_id,id:id}));
+        dispatch(getGoDownList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
             payload: "Stock details created successfully!",
@@ -150,13 +151,14 @@ export const addStockDetails = (payload,elementRef,setBtnPending,resetForm,itemR
 }
 
 
-export const updateStockDetails = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const updateStockDetails = (payload,elementRef,setBtnPending,id) => (dispatch) => {
 
   ajaxCall
   .post(`${config.BASE_URL}updatestockrecord`,payload)
   .then((res) => {
     setBtnPending(false);
-      dispatch(getStockDetails({user_id:payload.user_id,id:payload.stock_id}));
+      dispatch(getStockDetails({user_id:payload.user_id,id:id}));
+      dispatch(getGoDownList(payload.user_id));
       dispatch({
           type: actionTypes.SUCCESS_MESSAGE,
           payload: "Stock details updated  successfully!",
@@ -179,6 +181,7 @@ export const deleteStockDetails = (payload) => (dispatch) => {
   .then((res) => {
       console.log(payload);
       dispatch(getStockDetails({user_id:payload.user_id,id:payload.stock_id}));
+      dispatch(getGoDownList(payload.user_id));
       dispatch({
           type: actionTypes.SUCCESS_MESSAGE,
           payload: `${payload.name} Deleted Successfully!`,

@@ -19,17 +19,26 @@ export const getParty = (payload) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+  if(error.code == "ERR_NETWORK"){
+    dispatch({
+      type: actionTypes.ERROR_MESSAGE,
+      payload: error.message,
+    });
+  }else{
+    dispatch({
+      type: actionTypes.ERROR_MESSAGE,
+      payload: error.response.data.message,
+    });
+  }
+   
+      
     });
 }
 
-export const getPartyById = (payload,param) => (dispatch) => {
+export const getPartyById = (payload,param,datefromto) => (dispatch) => {
   setPendingData(dispatch);
     ajaxCall
-    .get(`${config.BASE_URL}getparty/${payload}?f=${param}`)
+    .get(`${config.BASE_URL}getparty/${payload}?f=${param}&start=${datefromto?.start}&end=${datefromto?.end}`)
     .then((res) => {
       setLoadedData(dispatch);
         dispatch({
@@ -42,10 +51,17 @@ export const getPartyById = (payload,param) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 

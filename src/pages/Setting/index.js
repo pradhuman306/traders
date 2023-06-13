@@ -43,19 +43,19 @@ function Setting(props) {
               <li className={`${pathname === "/settings/items" ? "active" : ""}`}>
               <Link to="/settings/items"
                 >
-                 Items {itemListAll.length?itemListAll.length:""}
+                 Items <span className="badge rounded-pill bg-text text-bg-primary">{itemListAll.length?itemListAll.length:""}</span>
                 </Link>
               </li>
               <li className={`${pathname === "/settings/firm" ? "active" : ""}`}>
               <Link to="/settings/firm"
                 >
-                 Firm {firmListAll.length?firmListAll.length:""}
+                 Firm <span className="badge rounded-pill bg-text text-bg-primary">{firmListAll.length?firmListAll.length:""}</span>
                 </Link>
               </li>
               <li className={`${pathname === "/settings/godown" ? "active" : ""}`}>
               <Link to="/settings/godown"
                 >
-                 Godown {godownListAll.length?godownListAll.length:""}
+                 Godown <span className="badge rounded-pill bg-text text-bg-primary">{godownListAll.length?godownListAll.length:""}</span>
                 </Link>
               </li>
             </ul>

@@ -4,27 +4,24 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import {  useParams } from 'react-router-dom';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
-import { formatDate } from '../../actions/common';
+import { formatDate, priceFormatter } from '../../actions/common';
 import { deleteStockDetails, getGoDownList, getStockById, getStockDetails } from '../../actions/godown';
 import AddStockDetails from './AddStockDetails';
 import EditStockDetails from './EditStockDetails';
 import { getItems } from '../../actions/items';
-import Header from '../Header/Header';
 import { getFirm } from '../../actions/firm';
 
 
 const StockDetails = (props) => {
-    const { stockid } = useParams();
-    console.log(stockid);
+    const stockid = props.godownListRow.id;
+    console.log(props);
     const userId = props.auth.userdata.id;
     const stockDetailsAll = useSelector((state) => state.godownReducer).stockDetails;
     const stockSingle = useSelector((state) => state.godownReducer).stockSingle;
     const itemListAll = useSelector((state) => state.itemReducer).itemList;
     const firmListAll = useSelector((state)=>state.firmReducer).firmList;
-    const godownListAll = useSelector((state)=>state.godownReducer).godownList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [stockDetails, setList] = useState([...stockDetailsAll]);
@@ -32,6 +29,10 @@ const StockDetails = (props) => {
     const [stockDetailsListRow, setDetailsListRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
+    const [godownNameShort, setGodownShort] = useState("");
+    const [allItems, setAllItems] = useState([]);
+    const [totalAmount, setTotalAmount] = useState([]);
+    
 
 
     const handleSort = (column, sortDirection) =>
@@ -41,14 +42,38 @@ const StockDetails = (props) => {
     useEffect(() => {
         dispatch(getStockDetails({ user_id: userId, id: stockid }));
         dispatch(getStockById(stockid));
-        dispatch(getGoDownList(userId));
         dispatch(getFirm(userId));
+
     }, [stockid])
 
 
+    useEffect(()=>{
+        let stockData = props.godownListAll;
+        let sum = 0;
+          if(stockData.length){
+           setAllItems(stockData[0].allitems);  
+            sum = stockData.reduce((accumulator, object) => {
+            return accumulator + parseInt(object.total);
+          }, 0);
+          setTotalAmount(sum);
+                }
+    },[props.godownListAll])
+
+    useEffect(() => {
+        if (props.godownListRow.name) {
+            let newName = props.godownListRow.name.split(" ");
+            let firstC = newName[0][0];
+            let lastC = "";
+            if (newName[1]) {
+                lastC = newName[1][0].toUpperCase();
+            }
+     
+            setGodownShort(firstC + lastC);
+        }
+
+    }, [props.godownListRow.name])
     useEffect(() => {
         setStockSingle({ ...stockSingle });
-
     }, [stockSingle])
 
     const ExpandedComponent = ({ data }) => {
@@ -120,6 +145,7 @@ const StockDetails = (props) => {
         if (filterText) {
             let tmp = stockDetailsAll.filter((item) => {
                 if (
+                    item.stock?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.firm?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.item?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.quantity?.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -145,48 +171,40 @@ const StockDetails = (props) => {
 
     const columns = useMemo(
         () => [
+         
+               
             {
-                name: "Item",
-                selector: (row) =>{
-                    return (
-    
-                        <div className="user-wraps">
-                        <div className="user-detail xl-text">{row.item}</div>
-                        <div class="c-date">{formatDate(row.date)}</div>
-                    </div>
-                    );
-                },
-                
+                name: "Date",
+                selector: (row) => formatDate(row.date),
                 sortable: true,
+                hide: 'sm',
+                // width: '120px',
 
-
-            },
-
-            {
-                name: "Godown",
-                selector: (row) => row.stock,
-                sortable: true,
             },
            
             {
-                name: "Quantity",
-                selector: (row) => row.quantity,
+                name: "Item",
+                selector: (row) => row.item,       
                 sortable: true,
-                hide: 'sm'
+
 
             },
+
+         
             {
                 name: "Weight",
                 selector: (row) => row.weight + ' qt',
                 sortable: true,
-                hide: 'md'
+                hide: 'md',
+                // width: '120px',
 
             },
             {
                 name: "Rate",
                 selector: (row) => "₹" + parseInt(row.rate).toLocaleString("en-IN"),
                 sortable: true,
-                hide: 'md'
+                hide: 'md',
+                // width: '100px',
 
             },
             {
@@ -209,31 +227,33 @@ const StockDetails = (props) => {
                 selector: (row) => row.vehicle_no,
                 sortable: true,
                 hide: 'md'
+                ,
+                // width: '120px',
 
             },
 
-            {
-                name: "Firm",
-                selector: (row) =>{
-                    return (
+            // {
+            //     name: "Firm",
+            //     selector: (row) =>{
+            //         return (
                         
-                        <span className="badge rounded-pill bg-text text-bg-secondary">
-                          {row.firm}
-                        </span>
-                    );
-                },
-                sortable: true,
-                hide: 'md',
-                width: "130px",
+            //             <span className="badge rounded-pill bg-text text-bg-secondary">
+            //               {row.firm}
+            //             </span>
+            //         );
+            //     },
+            //     sortable: true,
+            //     hide: 'md',
+            //     // width: "150px",
 
-            },
+            // },
 
 
 
 
             {
                 name: "Actions",
-                width: "150px",
+                // width: "150px",
                 selector: (row) => {
                     return (
                         <>
@@ -250,7 +270,7 @@ const StockDetails = (props) => {
                                             data-bs-target="#editaccountdetails"
                                         >
 
-                                        <svg class="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <svg className="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <mask id="path-1-outside-1_1154_12363" maskUnits="userSpaceOnUse" x="3" y="4" width="17" height="17" fill="black">
                                                 <rect fill="white" x="3" y="4" width="17" height="17"></rect>
                                                 <path d="M13.5858 7.41421L6.39171 14.6083C6.19706 14.8029 6.09974 14.9003 6.03276 15.0186C5.96579 15.1368 5.93241 15.2704 5.86564 15.5374L5.20211 18.1915C5.11186 18.5526 5.06673 18.7331 5.16682 18.8332C5.2669 18.9333 5.44742 18.8881 5.80844 18.7979L5.80845 18.7979L8.46257 18.1344C8.72963 18.0676 8.86316 18.0342 8.98145 17.9672C9.09974 17.9003 9.19706 17.8029 9.39171 17.6083L16.5858 10.4142L16.5858 10.4142C17.2525 9.74755 17.5858 9.41421 17.5858 9C17.5858 8.58579 17.2525 8.25245 16.5858 7.58579L16.4142 7.41421C15.7475 6.74755 15.4142 6.41421 15 6.41421C14.5858 6.41421 14.2525 6.74755 13.5858 7.41421Z"></path>
@@ -272,17 +292,17 @@ const StockDetails = (props) => {
 
                                        
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M10 15L10 12" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M14 15L14 12" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M3 7H21V7C20.0681 7 19.6022 7 19.2346 7.15224C18.7446 7.35523 18.3552 7.74458 18.1522 8.23463C18 8.60218 18 9.06812 18 10V16C18 17.8856 18 18.8284 17.4142 19.4142C16.8284 20 15.8856 20 14 20H10C8.11438 20 7.17157 20 6.58579 19.4142C6 18.8284 6 17.8856 6 16V10C6 9.06812 6 8.60218 5.84776 8.23463C5.64477 7.74458 5.25542 7.35523 4.76537 7.15224C4.39782 7 3.93188 7 3 7V7Z" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M10.0681 3.37059C10.1821 3.26427 10.4332 3.17033 10.7825 3.10332C11.1318 3.03632 11.5597 3 12 3C12.4403 3 12.8682 3.03632 13.2175 3.10332C13.5668 3.17033 13.8179 3.26427 13.9319 3.37059" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
+                                            <path d="M10 15L10 12" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M14 15L14 12" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M3 7H21V7C20.0681 7 19.6022 7 19.2346 7.15224C18.7446 7.35523 18.3552 7.74458 18.1522 8.23463C18 8.60218 18 9.06812 18 10V16C18 17.8856 18 18.8284 17.4142 19.4142C16.8284 20 15.8856 20 14 20H10C8.11438 20 7.17157 20 6.58579 19.4142C6 18.8284 6 17.8856 6 16V10C6 9.06812 6 8.60218 5.84776 8.23463C5.64477 7.74458 5.25542 7.35523 4.76537 7.15224C4.39782 7 3.93188 7 3 7V7Z" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M10.0681 3.37059C10.1821 3.26427 10.4332 3.17033 10.7825 3.10332C11.1318 3.03632 11.5597 3 12 3C12.4403 3 12.8682 3.03632 13.2175 3.10332C13.5668 3.17033 13.8179 3.26427 13.9319 3.37059" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
                                         </svg>
                                     </a>
                                     <ConfirmModal
                                 id={row.id}
                                 name={row.item}
                                 yes={(id) => {
-                                    dispatch(deleteStockDetails({ id: row.id, stock_id: stockid, name: row.item, user_id: userId }));
+                                    dispatch(deleteStockDetails({ id: row.id, stock_id: props.godownListRow.id, name: row.item, user_id: userId }));
                                 }}
 
                             />
@@ -296,14 +316,57 @@ const StockDetails = (props) => {
                 },
             },
         ],
-        []
+        [props.godownListRow]
     );
 
     return (
+        <>
         <div className="body-content">
-            <Header heading={stockSingleDetails.name} {...props} />
             <div className="usermanagement-main">
-                <div className="datatable-filter-wrap">
+            <div className="nav inline-div">
+            <div className='two-row-content'>
+                    <ul className='st-dtl'>
+                   {allItems.map((item)=>(
+                   <li>
+                    <span>{item.name}</span>
+                    <span>{item.weight}qt</span>
+                    <span>{priceFormatter(item.total)}</span>
+                   </li> 
+                   ))}
+                      </ul>  
+                     <p className='total-am'> <span>Total:</span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{priceFormatter(totalAmount)}   </label> </p>
+                       </div>
+                    </div>
+            {props.godownListRow.id ? <div className="nav inline-div">
+                    <div className='two-row-content'>
+                  
+                         <div className={`user-wrap`}>
+                            <h5 className="user-icon">{godownNameShort}</h5>
+                            <div className="user-detail">{props.godownListRow.name}
+                            </div>
+                        </div>
+            <div className='godown-stock'>
+        {
+        props.godownListRow.items.map((item)=>(
+            <>
+            <div><span>{item.name}</span>
+            <label>{item.weight} qt</label>
+            </div>
+         
+            </>
+        ))
+}
+        {/* {props.godownListRow.items} */}
+               
+            </div>
+                        <p>Total: <label className='badge rounded-pill bg-text text-bg-warning xl-text'>{priceFormatter(props.godownListRow.total)}</label></p>
+                 
+                          
+                     
+                    </div>
+
+                </div> : ""}
+                {props.godownListRow.id ?     <div className="datatable-filter-wrap">
                     <div className="datatable-search">
                         <input
                             type="text"
@@ -331,11 +394,11 @@ const StockDetails = (props) => {
 
                         </ul>
                     </div>
-                </div>
+                </div>:""}
             </div>
-            <AddStockDetails godownListAll={godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} />
-            <EditStockDetails godownListAll={godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} row_id={id} row_data={stockDetailsListRow} />
-
+          
+         <AddStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} godownList={props.godownListRow} />
+         <EditStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} row_id={id} row_data={stockDetailsListRow} godownList={props.godownListRow} />
             <DataTable
                 columns={columns}
                 data={stockDetails}
@@ -349,7 +412,10 @@ const StockDetails = (props) => {
                 onSort={handleSort}
 
             />
+             
         </div>
+         
+        </>
     )
 }
 export default StockDetails;

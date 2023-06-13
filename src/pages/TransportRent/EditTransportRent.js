@@ -217,7 +217,7 @@ const EditTransportRent = (props) => {
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
-                            Remaining amount 
+                          Pending amount 
                             
                           </label>
                           <Field

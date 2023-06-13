@@ -23,7 +23,7 @@ const AddStockDetails = (props) => {
     const [newListItems, setNewListItems] = useState([]);
     const [newListFirm, setNewListFirm] = useState([]);
     const [newListGodown, setNewGodownList] = useState([]);
-
+    const [valueGodown, setValueGodown] = useState({});
 
     
     const handleSelectChange = (e,setFieldValue) => {
@@ -40,6 +40,7 @@ const AddStockDetails = (props) => {
     const handleSelectChangeGoDown = (e,setFieldValue) => {
       if(e){
         setFieldValue('godown',e.value);
+        setValueGodown(e);
       }
     } 
 
@@ -63,7 +64,11 @@ const AddStockDetails = (props) => {
       setNewListFirm(newFirmList);
       setNewGodownList(newGodownList);
     },[props.itemListAll,props.firmListAll,props.godownListAll])
- 
+    useEffect(()=>{
+   
+      setValueGodown({label:props.godownList.name,value:props.godownList.id});
+  
+    },[props.godownList])
   return (
     <div
     className="modal right fade"
@@ -75,9 +80,10 @@ const AddStockDetails = (props) => {
     <div className="modal-dialog">
       <div className="modal-content right-modal">
       <Formik
+                enableReinitialize
               initialValues={{
-                firm:"",
-                godown:"",
+                // firm:"",
+                godown:props.godownList.id,
                 item:"",
                 quantity:"",
                 weight:"",
@@ -104,8 +110,9 @@ const AddStockDetails = (props) => {
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 values.user_id = user_id;
                 values.stock_id = values.godown;
+                
                 props.setBtnPending(true); 
-                dispatch(addStockDetails(values,elementRef,props.setBtnPending,resetForm,itemRef));
+                dispatch(addStockDetails(values,elementRef,props.setBtnPending,resetForm,itemRef,props.godownList.id));
                 setSubmitting(false);
               }}
             >
@@ -146,6 +153,7 @@ const AddStockDetails = (props) => {
                             isSearchable={true}
                             ref={godownRef}
                             name="godown" 
+                            value={valueGodown}
                             onChange={(e)=>handleSelectChangeGoDown(e,setFieldValue)}
                             theme={(theme) => ({
                               ...theme,
@@ -202,7 +210,7 @@ const AddStockDetails = (props) => {
                        
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      {/* <div className="col-md-6">
                       <div className="form-group mb-4">
                           <label>
                             
@@ -237,7 +245,7 @@ const AddStockDetails = (props) => {
                           />
                        
                         </div>
-                      </div>
+                      </div> */}
 
                     
                    
@@ -315,7 +323,7 @@ const AddStockDetails = (props) => {
                      
                         </div>
                       </div>
-                      <div className="col-md-12">
+                      <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
                             

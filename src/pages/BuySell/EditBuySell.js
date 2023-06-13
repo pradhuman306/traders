@@ -23,8 +23,12 @@ const EditBuySell = (props) => {
     const [newListItems, setNewListItems] = useState([]);
     const [valueParty, setValueParty] = useState({});
     const [valueItem, setValueItem] = useState({});
+    const [valueGodown, setValueGodown] = useState({});
     const [rowData, setRowData] = useState(props.row_data);
     const [checkedURD, setCheckedURD] = useState({});
+    const [godown,setGoDownList]=useState([]);
+    const [godownValue,setGodownValue]=useState({});
+    const godownSelectRef = useRef("");
     const handleSelectChangeItem = (e, setFieldValue) => {
         setFieldValue('item', e.value);
         setValueItem(e);
@@ -37,6 +41,7 @@ const EditBuySell = (props) => {
         setRowData({ ...props.row_data })
         setValueParty({ label: props.row_data.party, value: props.row_data.party_id });
         setValueItem({ label: props.row_data.item, value: props.row_data.item_id });
+        setGodownValue({ label: props.row_data.godown, value: props.row_data.godown_id });
         setCheckedURD(props.row_data.URD == 1 ? true : false);
         console.log(props.row_data);
     }, [props.row_data])
@@ -84,6 +89,21 @@ const EditBuySell = (props) => {
         setFieldValue('URD', e.target.checked)
         setCheckedURD(e.target.checked);
     }
+
+    useEffect(() => {
+        let godownList = [];
+        props.godownListAll.forEach((item) => {
+            godownList.push({ label: item.name, value: item.id });
+        })
+        setGoDownList([...godownList]);
+    }, [props.godownListAll])
+
+    const handleSelectChangeGoDown = (e, setFieldValue) => {
+        if (e) {
+            setFieldValue('godown', e.value);
+            setGodownValue(e);
+        }
+    }
     return (
         <div
             className="modal right fade"
@@ -99,6 +119,7 @@ const EditBuySell = (props) => {
                         initialValues={{
                             party: rowData.party_id,
                             bill_no: rowData.bill_no,
+                            godown:rowData.godown,
                             amount: rowData.amount,
                             debit: rowData.debit,
                             gst: rowData.gst,
@@ -256,8 +277,40 @@ const EditBuySell = (props) => {
                                                     />
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className='row'>
+                                            <div className='col-md-6'>
+                                                <div className="form-group mb-4">
+                                                    <label>
+
+                                                        Godown <span className="error-badge">*</span>
+                                                    </label>
+
+                                                    <Select
+                                                        className={`${touched.godown && error.godown
+                                                            ? "input-error"
+                                                            : ""
+                                                            }`}
+                                                        options={godown}
+                                                        name="item"
+                                                        value={godownValue}
+                                                        onChange={(e) => handleSelectChangeGoDown(e, setFieldValue)}
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            borderRadius: 8,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary25: 'rgba(5,131,107,0.1)',
+                                                                primary: '#05836b',
+                                                            },
+                                                        })}
+                                                    />
+
+                                                    <ErrorMessage
+                                                        className="error"
+                                                        name="item"
+                                                        component="span"
+                                                    />
+                                                </div>
+                                            </div>
                                             <div className='col-md-6'>
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -292,6 +345,9 @@ const EditBuySell = (props) => {
                                                     />
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className='row'>
+                                         
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -353,9 +409,6 @@ const EditBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="row">
-
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -378,6 +431,10 @@ const EditBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className="row">
+
+                                         
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -435,10 +492,9 @@ const EditBuySell = (props) => {
                                                         className={`form-control`}
                                                         disabled={true}
                                                         value={
-                                                            isActive.buy?
+                                                     
                                                             values.commission/100 == 0 ? "₹"+(values.rate*values.weight - values.debit) :
-                                                            "₹"+((values.rate*values.weight)-[(values.rate*values.weight - values.debit)*(values.commission/100)]).toLocaleString("en-IN") :values.commission/100 == 0? "₹"+(values.rate*values.weight - values.debit):
-                                                            "₹"+(parseInt(values.rate*values.weight)+parseInt([(values.rate*values.weight - values.debit)*(values.commission/100)])).toLocaleString("en-IN")
+                                                            "₹"+((values.rate*values.weight- values.debit)+parseInt([(values.rate*values.weight - values.debit)*(values.commission/100)])).toLocaleString("en-IN")
                                                             
                                                         }
                                                     />
@@ -449,11 +505,7 @@ const EditBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="row">
-
-
-                                            <div className="col-md-12">
+                                            <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         Date <span className="error-badge">*</span>
@@ -479,8 +531,8 @@ const EditBuySell = (props) => {
                                                     />
                                                 </div>
                                             </div>
-
                                         </div>
+                                   
                                         <div className="row">
 
                                             <div className="col-md-12">

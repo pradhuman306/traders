@@ -3,9 +3,6 @@ import * as ajaxCall from "../common/ajaxCall";
 import * as actionTypes from "../constants/actionTypes";
 import { setLoadedData, setPendingData } from "./common";
 
-
-
-
 export const getAccountList = (payload) => (dispatch) => {
   setPendingData(dispatch);
     ajaxCall

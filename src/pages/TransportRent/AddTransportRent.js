@@ -20,6 +20,7 @@ const AddTransportRent = (props) => {
     const dispatch = useDispatch();
     const [error, setError] = useState({});
     const [partyListOpt, setPartyListOptions] = useState([]);
+    const [valueParty, setValueParty] = useState([]);
     
     useEffect(()=>{
 dispatch(getParty(user_id));
@@ -30,12 +31,20 @@ dispatch(getParty(user_id));
         newPartyList.push({label:item.name,value:item.id});
       })
       setPartyListOptions([...newPartyList]);
+  
     },[partyList])
+
+    useEffect(()=>{
+   
+      setValueParty({label:props.transportRow.party,value:props.transportRow.party_id});
+  
+    },[props.transportRow])
 
     const handleSelectChange = (e,setFieldValue) => {
 
       if(e){
         setFieldValue('party',e.value);
+        setValueParty(e);
       }
     
     } 
@@ -52,8 +61,9 @@ dispatch(getParty(user_id));
     <div className="modal-dialog">
       <div className="modal-content right-modal">
       <Formik
+      enableReinitialize
               initialValues={{
-                party:"",
+                party:props.transportRow.party_id,
                 destination:"",
                 rate:"",
                 advance:"",
@@ -121,6 +131,7 @@ dispatch(getParty(user_id));
                             isSearchable={true}
                             options={partyListOpt} 
                             ref={partyRef}
+                            value={valueParty}
                             name="party" 
                             onChange={(e)=>handleSelectChange(e,setFieldValue)}
                             theme={(theme) => ({
@@ -224,7 +235,7 @@ dispatch(getParty(user_id));
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
-                            Remaining amount 
+                            Pending amount 
                             
                           </label>
                           <Field

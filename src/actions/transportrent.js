@@ -22,10 +22,10 @@ export const getTransportRentList = (payload) => (dispatch) => {
     });
 }
 
-export const getRentHistoryByParty = (payload) => (dispatch) => {
+export const getRentHistoryByParty = (payload,param,datefromto) => (dispatch) => {
   setPendingData(dispatch);
     ajaxCall
-    .get(`${config.BASE_URL}getrenthistorybyparty/${payload}`)
+    .get(`${config.BASE_URL}getrenthistorybyparty/${payload}?f=${param}&start=${datefromto?.start}&end=${datefromto?.end}`)
     .then((res) => {
       setLoadedData(dispatch);
         dispatch({
@@ -115,5 +115,28 @@ export const deleteTransportRentList = (payload) => (dispatch) => {
 export const setEmptyTransDetails = () => (dispatch) => {
   dispatch({
     type: actionTypes.SET_EMPTY_TRANS_LIST,
+  });
+}
+
+export const payRentAmount = (payload, elementRef, setBtnPending, resetForm ,filterValue) => (dispatch) => {
+  ajaxCall
+  .post(`${config.BASE_URL}rentpay`,payload)
+  .then((res) => {
+    setBtnPending(false);
+    dispatch(getRentHistoryByParty(payload.id,filterValue));
+    dispatch(getTransportRentList(payload.user_id));
+      resetForm();
+      elementRef.current.click();
+      dispatch({
+          type: actionTypes.SUCCESS_MESSAGE,
+          payload: `₹${payload.amount} Paid successfully!`,
+        });
+  })
+  .catch((error) => {
+    setBtnPending(false);
+    dispatch({
+      type: actionTypes.ERROR_MESSAGE,
+      payload: error.response.data.message,
+    });
   });
 }

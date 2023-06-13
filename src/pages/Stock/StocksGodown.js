@@ -5,42 +5,66 @@ import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { deleteAccount, getAccountList } from '../../actions/accounts';
-import { deleteTransportRentList, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
-import { deleteItems, getItems } from '../../actions/items';
-import AddItems from './AddItems';
-import EditItems from './EditItems';
-import DeleteSelected from '../../component/DeleteSelected';
+import EditGoDown from './EditGoDown';
+import AddGoDown from './AddGoDown';
+import { deleteGoDown, getGoDownList } from '../../actions/godown';
 import Header from '../Header/Header';
 
-const Items = (props) => {
+
+const StocksGodown = (props) => {
     const userId = props.auth.userdata.id;
-    const itemListAll = useSelector((state)=>state.itemReducer).itemList;
+    const godownListAll = useSelector((state)=>state.godownReducer).godownList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
-    const [itemList, setList] = useState([...itemListAll]);
-    const [itemListRow, setItemRow] = useState({});
+    const [godownList, setList] = useState([...godownListAll]);
+    const [godownListRow, setGodownRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
-
-
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
 
+    const ExpandedComponent = ({ data }) => {
+        // window.innerWidth <= 599 ? <></> : "";
+        if (window.innerWidth <= 599) {
+            return (
+                <>
+                    <p>
+                        <b>Place:</b> {data.place}
+                    </p>
+                 
+                </>
+            );
+        } 
+    };
+
+    var onresize = function () {
+        //your code here
+        //this is just an example
+        if (window.innerWidth <= 599) {
+            setisExpandable(true);
+        } else {
+            setisExpandable(false);
+        }
+    };
+    window.addEventListener("resize", onresize);
 
     useEffect(() => {
-        dispatch(getItems(userId));
-   
+        dispatch(getGoDownList(userId));
+        if (window.innerWidth <= 599) {
+            setisExpandable(true);
+        } else {
+            setisExpandable(false);
+        }
     }, []);
 
     useEffect(() => {
         if (filterText) {
-            let tmp = itemListAll.filter((item) => {
+            let tmp = godownListAll.filter((item) => {
                 if (
-                    item.item?.toLowerCase().includes(filterText.toLowerCase()) 
+                    item.name?.toLowerCase().includes(filterText.toLowerCase()) 
                 ) {
                     return true;
                 }
@@ -48,9 +72,9 @@ const Items = (props) => {
             });
             setList([...tmp]);
         } else {
-            setList([...itemListAll]);
+            setList([...godownListAll]);
         }
-    }, [filterText,itemListAll]);
+    }, [filterText,godownListAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -62,18 +86,18 @@ const Items = (props) => {
         () => [
           
           {
-            name: "Item",
+            name: "Name",
             selector: (row) => {
-                let newName = row.item.split(" ");
+                let newName = row.name.split(" ");
                 let firstC = newName[0][0];
                 let lastC = "";
                 if (newName[1]) {
                     lastC = newName[1][0].toUpperCase();
                 }
                 return (
-         
+            
                     <div className="user-wrap">
-                        <div className="user-detail">{row.item}</div>
+                        <div className="user-detail">{row.name}</div>
                     </div>
                  
                 );
@@ -81,8 +105,14 @@ const Items = (props) => {
             sortable: true,
          
         },
+
+        {
+            name: "Place",
+            selector: (row) => row.place,
+            sortable: true,
+            hide:"sm"
+        },
           
-              
             {
                 name: "Actions",
                 width: "150px",
@@ -93,8 +123,8 @@ const Items = (props) => {
                                 <li>
                                 <a onClick={(e) => {
                                               e.preventDefault();
-                                              setItemRow(row);
-                                              setId(row.id);
+                                              setGodownRow(row);
+                                            setId(row.id);
 
                                         }}
                                             className="btn-sml"
@@ -132,9 +162,9 @@ const Items = (props) => {
                                     </a>
                                     <ConfirmModal
                                 id={row.id}
-                                name={row.item}
+                                name={row.name}
                                 yes={(id) => {
-                                    dispatch(deleteItems({id:row.id,name:row.item,user_id:userId}));
+                                    dispatch(deleteGoDown({id:row.id,name:row.name,user_id:userId}));
                                 }}
                              
                             />
@@ -151,14 +181,22 @@ const Items = (props) => {
         []
     );
 
-    return ( <>
+
+
+
+
+
+
+    return (
+        <>
+            {/* <Header heading="Stock Management" {...props} /> */}
         <div className="body-content">
             <div className="usermanagement-main">
                 <div className="datatable-filter-wrap">
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder="Search items..."
+                            placeholder="Search godown..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
@@ -173,33 +211,35 @@ const Items = (props) => {
                                     data-bs-target="#addaccount"
                                 >
                             
-                                  Add Item
-                                
+                                  Add Godown               
                                 
                                 </button>
                             </li>
-                           
 
+                
+                        
                         </ul>
                     </div>
                 </div>
             </div>
-            <AddItems {...props}/>
-            <EditItems {...props} row_id={id} row_data={itemListRow} />
-            
+            <AddGoDown {...props}/>
+            <EditGoDown {...props} row_id={id} row_data={godownListRow} />
+         
             <DataTable
                 columns={columns}
-                data={itemList}
+                data={godownList}
                 progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination
                 paginationPerPage={8}
+                expandableRows={isExpandable}
+                expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
-               
+            
             />
         </div>
         </>
     )
 }
-export default Items;
+export default StocksGodown;

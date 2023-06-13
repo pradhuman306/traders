@@ -87,7 +87,7 @@ const EditStockDetails = (props) => {
               <Formik
                 enableReinitialize
                 initialValues={{
-                  firm: dataList.firm,
+                  // firm: dataList.firm,
                   godown:dataList.stock_id,
                   item: dataList.item,
                   quantity: dataList.quantity,
@@ -117,7 +117,7 @@ const EditStockDetails = (props) => {
                   values.stock_id = values.godown;
                   values.id = props.row_id;
                   props.setBtnPending(true);
-                  dispatch(updateStockDetails(values, elementRef, props.setBtnPending));
+                  dispatch(updateStockDetails(values, elementRef, props.setBtnPending,props.godownList.id));
                   setSubmitting(false);
                 }}
               >
@@ -212,7 +212,7 @@ const EditStockDetails = (props) => {
 
                             </div>
                           </div>
-                          <div className="col-md-6">
+                          {/* <div className="col-md-6">
                             <div className="form-group mb-4">
                               <label>
 
@@ -245,7 +245,7 @@ const EditStockDetails = (props) => {
                               />
 
                             </div>
-                          </div>
+                          </div> */}
 
                       
                           <div className="col-md-6">

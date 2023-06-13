@@ -9,45 +9,109 @@ import { deleteAccount, getAccountDetails, getAccountList } from '../../actions/
 import { deleteTransportRentList, getRentHistoryByParty, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
-import { formatDate } from '../../actions/common';
-
+import { formatDate, priceFormatter } from '../../actions/common';
+import Select from 'react-select';
 import { getItems } from '../../actions/items';
 import AddTransportRent from './AddTransportRent';
 import EditTransportRent from './EditTransportRent';
 import { getParty, getPartyById } from '../../actions/balancesheet';
 import Header from '../Header/Header';
 import EditParty from '../BalanceSheet/EditParty';
+import PayRent from './PayRent';
 
 
 const TransportDetails = (props) => {
     const { transid } = useParams();
     const userId = props.auth.userdata.id;
-    const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
+    const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
     const partySingle = useSelector((state) => state.balanceSheetReducer).partySingle;
-    const transRentListAll = useSelector((state)=>state.transportRentReducer).singletransportRent;
-    const btnPending = useSelector((state)=>state.balanceSheetReducer).pending;
-    const [transportRow,setTransportRow]= useState({});
+    const transRentListAll = useSelector((state) => state.transportRentReducer).singletransportRent;
+    const btnPending = useSelector((state) => state.balanceSheetReducer).pending;
+    const [newListItems, setNewListItems] = useState([]);
+    const [valueFilter, setValueFilter] = useState({});
+    const [transportRow, setTransportRow] = useState({});
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [transRentDetails, setList] = useState([...transRentListAll]);
-    const [partySingleDetails, setPartySingle] = useState({...partySingle});
+    const [partySingleDetails, setPartySingle] = useState({ ...partySingle });
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
-
+    const [partyNameShort, setPartyShort] = useState("");
+    const [isDisplayDate,setDisplayDate] = useState(false);
+    const [dateFromTo,setDateFromTo] = useState({start:"",end:""});
+    const [totalPaid,setTotalPaid] = useState(0);
+    const [lastPaid,setLastPaid] = useState({});
 
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
 
     useEffect(() => {
-        dispatch(getPartyById(transid));
-        console.log(transRentDetails);
+
+        let newFilterItems = [{
+            label: "This month",
+            value: "1m"
+        }, {
+            label: "Last month",
+            value: "1lm"
+        }, {
+            label: "Last 3 months",
+            value: "3m"
+        }, {
+            label: "Last 6 months",
+            value: "6m"
+        }, {
+            label: "This year",
+            value: "1y"
+        },{
+            label: "Custom date",
+            value: "custom"
+        }]
+        setNewListItems([...newFilterItems]);
+        setValueFilter(newFilterItems[0]);
+        // dispatch(getRentHistoryByParty(transid,newFilterItems[0].value));
     }, [transid])
 
+useEffect(()=>{
+    let totalPaid = 0;
+    if(props.transportRow.rent_paid){
+        let rent_paid = JSON.parse(props.transportRow.rent_paid);
+        totalPaid = rent_paid.reduce((accumulator, object) => {
+            return accumulator + parseInt(object.amount);
+          }, 0);
+          setLastPaid(rent_paid[rent_paid.length-1]);
+    }else{
+        setLastPaid({});
+    }
+    setTotalPaid(totalPaid);
+},[props.transRentList,props.transportRow])
+    const handleSelectChange = (e) => {
+        if (e && e.value != "custom") {
+            dispatch(getRentHistoryByParty(props.transportRow.party_id,e.value));
+            console.log(transid);
+            setValueFilter(e);
+            setDisplayDate(false);
+        }else if(e.value === "custom"){
+            setDisplayDate(true);
+            setValueFilter(e);
+        }
+    }
+    const handleSearch = () => {
+        dispatch(getRentHistoryByParty(props.transportRow.party_id,'custom',dateFromTo));
 
-
+    }
+    const handleChangeDate = (e,param) => {
+        let fromToDate = {...dateFromTo};
+        if(param === 'start'){
+            fromToDate.start = e.target.value;
+        }
+        if(param === 'end'){
+            fromToDate.end = e.target.value;
+        }
+        setDateFromTo(fromToDate);
+    }
     useEffect(() => {
-        setPartySingle({...partySingle});
+        setPartySingle({ ...partySingle });
     }, [partySingle])
 
 
@@ -134,8 +198,13 @@ const TransportDetails = (props) => {
             });
             setList([...tmp]);
         } else {
+            
             setList([...transRentListAll]);
         }
+
+  
+        
+     
     }, [filterText, transRentListAll]);
 
     const hanndleSearch = (value) => {
@@ -146,7 +215,7 @@ const TransportDetails = (props) => {
 
     const columns = useMemo(
         () => [
-       
+
             {
                 name: "Date",
                 selector: (row) => formatDate(row.date),
@@ -160,55 +229,55 @@ const TransportDetails = (props) => {
                 // width: "200px",
                 hide: "sm",
             },
-          
+
             {
                 name: "Rate",
-              
+
                 sortable: true,
                 hide: "md",
                 selector: (row) => {
                     return (
-                      
-                            <span className="badge rounded-pill bg-text text-bg-primary" >
-                                {"₹"+parseInt(row.rate).toLocaleString("en-IN")}
-                            </span> 
+
+                        <span className="badge rounded-pill bg-text text-bg-primary" >
+                            {"₹" + parseInt(row.rate).toLocaleString("en-IN")}
+                        </span>
                     );
                 },
             },
             {
                 name: "Weight",
-                selector: (row) => row.weight+" qt",
+                selector: (row) => row.weight + " qt",
                 sortable: true,
                 hide: "md",
             },
             {
                 name: "Advance",
-                selector: (row) => "₹"+parseInt(row.advance).toLocaleString("en-IN"),
+                selector: (row) => "₹" + parseInt(row.advance).toLocaleString("en-IN"),
                 sortable: true,
                 hide: "md",
             },
             {
-                name: "Remaining Amount",
-                
+                name: "Pending Amount",
+
                 sortable: true,
                 hide: "md",
                 selector: (row) => {
                     return (
-                      
-                            <span className="badge rounded-pill bg-text text-bg-warning">
-                                {"₹"+parseInt(row.rate*row.weight - row.advance).toLocaleString("en-IN")}
-                            </span> 
+
+                        <span className="badge rounded-pill bg-text text-bg-warning">
+                            {"₹" + parseInt(row.rate * row.weight - row.advance).toLocaleString("en-IN")}
+                        </span>
                     );
                 },
             },
-         
+
             {
-              name: "Description",
-              selector: (row) => row.description,
-              sortable: true,
-              hide: "md",
-          },
-        
+                name: "Description",
+                selector: (row) => row.description,
+                sortable: true,
+                hide: "md",
+            },
+
             {
                 name: "Actions",
                 width: "150px",
@@ -217,21 +286,21 @@ const TransportDetails = (props) => {
                         <>
                             <ul className='action-replay'>
                                 <li>
-                                <a onClick={(e) => {
-                                              e.preventDefault();
-                                              let newRow =  row; 
-                                              
-                                              newRow.party_name = props.transportRow.party;
-                                              setTransportRow(newRow);
-                                              setId(row.id);
+                                    <a onClick={(e) => {
+                                        e.preventDefault();
+                                        let newRow = row;
 
-                                        }}
-                                            className="btn-sml"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#edittransportrent"
-                                        >
+                                        newRow.party_name = props.transportRow.party;
+                                        setTransportRow(newRow);
+                                        setId(row.id);
 
-                                        <svg class="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    }}
+                                        className="btn-sml"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#edittransportrent"
+                                    >
+
+                                        <svg className="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <mask id="path-1-outside-1_1154_12363" maskUnits="userSpaceOnUse" x="3" y="4" width="17" height="17" fill="black">
                                                 <rect fill="white" x="3" y="4" width="17" height="17"></rect>
                                                 <path d="M13.5858 7.41421L6.39171 14.6083C6.19706 14.8029 6.09974 14.9003 6.03276 15.0186C5.96579 15.1368 5.93241 15.2704 5.86564 15.5374L5.20211 18.1915C5.11186 18.5526 5.06673 18.7331 5.16682 18.8332C5.2669 18.9333 5.44742 18.8881 5.80844 18.7979L5.80845 18.7979L8.46257 18.1344C8.72963 18.0676 8.86316 18.0342 8.98145 17.9672C9.09974 17.9003 9.19706 17.8029 9.39171 17.6083L16.5858 10.4142L16.5858 10.4142C17.2525 9.74755 17.5858 9.41421 17.5858 9C17.5858 8.58579 17.2525 8.25245 16.5858 7.58579L16.4142 7.41421C15.7475 6.74755 15.4142 6.41421 15 6.41421C14.5858 6.41421 14.2525 6.74755 13.5858 7.41421Z"></path>
@@ -242,31 +311,31 @@ const TransportDetails = (props) => {
                                     </a>
                                 </li>
                                 <li>
-                                <a onClick={(e) => {
-                                            e.preventDefault();
-                                        }}
-                                            className="btn-sml"
-                                            data-bs-toggle="modal"
-                                            data-bs-target={`#confirm_${row.id}`}
-                                        >
+                                    <a onClick={(e) => {
+                                        e.preventDefault();
+                                    }}
+                                        className="btn-sml"
+                                        data-bs-toggle="modal"
+                                        data-bs-target={`#confirm_${row.id}`}
+                                    >
 
 
-                                       
+
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M10 15L10 12" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M14 15L14 12" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M3 7H21V7C20.0681 7 19.6022 7 19.2346 7.15224C18.7446 7.35523 18.3552 7.74458 18.1522 8.23463C18 8.60218 18 9.06812 18 10V16C18 17.8856 18 18.8284 17.4142 19.4142C16.8284 20 15.8856 20 14 20H10C8.11438 20 7.17157 20 6.58579 19.4142C6 18.8284 6 17.8856 6 16V10C6 9.06812 6 8.60218 5.84776 8.23463C5.64477 7.74458 5.25542 7.35523 4.76537 7.15224C4.39782 7 3.93188 7 3 7V7Z" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
-                                            <path d="M10.0681 3.37059C10.1821 3.26427 10.4332 3.17033 10.7825 3.10332C11.1318 3.03632 11.5597 3 12 3C12.4403 3 12.8682 3.03632 13.2175 3.10332C13.5668 3.17033 13.8179 3.26427 13.9319 3.37059" stroke="#8F99B3" stroke-width="2" stroke-linecap="round"></path>
+                                            <path d="M10 15L10 12" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M14 15L14 12" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M3 7H21V7C20.0681 7 19.6022 7 19.2346 7.15224C18.7446 7.35523 18.3552 7.74458 18.1522 8.23463C18 8.60218 18 9.06812 18 10V16C18 17.8856 18 18.8284 17.4142 19.4142C16.8284 20 15.8856 20 14 20H10C8.11438 20 7.17157 20 6.58579 19.4142C6 18.8284 6 17.8856 6 16V10C6 9.06812 6 8.60218 5.84776 8.23463C5.64477 7.74458 5.25542 7.35523 4.76537 7.15224C4.39782 7 3.93188 7 3 7V7Z" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
+                                            <path d="M10.0681 3.37059C10.1821 3.26427 10.4332 3.17033 10.7825 3.10332C11.1318 3.03632 11.5597 3 12 3C12.4403 3 12.8682 3.03632 13.2175 3.10332C13.5668 3.17033 13.8179 3.26427 13.9319 3.37059" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
                                         </svg>
                                     </a>
                                     <ConfirmModal
-                                id={row.id}
-                                name={""}
-                                yes={(id) => {
-                                    dispatch(deleteTransportRentList({id:row.id,name:"",user_id:userId,party_id:row.party}));
-                                }}
-                             
-                            />
+                                        id={row.id}
+                                        name={""}
+                                        yes={(id) => {
+                                            dispatch(deleteTransportRentList({ id: row.id, name: "", user_id: userId, party_id: row.party }));
+                                        }}
+
+                                    />
                                 </li>
                             </ul>
 
@@ -279,56 +348,114 @@ const TransportDetails = (props) => {
         ],
         [props.transportRow]
     );
-
+  
+    useEffect(() => {
+        if (props.transportRow.party) {
+            let newName = props.transportRow.party.split(" ");
+            let firstC = newName[0][0];
+            let lastC = "";
+            if (newName[1]) {
+                lastC = newName[1][0].toUpperCase();
+            }
+            setPartyShort(firstC + lastC);
+        }
+    }, [props.transportRow])
     return (
         <div className="body-content">
-                 {/* <Header heading={partySingleDetails.name} {...props} /> */}
-      
             <div className="usermanagement-main">
-                {props.transportRow.party ?   <div className="">
-                <h2>{props.transportRow.party}</h2>
-                <p>Pending Amount: {"₹"+parseInt(props.transportRow.total_rent).toLocaleString("en-IN")}</p>
-                <a className="badge rounded-pill bg-text text-bg-primary"   data-bs-toggle="modal"
-                                            data-bs-target="#editparty">
-                               Edit party
-                            </a> 
+            <div className="nav inline-div">
+            <div className='two-row-content'>
+                        <p className='total-am'><span>Total Pending Amount:</span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{"₹" + parseInt(props.totalPending-props.totalAllPaid).toLocaleString("en-IN")}</label></p>      
+                       </div>
+                    </div>
+                {props.transportRow.party ? <div className="nav inline-div">
+                    <div className='two-row-content'>
+                         <div className={`user-wrap`}>
+                            <h5 className="user-icon">{partyNameShort}</h5>
+                            <div className="user-detail">{props.transportRow.party}
+                            {/* <label className='badge rounded-pill bg-text text-bg-primary mx-2' data-bs-toggle="modal"
+                                data-bs-target="#editparty"     > 
+                                 Edit party
+                            </label> */}
+                            </div>
+                        </div>
+                        {/* <div>{lastPaid.amount?`Last paid on ${formatDate(lastPaid.date)} amount ${priceFormatter(lastPaid.amount)}`:""}</div> */}
+                        <div>{lastPaid.amount? `Last paid on`:""} {lastPaid.amount?<b>{formatDate(lastPaid.date)}</b>:""} {lastPaid.amount? `amount`:""} {lastPaid.amount?<b>{priceFormatter(lastPaid.amount)}</b>:""}</div>
+                        <p><span>Total Pending Amount :</span> <label className='badge rounded-pill bg-text text-bg-warning xl-text'>{"₹" + parseInt(props.transportRow.total_rent-totalPaid).toLocaleString("en-IN")}</label></p>
+                    </div>
                 </div> : ""}
-              
-               
-                <div className="datatable-filter-wrap">
+                {props.transportRow.party ? <div><div className="datatable-filter-wrap">
                     <div className="datatable-search">
                         <input
                             type="text"
                             placeholder="Search transport details..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
-                        />
+                        />                 
                     </div>
+                    <div className='select-filter form-group'>
+                    <Select
+                        options={newListItems}
+                        onChange={(e) => handleSelectChange(e)}
+                        value={valueFilter}
+                        theme={(theme) => ({
+                            ...theme,
+                            borderRadius: 8,
+                            colors: {
+                                ...theme.colors,
+                                primary25: 'rgba(5,131,107,0.1)',
+                                primary: '#05836b',
+                            },
+                        })}
+                    />
+                    
+                </div>
                     <div className="datatable-filter-right">
-                        <ul className="btn-group">
-
-                        {props.transportRow.party_id ?  <li>
+                            {props.transportRow.party_id ? 
+                                         <ul className="btn-group">
+                          <li> 
+                             
+                        <button
+                        className={`${totalPaid >= props.transportRow.total_rent?"anchor pay-btn paid-btn":"anchor pay-btn"}`}
+                        // onClick={() => setRowData(row)}
+                        data-bs-toggle={`${totalPaid >= props.transportRow.total_rent ? false : "modal"}`}
+                        data-bs-target={`${totalPaid >= props.transportRow.total_rent ? false : "#payRent"}`}
+                    >
+                     {totalPaid >= props.transportRow.total_rent?"Paid":"Pay"}
+                    </button>
+                    </li>   
+                            <li>
                                 <button
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
                                     data-bs-target="#addtransportrent"
                                 >
-                         
-                                  Add Transport
-                                 
-                                
+                                    Add Transport
                                 </button>
-                            </li> :""}
-                       
-
-
-                        </ul>
+                            </li></ul> : ""}
                     </div>
-                </div>
+                </div><div className={`${!isDisplayDate?"d-none":"date-filter"}`}>
+                    <label>From: <input
+                        type="date"
+                        name="from"
+                        onChange={(e)=>handleChangeDate(e,'start')}
+                        className="form-control"
+                    /></label>
+              
+                      <label>To:   <input
+                        type="date"
+                        name="to"
+                        onChange={(e)=>handleChangeDate(e,'end')}
+                        className="form-control"
+                    /></label>
+                    <button className='btn btn-primary' onClick={()=>handleSearch()} type="button">Search</button>
+                </div></div>:""}
             </div>
-            {/* <AddTransportRent {...props} partyList={partyList} row_data={props.transportRow} setTransportRow={props.setTransportRow}  /> */}
+                 
             <EditTransportRent {...props} row_data={transportRow} row_id={id} partyList={partyList} />
-            <EditParty {...props} row_id={props.partyDetails.id} row_data={props.partyDetails} btnPending={btnPending}  />
+            <EditParty {...props} row_id={props.partyDetails.id} row_data={props.partyDetails} btnPending={btnPending} />
+            <PayRent {...props} row_data={props.transportRow} filterValue={valueFilter} userId={userId} pendingAmount={parseInt(props.transportRow.total_rent-totalPaid)}  />
+
 
             <DataTable
                 columns={columns}

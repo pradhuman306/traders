@@ -23,15 +23,94 @@ export const setPendingData = (dispatch) => {
 export const setLoadedData = (dispatch) => {
   dispatch({ type: SET_LOADED });
 }
-export const totalAmountCalculate = (row) => {
-  return row.type === 'Buy' ?
-    row.commission / 100 == 0 ? "₹" + (row.amount - row.debit) :
-      "₹" + ((row.amount) - [(row.amount - row.debit) * (row.commission / 100)]).toLocaleString("en-IN") : row.commission / 100 == 0 ? "₹" + (row.amount - row.debit) :
-      "₹" + (parseInt(row.amount) + parseInt([(row.amount - row.debit) * (row.commission / 100)])).toLocaleString("en-IN")
+
+export const totalAmountCalculateRaw = (row) => { 
+let mainAmountAfterDebit = 0;
+if(row.debit == ""){
+  row.debit = 0;
 }
-export const totalAmountCalculateRaw = (row) => {
-  return row.type === 'Buy' ?
-    row.commission / 100 == 0 ?  (row.amount - row.debit) :
-       ((row.amount) - [(row.amount - row.debit) * (row.commission / 100)]) : row.commission / 100 == 0 ? "₹" + (row.amount - row.debit) :
-       (parseInt(row.amount) + parseInt([(row.amount - row.debit) * (row.commission / 100)]))
+if(row.commission == ""){
+  row.commission = 0;
 }
+  
+    mainAmountAfterDebit = parseInt(row.amount) - parseInt(row.debit);
+    if(parseInt(row.commission) / 100 == 0){
+      console.log(mainAmountAfterDebit);
+      return parseInt(mainAmountAfterDebit);
+    }else{
+      console.log(parseInt((mainAmountAfterDebit) + parseInt([(mainAmountAfterDebit) * (parseInt(row.commission) / 100)])));
+      return parseInt((mainAmountAfterDebit) + parseInt([(mainAmountAfterDebit) * (parseInt(row.commission) / 100)]));
+    }
+
+}
+
+export const totalAmountBuy = (row) => { 
+  let mainAmountAfterDebit = 0;
+  if(row.debit == ""){
+    row.debit = 0;
+  }
+  if(row.commission == ""){
+    row.commission = 0;
+  }
+    if(row.type=="Buy"){
+      mainAmountAfterDebit = parseInt(row.amount) - parseInt(row.debit);
+      if(parseInt(row.commission) / 100 == 0){
+        return parseInt(mainAmountAfterDebit);
+      }else{
+        return parseInt((mainAmountAfterDebit) + parseInt([(mainAmountAfterDebit) * (parseInt(row.commission) / 100)]));
+      }
+    }else {
+      return 0;
+    }
+
+  }
+  export const totalAmountSell = (row) => { 
+    let mainAmountAfterDebit = 0;
+    if(row.debit == ""){
+      row.debit = 0;
+    }
+    if(row.commission == ""){
+      row.commission = 0;
+    }
+      if(row.type=="Sale"){
+        mainAmountAfterDebit = parseInt(row.amount) - parseInt(row.debit);
+        if(parseInt(row.commission) / 100 == 0){
+          return parseInt(mainAmountAfterDebit);
+        }else{
+          return parseInt((mainAmountAfterDebit) + parseInt([(mainAmountAfterDebit) * (parseInt(row.commission) / 100)]));
+        }
+      }else{
+        return 0;
+      }
+  
+    }
+
+export const gstCalculate = (amount,gst) => { 
+  if(gst == ""){
+    gst = 0;
+  }
+  return parseInt(amount)*parseInt(gst)/100;
+  }
+
+  export const gstCalculateBuy = (amount,gst,row) => { 
+    if(row.type == 'Buy'){
+      if(gst == ""){
+        gst = 0;
+      }
+      return parseInt(amount)*parseInt(gst)/100;
+    }
+  
+    }
+
+export const priceFormatter = (price) => {
+  return "₹"+parseInt(price).toLocaleString("en-IN");
+  
+  }
+  export const makePositive = (amount) => {
+ if(parseInt(amount) < 0){
+return parseInt(-amount);
+ }else{
+  return parseInt(amount);
+ }
+    
+    }

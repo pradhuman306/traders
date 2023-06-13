@@ -123,7 +123,7 @@ function SideNav(props) {
          
               className={`${pathname === "/stock" || pathname === `/stockdetails/${params.stockid}` ? "active" : ""}`}
             >
-              <Link to="/stockdetails/all">
+              <Link to="/stock">
             
                 <svg
                   width="24"

@@ -13,6 +13,7 @@ import { addBuy, addSell } from '../../actions/buysell';
 const AddBuySell = (props) => {
     const elementRef = useRef(null);
     const itemSelectRef = useRef("");
+    const godownSelectRef = useRef("");
     const partySelectRef = useRef("");
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
@@ -22,6 +23,11 @@ const AddBuySell = (props) => {
     const [newListItems, setNewListItems] = useState([]);
     const [partyValue, setPartyValue] = useState({});
     const [itemValue, setItemValue] = useState({});
+    const [godown,setGoDownList]=useState([]);
+    const [godownValue,setGodownValue]=useState({});
+    
+
+    
     const handleSelectChangeItem = (e, setFieldValue) => {
         if (e) {
             setFieldValue('item', e.value);
@@ -44,10 +50,26 @@ const AddBuySell = (props) => {
         setPartyListOptions([...newPartyList]);
     }, [props.partyList])
 
+    useEffect(() => {
+        let godownList = [];
+        props.godownListAll.forEach((item) => {
+            godownList.push({ label: item.name, value: item.id });
+        })
+        setGoDownList([...godownList]);
+
+    }, [props.godownListAll])
+
     const handleSelectChange = (e, setFieldValue) => {
         if (e) {
             setFieldValue('party', e.value);
             setPartyValue(e);
+        }
+    }
+
+    const handleSelectChangeGoDown = (e, setFieldValue) => {
+        if (e) {
+            setFieldValue('godown', e.value);
+            setGodownValue(e);
         }
     }
 
@@ -87,6 +109,7 @@ const AddBuySell = (props) => {
                             initialValues={{
                                 party: "",
                                 bill_no: "",
+                                godown:"",
                                 rate: "",
                                 amount: "",
                                 debit: "",
@@ -110,6 +133,9 @@ const AddBuySell = (props) => {
                                 if (!values.date) {
                                     errors.date = "Please select date!"
                                 }
+                                if (!values.godown) {
+                                    errors.godown = "Please select godown!"
+                                }
 
 
                                 setError({ ...errors });
@@ -123,6 +149,7 @@ const AddBuySell = (props) => {
                                 console.log(itemSelectRef);
                                 itemSelectRef.current.clearValue();
                                 partySelectRef.current.clearValue();
+                                godownSelectRef.current.clearValue();
                                 if (isActive.buy) {
                                     dispatch(addBuy(values, elementRef, props.setBtnPending, resetForm));
                                 } else {
@@ -248,6 +275,42 @@ const AddBuySell = (props) => {
                                             </div>
                                         </div>
                                         <div className='row'>
+                                        <div className='col-md-6'>
+                                                <div className="form-group mb-4">
+                                                    <label>
+
+                                                        Godown <span className="error-badge">*</span>
+                                                    </label>
+
+                                                    <Select
+                                                        className={`${touched.item && error.item
+                                                            ? "input-error"
+                                                            : ""
+                                                            }`}
+                                                        options={godown}
+                                                        isSearchable={true}
+                                                        isClearable={true}
+                                                        name="godown"
+                                                        ref={godownSelectRef}
+                                                        onChange={(e) => handleSelectChangeGoDown(e, setFieldValue)}
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            borderRadius: 8,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary25: 'rgba(5,131,107,0.1)',
+                                                                primary: '#05836b',
+                                                            },
+                                                        })}
+                                                    />
+
+                                                    <ErrorMessage
+                                                        className="error"
+                                                        name="godown"
+                                                        component="span"
+                                                    />
+                                                </div>
+                                            </div>
                                             <div className='col-md-6'>
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -284,6 +347,7 @@ const AddBuySell = (props) => {
                                                     />
                                                 </div>
                                             </div>
+                                           
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -346,9 +410,6 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="row">
-
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -372,6 +433,10 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className="row">
+
+                                           
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -430,11 +495,10 @@ const AddBuySell = (props) => {
                                                         disabled={true}
                                                         placeholder="₹"
                                                         value={
-                                                            isActive.buy ?
-                                                                values.commission / 100 == 0 ? "₹" + (values.amount - values.debit) :
-                                                                    "₹" + ((values.amount) - [(values.amount - values.debit) * (values.commission / 100)]).toLocaleString("en-IN") : values.commission / 100 == 0 ? "₹" + (values.amount - values.debit) :
-                                                                    "₹" + (parseInt(values.amount) + parseInt([(values.amount - values.debit) * (values.commission / 100)])).toLocaleString("en-IN")
-
+                                                     
+                                                            values.commission/100 == 0 ? "₹"+(values.rate*values.weight - values.debit) :
+                                                            "₹"+((values.rate*values.weight- values.debit)+parseInt([(values.rate*values.weight - values.debit)*(values.commission/100)])).toLocaleString("en-IN")
+                                                            
                                                         }
                                                     />
                                                     {/* <ErrorMessage
@@ -444,13 +508,7 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-
-                                        </div>
-                                        <div className="row">
-
-
-
-                                            <div className="col-md-12">
+                                            <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         Date <span className="error-badge">*</span>
@@ -476,8 +534,8 @@ const AddBuySell = (props) => {
                                                     />
                                                 </div>
                                             </div>
-
                                         </div>
+                                    
                                         <div className="row">
 
                                             <div className="col-md-12">
