@@ -58,6 +58,12 @@ function Setting(props) {
                  Godown <span className="badge rounded-pill bg-text text-bg-primary">{godownListAll.length?godownListAll.length:""}</span>
                 </Link>
               </li>
+              <li className={`${pathname === "/settings/investment" ? "active" : ""}`}>
+              <Link to="/settings/investment"
+                >
+                 Investment
+                </Link>
+              </li>
             </ul>
           </div>
           <div className="col-md-12">

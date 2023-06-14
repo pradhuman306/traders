@@ -4,78 +4,47 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { deleteParty, getParty } from '../../actions/balancesheet';
-import { makePositive, priceFormatter } from '../../actions/common';
 import ConfirmModal from '../../common/confirmModal';
-import DeleteSelected from '../../component/DeleteSelected';
 import CustomLoader from '../Customloader';
+import { deleteItems, getItems } from '../../actions/items';
+import AddInvestment from './AddInvestment';
+import EditInvestment from './EditInvestment';
 import Header from '../Header/Header';
-import AddParty from './AddParty';
-import EditParty from './EditParty';
+import { deleteInvestment, getInvestment } from '../../actions/investment';
+import { formatDate } from '../../actions/common';
+import { priceFormatter } from '../../actions/common';
 
-const BalanceSheet = (props) => {
+const Investment = (props) => {
     const userId = props.auth.userdata.id;
-    const partyData = useSelector((state)=>state.balanceSheetReducer).partyList;
-    const btnPending = useSelector((state)=>state.balanceSheetReducer).pending;
+    const investmentListAll = useSelector((state)=>state.investmentReducer).investmentList;
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const [filterText, setFilter] = useState("");
-    const [partyList, setList] = useState([...partyData]);
-    const [partyRow, setPartyRow] = useState({});
+    const [investmentList, setList] = useState([...investmentListAll]);
+    const [investmentListRow, setItemRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
-    const [totalAmount, setTotalAmount] = useState(0);
-    const [totalGSTAmount, setTotalGSTAmount] = useState(0);
-    const [totalPendingAmount, setTotalPendingAmount] = useState(0);
+    const [totalInvestment, setTotalInvestment] = useState(0);
+
+    
 
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
 
-    const ExpandedComponent = ({ data }) => {
-        // window.innerWidth <= 599 ? <></> : "";
-        if (window.innerWidth <= 599) {
-            return (
-                <>
-                    <p>
-                        <b>Mobile:</b> {data.mobile}
-                    </p>
-            
-                </>
-            );
-        } 
-    };
-
-    var onresize = function () {
-        //your code here
-        //this is just an example
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
-            setisExpandable(true);
-        } else {
-            setisExpandable(false);
-        }
-    };
-    window.addEventListener("resize", onresize);
 
     useEffect(() => {
-        dispatch(getParty(userId));
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
-            setisExpandable(true);
-        } else {
-            setisExpandable(false);
-        }
+        dispatch(getInvestment(userId));
+   
     }, []);
 
     useEffect(() => {
         let sum = 0;
-        let gstsum = 0;
-        let pendingsum = 0;
         if (filterText) {
-            let tmp = partyList.filter((item) => {
+            let tmp = investmentListAll.filter((item) => {
                 if (
-                    item.name?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.mobile?.toLowerCase().includes(filterText.toLowerCase()) 
+                    formatDate(item.date).includes(filterText) ||
+                    item.amount.includes(filterText) ||
+                    item.description?.includes(filterText) 
                 ) {
                     return true;
                 }
@@ -83,21 +52,13 @@ const BalanceSheet = (props) => {
             });
             setList([...tmp]);
         } else {
-            setList([...partyData]);
+            setList([...investmentListAll]);
         }
-      sum = partyData.reduce((accumulator, object) => {
-            return accumulator + object.finalamount;
+        sum = investmentListAll.reduce((accumulator, object) => {
+            return accumulator + parseInt(object.amount);
           }, 0);
-          gstsum = partyData.reduce((accumulator, object) => {
-            return accumulator + object.finalgstamount;
-          }, 0);
-          pendingsum = partyData.reduce((accumulator, object) => {
-            return accumulator + object.finalpendingamount;
-          }, 0);
-          setTotalAmount(sum);
-          setTotalGSTAmount(gstsum);
-          setTotalPendingAmount(pendingsum);
-    }, [filterText,partyData]);
+          setTotalInvestment(sum);
+    }, [filterText,investmentListAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -107,44 +68,31 @@ const BalanceSheet = (props) => {
 
     const columns = useMemo(
         () => [
-
-            {
-                name: "Party",
-                selector: (row) => {
-                    let newName = row.name.split(" ");
-                    let firstC = newName[0][0];
-                    let lastC = "";
-                    if (newName[1]) {
-                        lastC = newName[1][0].toUpperCase();
-                    }
-                    return (
-                      <Link className='anchor' to={`/balancesheet/${row.id}`}>
-                        <div className="user-wrap">
-                        <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
-                            <div className="user-detail">{row.name}</div>
-                        </div>
-                        </Link>
-                    );
-                },
-                sortable: true,
-                width: "50%",
+          
+          {
+            name: "Date",
+            selector: (row) => formatDate(row.date),
+            sortable: true,
+         
+        },
+        {
+            name: "Amount",
+            selector: (row) => {
+                return(
+                    <span class="badge rounded-pill bg-text text-bg-warning">{priceFormatter(row.amount)}</span>
+                )
             },
-
-            {
-              name: "Mobile",
-              sortable: true,
-              hide:"sm",
-              selector: (row) =>{
-                return (
-                    
-                    <span className="badge rounded-pill bg-text text-bg-light">
-                    {row.mobile}
-                    </span>
-                );
-            },
-          },
-        
-
+            sortable: true,
+         
+        },
+        {
+            name: "Description",
+            selector: (row) => row.description,
+            sortable: true,
+         
+        },
+          
+              
             {
                 name: "Actions",
                 width: "150px",
@@ -154,14 +102,14 @@ const BalanceSheet = (props) => {
                             <ul className='action-replay'>
                                 <li>
                                 <a onClick={(e) => {
-                                            e.preventDefault();
-                                            setPartyRow(row);
-                                            setId(row.id);
-                                            
+                                              e.preventDefault();
+                                              setItemRow(row);
+                                              setId(row.id);
+
                                         }}
                                             className="btn-sml"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#editparty"
+                                            data-bs-target="#editaccount"
                                         >
 
                                         <svg className="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -194,9 +142,9 @@ const BalanceSheet = (props) => {
                                     </a>
                                     <ConfirmModal
                                 id={row.id}
-                                name={row.name}
+                                name={"this entry"}
                                 yes={(id) => {
-                                    dispatch(deleteParty({id:row.id,name:row.name,user_id:userId}));
+                                    dispatch(deleteInvestment({id:row.id,name:"Entry",user_id:userId}));
                                 }}
                              
                             />
@@ -213,34 +161,21 @@ const BalanceSheet = (props) => {
         []
     );
 
-    return (
-        <>
-            <Header heading="Balance Sheet" {...props} />
+    return ( <>
+    
         <div className="body-content">
-        <div className='mr-minus'>
-                <div className="usermanagement-main">
-                    <p class="extra-stuff">
-
-                        <div className='amount-dtl'>
-                            <p className='total-am'><span>Total Amount : </span><label className={`badge rounded-pill bg-text ${(totalAmount)<0?"text-bg-success":"text-bg-danger"} xl-text`}>{priceFormatter(makePositive(parseInt(totalAmount)))+`${(totalAmount)<0?" CR.":" DR."}`}</label></p>
-                            <p className='total-am'><span>Total GST Amount : </span><label className={`badge rounded-pill bg-text ${(totalGSTAmount)<0?"text-bg-success":"text-bg-danger"} xl-text`}>₹{makePositive(parseInt(totalGSTAmount)).toLocaleString("en-IN")+`${totalGSTAmount<0?" CR.":" DR."}`}</label></p>
-                            <p className='pending-am'><span>Total Pending Amount :</span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{parseInt(totalPendingAmount)<0  ? priceFormatter(makePositive(makePositive(totalPendingAmount)))+`${" CR."}`:priceFormatter(makePositive((makePositive(totalPendingAmount))))+`${(totalPendingAmount)<0?" CR.":" DR."}`}</label></p>
-                        </div>
-                    </p>
-                    
-
-
-                </div>
-            </div>
             <div className="usermanagement-main">
                 <div className="datatable-filter-wrap">
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder="Search party..."
+                            placeholder="Search investment details..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
+                    </div>
+                    <div>
+                        <div>Total Amount: <span class="badge rounded-pill bg-text text-bg-warning">{priceFormatter(totalInvestment)}</span></div>
                     </div>
                     <div className="datatable-filter-right">
                         <ul className="btn-group">
@@ -249,33 +184,36 @@ const BalanceSheet = (props) => {
                                 <button
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#addparty"
+                                    data-bs-target="#addaccount"
                                 >
-                                  Add Party
+                            
+                                  Add Investment
+                                
+                                
                                 </button>
                             </li>
+                           
+
                         </ul>
                     </div>
                 </div>
-                
             </div>
-            <AddParty {...props} btnPending={btnPending} />
-            <EditParty {...props} row_id={id} row_data={partyRow} btnPending={btnPending}  />
-    
+            <AddInvestment {...props}/>
+            <EditInvestment  {...props} row_id={id} row_data={investmentListRow} />
+            
             <DataTable
                 columns={columns}
-                data={partyList}
+                data={investmentList}
                 progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination
                 paginationPerPage={8}
-                expandableRows={isExpandable}
-                expandableRowsComponent={ExpandedComponent}
                 onSort={handleSort}
+               
             />
         </div>
         </>
     )
 }
-export default BalanceSheet;
+export default Investment;

@@ -52,6 +52,7 @@ export const login = (loginDetails) => (dispatch) => {
         localstorage.set("exp", btoa(date));
         localstorage.set("traders_token", btoa(token));
         localstorage.set("userdata", JSON.stringify(data));
+        dispatch(getLogo())
         dispatch(loginSuccess(actionTypes.USER_LOADED, response.data));
         dispatch({
           type: actionTypes.SUCCESS_MESSAGE,

@@ -9,6 +9,7 @@ import firmReducer from "./firmReducer";
 import godownReducer from "./godownReducer";
 import loaderReducer from "./loaderReducer";
 import logoReducer from "./logoReducer";
+import investmentReducer from "./investmentReducer";
 import { combineReducers } from "redux";
 import * as actionTypes from "../constants/actionTypes";
 const appReducer = combineReducers({
@@ -22,7 +23,8 @@ const appReducer = combineReducers({
   godownReducer,
   loaderReducer,
   logoReducer,
-  firmReducer
+  firmReducer,
+  investmentReducer
 });
 
 export default function (state, action) {

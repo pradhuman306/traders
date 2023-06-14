@@ -26,7 +26,7 @@ const Signin = (props) => {
     setTimeout(() => {
       setsignInPending(false);
     }, 1000);
-    // dispatch(getLogo());
+ 
   }, []);
 
   useEffect(() => {
