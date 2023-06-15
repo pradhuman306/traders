@@ -199,7 +199,7 @@ const TransportRent = (props) => {
                         }, 0);
                     }
                     return (
-                        <span class="badge rounded-pill bg-text text-bg-light">{priceFormatter(row.total_rent - totalPaid)}</span>
+                        <span className="badge rounded-pill bg-text text-bg-light">{priceFormatter(row.total_rent - totalPaid)}</span>
                     )
 
                 },
@@ -215,13 +215,14 @@ const TransportRent = (props) => {
     return (
         <div className='ts-rent'>
             <Header heading="Transport Management" {...props} />
-            <div class="mr-minus">
-                <div class="usermanagement-main">
-                    <p class="extra-stuff"><div class="amount-dtl justify-content-end align-items-center">
-
-                        <p class="pending-am">
+            <div className="mr-minus">
+                <div className="usermanagement-main">
+                    <div className="extra-stuff">
+                        <div className="amount-dtl justify-content-end align-items-center">
+                        <p className="pending-am">
+                            
                             <span>Total Pending Amount</span>
-                            <label class="badge rounded-pill bg-text text-bg-warning xl-text">{(priceFormatter(totalPending - totalAllPaid))}
+                            <label className="badge rounded-pill bg-text text-bg-warning xl-text">{(priceFormatter(totalPending - totalAllPaid))}
                             </label>
                         </p>
                         <button
@@ -232,8 +233,7 @@ const TransportRent = (props) => {
                             Add Transport
                         </button>
                     </div>
-                    </p>
-
+                    </div>
                 </div>
             </div>
             <div className='row'>

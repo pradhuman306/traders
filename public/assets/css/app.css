@@ -1,3 +1,6 @@
+.overlay-close {
+    display: none;
+}
 /* siderbar */
 .sidebar {
     background: rgba(var(--white));
@@ -60,7 +63,10 @@
 .sidebar-body ul li.active a .transport-icon path {
     stroke: rgba(var(--primaryColor));
 }
-
+.r-items {
+    display: flex;
+    align-items: center;
+}
 /* main body */
 .body-main {
     padding: 0 30px;
@@ -532,6 +538,11 @@ a.anchor {
     font-size: 12px;
 }
 
+
+.datatable-search {
+    width: 50%;
+  }
+
 .datatable-filter-wrap.balance-filter-wrap {
     align-items: end;
 }
@@ -714,7 +725,7 @@ ul.st-dtl {
     border-top: 1px solid rgba(var(--border));
 }
 .main-nav {
-    height: calc(100vh - 140px);
+    height: calc(100vh - 70px);
     overflow: auto;
 }
 .usermanagement-main .extra-stuff {

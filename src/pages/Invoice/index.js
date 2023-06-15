@@ -24,26 +24,26 @@ const Invoice = (props) => {
     >
       <div className="modal-dialog">
         <div className="modal-content">
-            <div class="card">
-                <div class="card-body">
+            <div className="card">
+                <div className="card-body">
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="text-muted">
-                                <h5 class="font-size-16 mb-3">Billed To:</h5>
-                                <h5 class="font-size-15 mb-2">{partyDetails.name}</h5>
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="text-muted">
+                                <h5 className="font-size-16 mb-3">Billed To:</h5>
+                                <h5 className="font-size-15 mb-2">{partyDetails.name}</h5>
                               
                             </div>
                         </div>
              
-                        <div class="col-sm-6">
-                            <div class="text-muted text-sm-end">
+                        <div className="col-sm-6">
+                            <div className="text-muted text-sm-end">
                                 <div>
-                                    <h5 class="font-size-15 mb-1">Invoice No:</h5>
+                                    <h5 className="font-size-15 mb-1">Invoice No:</h5>
                                     <p>#{historyDetails.bill_no}</p>
                                 </div>
-                                <div class="mt-4">
-                                    <h5 class="font-size-15 mb-1">Invoice Date:</h5>
+                                <div className="mt-4">
+                                    <h5 className="font-size-15 mb-1">Invoice Date:</h5>
                                     <p>{formatDate(historyDetails.date)}</p>
                                 </div>
                            
@@ -53,18 +53,18 @@ const Invoice = (props) => {
                     </div>
       
                     
-                    <div class="py-2">
+                    <div className="py-2">
                  
 
-                        <div class="table-responsive">
-                            <table class="table align-middle table-nowrap table-centered mb-0">
+                        <div className="table-responsive">
+                            <table className="table align-middle table-nowrap table-centered mb-0">
                                 <thead>
                                     <tr>
                                         <th style={{width: "70px"}}>No.</th>
                                         <th>Item</th>
                                         <th>Rate</th>
                                         <th>Weight</th>
-                                        <th class="text-end" style={{width: "120px"}}>Total</th>
+                                        <th className="text-end" style={{width: "120px"}}>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -72,13 +72,13 @@ const Invoice = (props) => {
                                         <th scope="row">01</th>
                                         <td>
                                             <div>
-                                                <h5 class="text-truncate font-size-14 mb-1">{historyDetails.item}</h5>
+                                                <h5 className="text-truncate font-size-14 mb-1">{historyDetails.item}</h5>
                                      
                                             </div>
                                         </td>
                                         <td>{"₹"+parseInt((historyDetails.rate)).toLocaleString("en-IN")}</td>
                                         <td>{historyDetails.weight}qt</td>
-                                        <td class="text-end">{"₹"+parseInt((historyDetails.amount)).toLocaleString("en-IN")}</td>
+                                        <td className="text-end">{"₹"+parseInt((historyDetails.amount)).toLocaleString("en-IN")}</td>
                                     
                                     </tr>
                             
@@ -86,34 +86,34 @@ const Invoice = (props) => {
                     
                                
                                     <tr>
-                                        <th scope="row" colspan="4" class="border-0 text-end">
+                                        <th scope="row" colspan="4" className="border-0 text-end">
                                             Debit note :</th>
-                                        <td class="border-0 text-end">{"₹"+parseInt((historyDetails.debit)).toLocaleString("en-IN")}</td>
+                                        <td className="border-0 text-end">{"₹"+parseInt((historyDetails.debit)).toLocaleString("en-IN")}</td>
                                     </tr>
                      
                                     <tr>
-                                        <th scope="row" colspan="4" class="border-0 text-end">
+                                        <th scope="row" colspan="4" className="border-0 text-end">
                                             Commission :</th>
-                                            <td class="border-0 text-end"> ₹{parseInt((historyDetails.amount-historyDetails.debit)*historyDetails.commission/100).toLocaleString("en-IN")}</td>
+                                            <td className="border-0 text-end"> ₹{parseInt((historyDetails.amount-historyDetails.debit)*historyDetails.commission/100).toLocaleString("en-IN")}</td>
                                     </tr>
                                
                                     <tr>
-                                        <th scope="row" colspan="4" class="border-0 text-end">
+                                        <th scope="row" colspan="4" className="border-0 text-end">
                                             GST: </th>
-                                        <td class="border-0 text-end">₹{parseInt(historyDetails.amount*historyDetails.gst/100).toLocaleString("en-IN")}</td>
+                                        <td className="border-0 text-end">₹{parseInt(historyDetails.amount*historyDetails.gst/100).toLocaleString("en-IN")}</td>
                                     </tr>
                            
                                     <tr>
-                                        <th scope="row" colspan="4" class="border-0 text-end">Total</th>
-                                        <td class="border-0 text-end"><h4 class="m-0 fw-semibold">{priceFormatter(parseInt(totalAmountCalculateRaw(historyDetails)+gstCalculate(totalAmountCalculateRaw(historyDetails),historyDetails.gst)))}</h4></td>
+                                        <th scope="row" colspan="4" className="border-0 text-end">Total</th>
+                                        <td className="border-0 text-end"><h4 className="m-0 fw-semibold">{priceFormatter(parseInt(totalAmountCalculateRaw(historyDetails)+gstCalculate(totalAmountCalculateRaw(historyDetails),historyDetails.gst)))}</h4></td>
                                     </tr>
                                 
                                 </tbody>
                             </table>
                         </div>
-                        <div class="d-print-none mt-4">
-                            <div class="float-end">
-                                <a href="javascript:window.print()" class="btn btn-success me-1">Print</a>
+                        <div className="d-print-none mt-4">
+                            <div className="float-end">
+                                <a href="javascript:window.print()" className="btn btn-success me-1">Print</a>
                             </div>
                         </div>
                     </div>

@@ -11,27 +11,33 @@ function SideNav(props) {
   const pathname = useLocation().pathname;
   const params = useParams();
 
+  const handleClick = () => {
+    document.body.classList.toggle("menu-open");
+
+    const navIcon = document.getElementById("nav-icon");
+
+    navIcon.classList.toggle("open");
+  };
 
   return (
     <aside className="sidebar">
       <div className="sidebar-wrap">
         <div className="sidebar-body">
           <div className="navbar-left">
-            <Link to="/">
-              <img
-                src="/assets/images/logo.svg"
-
-                width="100px"
-                alt=""
-              />
+            <Link
+              to="/"
+              onClick={(e) => {
+                handleClick(e);
+              }}
+            >
+              <img src="/assets/images/logo.svg" width="100px" alt="" />
             </Link>
           </div>
           <ul className="main-nav">
-            <li
-
-              className={`${pathname === "/dashboard" ? "active" : ""}`}
-            >
-              <Link to="/dashboard">
+            <li className={`${pathname === "/dashboard" ? "active" : ""}`}>
+              <Link to="/dashboard" onClick={(e) => {
+                handleClick(e);
+              }}>
                 <svg
                   className="icon-dashboard"
                   width="24px"
@@ -45,11 +51,10 @@ function SideNav(props) {
                 <span>Home</span>
               </Link>
             </li>
-            <li
-
-              className={`${pathname === "/buysell" ? "active" : ""}`}
-            >
-              <Link to="/buysell">
+            <li className={`${pathname === "/buysell" ? "active" : ""}`}>
+              <Link to="/buysell" onClick={(e) => {
+                handleClick(e);
+              }}>
                 <svg
                   width="24"
                   height="24"
@@ -70,10 +75,16 @@ function SideNav(props) {
               </Link>
             </li>
             <li
-
-              className={`${pathname === "/balancesheet" || pathname === `/balancesheet/${params.partyid}` ? "active" : ""}`}
+              className={`${
+                pathname === "/balancesheet" ||
+                pathname === `/balancesheet/${params.partyid}`
+                  ? "active"
+                  : ""
+              }`}
             >
-              <Link to="/balancesheet">
+              <Link to="/balancesheet" onClick={(e) => {
+                handleClick(e);
+              }}>
                 <svg
                   width="24"
                   height="24"
@@ -89,11 +100,10 @@ function SideNav(props) {
                 <span>Balance Sheet</span>
               </Link>
             </li>
-            <li
-
-              className={`${pathname === "/transportrent" ? "active" : ""}`}
-            >
-              <Link to="/transportrent">
+            <li className={`${pathname === "/transportrent" ? "active" : ""}`}>
+              <Link to="/transportrent" onClick={(e) => {
+                handleClick(e);
+              }}>
                 <svg
                   width="24"
                   height="24"
@@ -120,11 +130,16 @@ function SideNav(props) {
               </Link>
             </li>
             <li
-
-              className={`${pathname === "/stock" || pathname === `/stockdetails/${params.stockid}` ? "active" : ""}`}
+              className={`${
+                pathname === "/stock" ||
+                pathname === `/stockdetails/${params.stockid}`
+                  ? "active"
+                  : ""
+              }`}
             >
-              <Link to="/stock">
-
+              <Link to="/stock" onClick={(e) => {
+                handleClick(e);
+              }}>
                 <svg
                   width="24"
                   height="24"
@@ -150,14 +165,17 @@ function SideNav(props) {
                 <span>Stock</span>
               </Link>
             </li>
-            <li
-
-              className={`${pathname === "/investment" ? "active" : ""}`}
-            >
-              <Link to="/investment">
-                <svg width="25px" height="25px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <li className={`${pathname === "/investment" ? "active" : ""}`}>
+              <Link to="/investment" onClick={(e) => {
+                handleClick(e);
+              }}>
+                <svg
+                  width="25px"
+                  height="25px"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <g>
-                   
                     <path d="M14 2a8 8 0 0 1 3.292 15.293A8 8 0 1 1 6.706 6.707 8.003 8.003 0 0 1 14 2zm-4 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm1 1v1h2v2H9a.5.5 0 0 0-.09.992L9 13h2a2.5 2.5 0 1 1 0 5v1H9v-1H7v-2h4a.5.5 0 0 0 .09-.992L11 15H9a2.5 2.5 0 1 1 0-5V9h2zm3-5a5.985 5.985 0 0 0-4.484 2.013 8 8 0 0 1 8.47 8.471A6 6 0 0 0 14 4z" />
                   </g>
                 </svg>
@@ -165,10 +183,16 @@ function SideNav(props) {
               </Link>
             </li>
             <li
-
-              className={`${pathname === "/bank" || pathname === `/accountdetails/${params.accountid}` ? "active" : ""}`}
+              className={`${
+                pathname === "/bank" ||
+                pathname === `/accountdetails/${params.accountid}`
+                  ? "active"
+                  : ""
+              }`}
             >
-              <Link to="/bank">
+              <Link to="/bank" onClick={(e) => {
+                handleClick(e);
+              }}>
                 <svg
                   width="24"
                   height="24"
@@ -265,9 +289,7 @@ function SideNav(props) {
               </a>
             </li>
           </ul> */}
-
         </div>
-
       </div>
     </aside>
   );

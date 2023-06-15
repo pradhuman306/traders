@@ -153,8 +153,9 @@ const Bank = (props) => {
         <>
             <Header heading="Bank Account" {...props} />
         <div className="body-content">
+        <div className="mr-minus">
             <div className="usermanagement-main">
-                <div className="datatable-filter-wrap">
+                <div className="datatable-filter-wrap mb-0">
                     <div className="datatable-search">
                         <input
                             type="text"
@@ -165,24 +166,19 @@ const Bank = (props) => {
                     </div>
                     <div className="datatable-filter-right">
                         <ul className="btn-group">
-                        
                             <li>
                                 <button
                                     className="btn btn-primary"
                                     data-bs-toggle="modal"
                                     data-bs-target="#addaccount"
                                 >
-                            
                                   Add Account
-                                
-                                
                                 </button>
                             </li>
-                          
-
                         </ul>
                     </div>
                 </div>
+            </div>
             </div>
             <AddAccount {...props}/>
             <EditAccount {...props} row_id={id} row_data={accountListRow} />

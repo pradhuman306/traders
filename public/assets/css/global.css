@@ -114,18 +114,11 @@ li {
   margin-bottom: 20px;
 }
 
-.datatable-search {
-  width: 50%;
-}
 
 .form-control {
   border-radius: var(--radius);
   min-height: 40px;
 
-}
-
-.datatable-search .form-control {
-  /* box-shadow: 0px 0px 5px rgb(23 24 24 / 5%), 0px 1px 2px rgb(0 0 0 / 5%); */
 }
 
 .btn {
@@ -140,6 +133,10 @@ body .sc-dmRaPn {
   margin-bottom: 20px;
   border: 1px solid rgba(var(--border));
   /* box-shadow: 0px 0px 5px rgb(23 24 24 / 5%), 0px 1px 2px rgb(0 0 0 / 5%); */
+}
+
+.rdt_ExpanderRow {
+  padding: 10px 15px;
 }
 
 nav.sc-iIPllB.rdt_Pagination {

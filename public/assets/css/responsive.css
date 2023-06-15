@@ -1,0 +1,181 @@
+@media(max-width:991px) {
+    body.menu-open {
+        overflow: hidden;
+    }    
+    .sideToggle {
+        width: 33px;
+        height: 33px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 8px;
+        margin-left: 15px;
+    }
+
+    div#nav-icon {
+        width: 22px;
+        position: relative;
+        height: 16px;
+        display: block;
+        z-index: 92;
+    }
+
+    div#nav-icon span {
+        display: block;
+        position: absolute;
+        height: 2px;
+        width: 100%;
+        background: rgba(var(--black));
+        -webkit-border-radius: 9px;
+        -moz-border-radius: 9px;
+        border-radius: 9px;
+        opacity: 1;
+        left: 0;
+        -webkit-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        -ms-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transition: 0.25s ease-in-out;
+        -moz-transition: 0.25s ease-in-out;
+        -o-transition: 0.25s ease-in-out;
+        transition: 0.25s ease-in-out;
+    }
+
+    #nav-icon span:nth-child(1) {
+        top: 0px;
+    }
+
+    #nav-icon span:nth-child(2) {
+        top: 7px;
+        -webkit-animation: nav-icon-bg 3s infinite;
+        -moz-animation: nav-icon-bg 3s infinite;
+        -o-animation: nav-icon-bg 3s infinite;
+        animation: nav-icon-bg 3s infinite;
+    }
+
+    #nav-icon span:nth-child(3) {
+        top: 14px;
+    }
+
+    .menu-open #nav-icon span {
+        background: rgba(var(--white));
+    }
+
+    #nav-icon.open span:nth-child(1) {
+        top: 6px;
+        -webkit-transform: rotate(135deg);
+        -moz-transform: rotate(135deg);
+        -o-transform: rotate(135deg);
+        -ms-transform: rotate(135deg);
+        transform: rotate(135deg);
+    }
+
+    #nav-icon.open span:nth-child(2) {
+        opacity: 0;
+        left: -60px;
+    }
+
+    #nav-icon.open span:nth-child(3) {
+        top: 6px;
+        -webkit-transform: rotate(-135deg);
+        -moz-transform: rotate(-135deg);
+        -o-transform: rotate(-135deg);
+        -ms-transform: rotate(-135deg);
+        transform: rotate(-135deg);
+    }
+
+    .sidebar {
+        z-index: 9991;
+        display: block;
+        align-items: inherit;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100%;
+        overflow: auto;
+        -webkit-box-shadow: 0 0 10px rgba(var(--blackBg), 10%);
+        box-shadow: 0 0 10px rgba(var(--blackBg), 10%);
+        -webkit-font-smoothing: antialiased;
+        -webkit-transform-origin: 0% 0%;
+        transform-origin: 0% 0%;
+        -webkit-transform: translate(-120%, 0);
+        transform: translate(-120%, 0);
+        -webkit-transition: -webkit-transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+        transition: -webkit-transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+        transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+        transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
+        border-radius: 0 20px 20px 0;
+    }
+    .body-main {
+        max-width: 100%;
+        flex: 0 0 100%;
+        margin-left: 0;
+        padding: 0 15px;
+    }
+    .menu-open .sidebar {
+        -webkit-transform: none;
+        transform: none;
+    }
+    .overlay-close {
+        position: fixed;
+        width: 100%;
+        height: 101vh;
+        background: rgba(var(--black), 0.7);
+        left: 0;
+        top: -1px;
+        bottom: 0;
+        right: 0px;
+        z-index: 91;
+        opacity: 0;
+        visibility: hidden;
+        -webkit-transition: 300ms all;
+        transition: 300ms all;
+        display: block;
+    }
+    .menu-open .overlay-close {
+        opacity: 1;
+        visibility: visible;
+    }
+    .main-header {
+        padding: 10px 15px;
+        margin: 0 -15px;
+    }
+    .report-filter {
+        margin: 0 -15px;
+        margin-bottom: 20px;
+        overflow: auto;
+    }
+    .mr-minus {
+        margin: 0 -15px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .ts-rent .st-fixed {
+        margin-top: -76px;
+    }
+    .amount-dtl {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: start;
+    }
+}
+
+@media(max-width:767px) {
+    .navbar-left img {
+        width: 125px;
+    }
+    .ts-rent .st-fixed {
+        margin-top: 0;
+    }
+    .datatable-search, .datatable-filter-right {
+        width: 100%;
+    }
+    .datatable-filter-wrap {
+        flex-wrap: wrap;
+        flex-direction: column-reverse;
+        gap: 15px;
+    }
+}

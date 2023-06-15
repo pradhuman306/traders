@@ -22,41 +22,40 @@ const PaySlip = (props) => {
   const [totalPaidAmount, setTotalPaidAmount] = useState("");
   const [totalPaidWithoutGST, setTotalPaidWithoutGST] = useState("");
   const [totalPaidWithGST, setTotalPaidGST] = useState("");
-  const [isActive,setIsActive] =  useState({main:true,gst:false});
+  const [isActive, setIsActive] = useState({ main: true, gst: false });
   useEffect(() => {
     let toalPaid = 0;
     let totalPaidWithoutGST = 0;
     let totalAmount =
       totalAmountCalculateRaw(props.rowData) +
-      gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst);
-      totalAmountCalculateRaw(props.rowData)
+      gstCalculate(totalAmountCalculateRaw(props.rowData), props.rowData.gst);
+    totalAmountCalculateRaw(props.rowData);
     if (props.rowData.paid) {
-  
       let paidData = JSON.parse(props.rowData.paid);
       paidData.map((element) => {
-        if(element.type == 'main' ){
-          totalPaidWithoutGST+=parseInt(element.amount);
+        if (element.type == "main") {
+          totalPaidWithoutGST += parseInt(element.amount);
         }
         toalPaid += parseInt(element.amount);
       });
     }
     setTotalAmount(totalAmount);
     setTotalPaidWithoutGST(totalPaidWithoutGST);
-    setTotalPaidGST(toalPaid-totalPaidWithoutGST);
+    setTotalPaidGST(toalPaid - totalPaidWithoutGST);
     setTotalPaidAmount(toalPaid);
     console.log(props.rowData);
-    let isActiveValue = {main:true,gst:false};
+    let isActiveValue = { main: true, gst: false };
     setIsActive(isActiveValue);
   }, [props.rowData]);
 
-  const handleSetAmount = (e,amount,setFieldValue) => {
-    let isActiveValue = {...isActive}
-    isActiveValue.main= false;
-    isActiveValue.gst= false;
+  const handleSetAmount = (e, amount, setFieldValue) => {
+    let isActiveValue = { ...isActive };
+    isActiveValue.main = false;
+    isActiveValue.gst = false;
     isActiveValue[e] = true;
-    setFieldValue('amount',amount);
+    setFieldValue("amount", amount);
     setIsActive(isActiveValue);
-  }
+  };
   return (
     <div
       className="modal fade"
@@ -68,19 +67,24 @@ const PaySlip = (props) => {
       <div className="modal-dialog">
         <div className="modal-content ">
           <Formik
-          enableReinitialize
+            enableReinitialize
             initialValues={{
               amount: parseInt(
-                parseInt(totalAmount)- gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - parseInt(totalPaidWithoutGST)
+                parseInt(totalAmount) -
+                  gstCalculate(
+                    totalAmountCalculateRaw(props.rowData),
+                    props.rowData.gst
+                  ) -
+                  parseInt(totalPaidWithoutGST)
               ),
-              type:"main",
+              type: "main",
             }}
             validate={(values) => {
               const errors = {};
               if (!values.amount) {
                 errors.amount = "Please enter amount!";
               }
-           
+
               setError({ ...errors });
               return errors;
             }}
@@ -103,7 +107,14 @@ const PaySlip = (props) => {
               setSubmitting(false);
             }}
           >
-            {({ values, isSubmitting, dirty, handleReset, touched,setFieldValue }) => (
+            {({
+              values,
+              isSubmitting,
+              dirty,
+              handleReset,
+              touched,
+              setFieldValue,
+            }) => (
               <Form action="" id="newcustomer">
                 <div className="modal-head">
                   <h4>Pay amount</h4>
@@ -141,20 +152,30 @@ const PaySlip = (props) => {
                           ((props.rowData.amount - props.rowData.debit) *
                             props.rowData.commission) /
                             100
-                        ).toLocaleString("en-IN")} <span class="badge rounded-pill text-bg-success">{props.rowData.commission}%</span>
-                        
-                        
+                        ).toLocaleString("en-IN")}{" "}
+                        <span className="badge rounded-pill text-bg-success">
+                          {props.rowData.commission}%
+                        </span>
                       </p>
                     </div>
                     <div className="modal-body-row">
                       <h6>Debit Amount</h6>
-                      <p>{priceFormatter(totalAmountCalculateRaw(props.rowData))}</p>
+                      <p>
+                        {priceFormatter(totalAmountCalculateRaw(props.rowData))}
+                      </p>
                     </div>
                     <div className="modal-body-row">
                       <h6>GST Amount</h6>
                       <p>
-                        
-                        {priceFormatter(gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst))} <span class="badge rounded-pill text-bg-success">{props.rowData.gst}%</span>
+                        {priceFormatter(
+                          gstCalculate(
+                            totalAmountCalculateRaw(props.rowData),
+                            props.rowData.gst
+                          )
+                        )}{" "}
+                        <span className="badge rounded-pill text-bg-success">
+                          {props.rowData.gst}%
+                        </span>
                       </p>
                     </div>
                     <div className="modal-body-row">
@@ -166,37 +187,81 @@ const PaySlip = (props) => {
                       <p>
                         ₹
                         {parseInt(
-                          parseInt(totalAmount)- gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - parseInt(totalPaidWithoutGST)
+                          parseInt(totalAmount) -
+                            gstCalculate(
+                              totalAmountCalculateRaw(props.rowData),
+                              props.rowData.gst
+                            ) -
+                            parseInt(totalPaidWithoutGST)
                         ).toLocaleString("en-IN")}
                       </p>
                     </div>
                     <div className="modal-body-row">
                       <h6>Pending GST</h6>
                       <p>
-                        
-                     {priceFormatter(gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst)-parseInt(totalPaidWithGST))}
+                        {priceFormatter(
+                          gstCalculate(
+                            totalAmountCalculateRaw(props.rowData),
+                            props.rowData.gst
+                          ) - parseInt(totalPaidWithGST)
+                        )}
                       </p>
                     </div>
                   </div>
                   <div className="form-fields-wrap">
                     <div className="row">
                       <div className="col-md-12">
-                      <div className='mt-3 mb-3 gf-in'>
-                        
-                                                        <div className='form-check'>
-                                                            <Field className="form-check-input" type="radio" id="main" name="type"   onClick={(e) => handleSetAmount("main",(parseInt(totalAmount) - gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - parseInt(totalPaidWithoutGST)),setFieldValue)} checked={isActive.main}  value="main" />
-                                                            <label htmlFor='main' className='form-check-label'>
-                                                                Pay debit Amount
-                                                            </label>
-                                                        </div>
+                        <div className="mt-3 mb-3 gf-in">
+                          <div className="form-check">
+                            <Field
+                              className="form-check-input"
+                              type="radio"
+                              id="main"
+                              name="type"
+                              onClick={(e) =>
+                                handleSetAmount(
+                                  "main",
+                                  parseInt(totalAmount) -
+                                    gstCalculate(
+                                      totalAmountCalculateRaw(props.rowData),
+                                      props.rowData.gst
+                                    ) -
+                                    parseInt(totalPaidWithoutGST),
+                                  setFieldValue
+                                )
+                              }
+                              checked={isActive.main}
+                              value="main"
+                            />
+                            <label htmlFor="main" className="form-check-label">
+                              Pay debit Amount
+                            </label>
+                          </div>
 
-                                                        <div className='form-check'>
-                                                            <Field className="form-check-input" type="radio" id="gst"   onClick={(e) => handleSetAmount("gst",(gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - parseInt(totalPaidWithGST)),setFieldValue)} checked={isActive.gst}  name="type" value="gst" />
-                                                            <label htmlFor='gst' className='form-check-label'>
-                                                                Pay GST amount
-                                                            </label>
-                                                        </div>
-                                                    </div>
+                          <div className="form-check">
+                            <Field
+                              className="form-check-input"
+                              type="radio"
+                              id="gst"
+                              onClick={(e) =>
+                                handleSetAmount(
+                                  "gst",
+                                  gstCalculate(
+                                    totalAmountCalculateRaw(props.rowData),
+                                    props.rowData.gst
+                                  ) - parseInt(totalPaidWithGST),
+                                  setFieldValue
+                                )
+                              }
+                              checked={isActive.gst}
+                              name="type"
+                              value="gst"
+                            />
+                            <label htmlFor="gst" className="form-check-label">
+                              Pay GST amount
+                            </label>
+                          </div>
+                        </div>
                         <div className="form-group mb-3">
                           <label>
                             Enter Amount<span className="error-badge">*</span>
@@ -209,10 +274,7 @@ const PaySlip = (props) => {
                               touched.amount && error.amount
                                 ? "input-error"
                                 : ""
-                            } ${values.amount
-                              ? "filled"
-                              : ""
-                            }`}
+                            } ${values.amount ? "filled" : ""}`}
                           />
                           <ErrorMessage
                             className="error"
@@ -220,27 +282,68 @@ const PaySlip = (props) => {
                             component="span"
                           />
                           <div className="mt-2">
-                            {values.type=="main"?values.amount && (values.amount < (
-                                  parseInt(totalAmount - gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - totalPaidWithoutGST)
-                                ))
+                            {values.type == "main"
+                              ? values.amount &&
+                                values.amount <
+                                  parseInt(
+                                    totalAmount -
+                                      gstCalculate(
+                                        totalAmountCalculateRaw(props.rowData),
+                                        props.rowData.gst
+                                      ) -
+                                      totalPaidWithoutGST
+                                  )
+                                ? "₹" +
+                                  parseInt(
+                                    totalAmount -
+                                      totalPaidWithoutGST -
+                                      gstCalculate(
+                                        totalAmountCalculateRaw(props.rowData),
+                                        props.rowData.gst
+                                      ) -
+                                      values.amount
+                                  ).toLocaleString("en-IN") +
+                                  " is still remaining!"
+                                : values.amount &&
+                                  values.amount ==
+                                    parseInt(
+                                      totalAmount -
+                                        gstCalculate(
+                                          totalAmountCalculateRaw(
+                                            props.rowData
+                                          ),
+                                          props.rowData.gst
+                                        ) -
+                                        totalPaidWithoutGST
+                                    )
+                                ? "Fully Paid !"
+                                : ""
+                              : values.amount &&
+                                values.amount <
+                                  gstCalculate(
+                                    totalAmountCalculateRaw(props.rowData),
+                                    props.rowData.gst
+                                  ) -
+                                    parseInt(totalPaidWithGST)
                               ? "₹" +
                                 parseInt(
-                                  totalAmount - totalPaidWithoutGST -  gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - values.amount
+                                  gstCalculate(
+                                    totalAmountCalculateRaw(props.rowData),
+                                    props.rowData.gst
+                                  ) -
+                                    parseInt(totalPaidWithGST) -
+                                    values.amount
                                 ).toLocaleString("en-IN") +
                                 " is still remaining!"
-                              : values.amount &&  (values.amount == (
-                                parseInt(totalAmount -  gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - totalPaidWithoutGST)
-                              ))? "Fully Paid !":"":values.amount && (values.amount < (
-                                (gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - parseInt(totalPaidWithGST))
-                              ))
-                            ? "₹" +
-                              parseInt(
-                                (gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - parseInt(totalPaidWithGST)) - values.amount
-                              ).toLocaleString("en-IN") +
-                              " is still remaining!"
-                            : values.amount &&  (values.amount == (
-                              (gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst) - parseInt(totalPaidWithGST))
-                            ))? "Fully Paid !":""}                       
+                              : values.amount &&
+                                values.amount ==
+                                  gstCalculate(
+                                    totalAmountCalculateRaw(props.rowData),
+                                    props.rowData.gst
+                                  ) -
+                                    parseInt(totalPaidWithGST)
+                              ? "Fully Paid !"
+                              : ""}
                           </div>
                         </div>
                       </div>
@@ -261,7 +364,6 @@ const PaySlip = (props) => {
           </Formik>
         </div>
       </div>
-      
     </div>
   );
 };
