@@ -7984,6 +7984,11 @@ react-confirm-alert@^3.0.2:
   resolved "https://registry.npmjs.org/react-confirm-alert/-/react-confirm-alert-3.0.6.tgz"
   integrity sha512-rplP6Ed9ZSNd0KFV5BUzk4EPQ77BxsrayllBXGFuA8xPXc7sbBjgU5KUrNpl7aWFmP7mXRlVXfuy1IT5DbffYw==
 
+react-csv@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.npmjs.org/react-csv/-/react-csv-2.2.2.tgz"
+  integrity sha512-RG5hOcZKZFigIGE8LxIEV/OgS1vigFQT4EkaHeKgyuCbUAu9Nbd/1RYq++bJcJJ9VOqO/n9TZRADsXNDR4VEpw==
+
 react-data-table-component@^7.5.2:
   version "7.5.2"
   resolved "https://registry.npmjs.org/react-data-table-component/-/react-data-table-component-7.5.2.tgz"

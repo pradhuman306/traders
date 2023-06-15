@@ -167,10 +167,10 @@ newIsActive.all = false;
                             values.amount = values.rate * values.weight;
                             console.log(values);
                             if (isActive.buy) {
-                                dispatch(updateBuy(values, elementRef, props.setBtnPending));
+                                dispatch(updateBuy(values, elementRef, props.setBtnPending,props.isActive));
                             } else if(isActive.sell){
 
-                                dispatch(updateSell(values, elementRef, props.setBtnPending));
+                                dispatch(updateSell(values, elementRef, props.setBtnPending,props.isActive));
                             }
 
                             setSubmitting(false);

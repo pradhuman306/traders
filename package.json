@@ -16,6 +16,7 @@
     "keywords": "^0.1.2",
     "react": "^18.1.0",
     "react-confirm-alert": "^3.0.2",
+    "react-csv": "^2.2.2",
     "react-data-table-component": "^7.5.2",
     "react-dom": "^18.1.0",
     "react-helmet": "^6.1.0",

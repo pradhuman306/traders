@@ -45,13 +45,18 @@ export const getBuyList = (payload) => (dispatch) => {
     });
 }
 
-export const addBuy = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
+export const addBuy = (payload,elementRef,setBtnPending,resetForm,isActive) => (dispatch) => {
   ajaxCall
   .post(`${config.BASE_URL}createbuy`,payload)
   .then((res) => {
     elementRef.current.click();
     setBtnPending(false);
     resetForm();
+    if(isActive.buy){
+      dispatch(getBuyList(payload.user_id));
+    }else{
+    dispatch(getAllBuySellList(payload.user_id));
+    }
     dispatch(getBuyList(payload.user_id));
       dispatch({
         type: actionTypes.SUCCESS_MESSAGE,
@@ -67,13 +72,19 @@ export const addBuy = (payload,elementRef,setBtnPending,resetForm) => (dispatch)
   });
 }
 
-export const updateBuy = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const updateBuy = (payload,elementRef,setBtnPending,isActive) => (dispatch) => {
   ajaxCall
   .post(`${config.BASE_URL}updatebuy`,payload)
   .then((res) => {
     elementRef.current.click();
     setBtnPending(false);
-    dispatch(getBuyList(payload.user_id));
+
+    if(isActive.sell){
+      dispatch(getBuyList(payload.user_id));
+    }else{
+    dispatch(getAllBuySellList(payload.user_id));
+    }
+    
       dispatch({
         type: actionTypes.SUCCESS_MESSAGE,
         payload: res.data.message,
@@ -88,14 +99,19 @@ export const updateBuy = (payload,elementRef,setBtnPending) => (dispatch) => {
   });
 }
 
-export const addSell = (payload,elementRef,setBtnPending,resetForm) => (dispatch) => {
+export const addSell = (payload,elementRef,setBtnPending,resetForm,isActive) => (dispatch) => {
   ajaxCall
   .post(`${config.BASE_URL}createsale`,payload)
   .then((res) => {
     resetForm();
     elementRef.current.click();
     setBtnPending(false);
-    dispatch(getSellList(payload.user_id));
+    if(isActive.sell){
+      dispatch(getSellList(payload.user_id));
+    }else{
+    dispatch(getAllBuySellList(payload.user_id));
+    }
+  
     dispatch({
       type: actionTypes.SUCCESS_MESSAGE,
       payload: res.data.message,
@@ -110,13 +126,18 @@ export const addSell = (payload,elementRef,setBtnPending,resetForm) => (dispatch
   });
 }
 
-export const updateSell = (payload,elementRef,setBtnPending) => (dispatch) => {
+export const updateSell = (payload,elementRef,setBtnPending,isActive) => (dispatch) => {
   ajaxCall
   .post(`${config.BASE_URL}updatesale`,payload)
   .then((res) => {
     elementRef.current.click();
     setBtnPending(false);
-    dispatch(getSellList(payload.user_id));
+    if(isActive.sell){
+      dispatch(getSellList(payload.user_id));
+    }else{
+      dispatch(getAllBuySellList(payload.user_id));
+    }
+    
     dispatch({
       type: actionTypes.SUCCESS_MESSAGE,
       payload: res.data.message,
@@ -138,9 +159,14 @@ export const deleteBuySellList = (payload,isActive) => (dispatch) => {
       console.log(payload);
       if(isActive.buy){
         dispatch(getBuyList(payload.user_id));
-      }else{
+      }else if(isActive.sell){
         dispatch(getSellList(payload.user_id));
+      }else{
+        dispatch(getAllBuySellList(payload.user_id));
       }
+
+
+    
 
       dispatch({
           type: actionTypes.SUCCESS_MESSAGE,

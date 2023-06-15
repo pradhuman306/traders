@@ -28,7 +28,8 @@ const BuySell = (props) => {
     const [isActive, setIsActive] = useState({
         "buy": false,
         "sell": false,
-        "all": true
+        "all": true,
+        "urd": false
     });
     const [id, setId] = useState({});
     const [isExpandable, setisExpandable] = useState(false);
@@ -121,6 +122,12 @@ const BuySell = (props) => {
        setBuyList([...urdList]);
     }
 
+    useEffect(() => {
+    if(isActive.urd){
+        getFilterUrd();
+    }
+    }, [buySellListAll]);
+
 
     useEffect(() => {
         dispatch(getAllBuySellList(user_id));
@@ -139,14 +146,24 @@ const BuySell = (props) => {
             activeTab.buy = true;
             activeTab.all = false;
             activeTab.sell = false;
+            activeTab.urd = false;
         } else if (param === 'sell') {
             activeTab.sell = true;
             activeTab.all = false;
             activeTab.buy = false;
+            activeTab.urd = false;
         } else if (param === 'all') {
             activeTab.sell = false;
             activeTab.all = true;
             activeTab.buy = false;
+            activeTab.urd = false;
+        } else {
+   
+                activeTab.sell = false;
+                activeTab.all = false;
+                activeTab.buy = false;
+                activeTab.urd = true;
+          
         }
         setIsActive({ ...activeTab });
     }
@@ -183,7 +200,7 @@ const BuySell = (props) => {
             filterValue(filterText, sellListAll);
         } else if (isActive.all) {
             filterValue(filterText, buySellListAll);
-        }
+        } 
 
     }, [filterText, buyListAll, isActive, sellListAll, buySellListAll]);
 
@@ -350,7 +367,7 @@ const BuySell = (props) => {
 
     return (
         <div className="body-content">
-             <Header heading={isActive.buy ? "Buy" : isActive.sell ? "Sell" : isActive.all ? "All" : ""} {...props} />
+             <Header heading={isActive.buy ? "Buy" : isActive.sell ? "Sell" : isActive.all ? "All" : "URD"} {...props} />
             <div className="usermanagement-main">
                 <div>
                 <ul id="report-filter" className="report-filter tabs">
@@ -381,7 +398,7 @@ const BuySell = (props) => {
 
                         ><a onClick={() => {
                             getFilterUrd();
-                            handleSetActive('sell');
+                            handleSetActive('urd');
                         }}>URD</a></li>
                     </ul>
                     
@@ -420,6 +437,7 @@ const BuySell = (props) => {
             <DataTable
                 columns={columns}
                 data={buyList}
+                keyField={'key'}       
                 progressPending={props.pendingData}
                 progressComponent={<CustomLoader />}
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}

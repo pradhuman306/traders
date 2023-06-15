@@ -151,11 +151,12 @@ const AddBuySell = (props) => {
                                 itemSelectRef.current.clearValue();
                                 partySelectRef.current.clearValue();
                                 godownSelectRef.current.clearValue();
+                                console.log(isActive);
                                 if (isActive.buy) {
-                                    dispatch(addBuy(values, elementRef, props.setBtnPending, resetForm));
-                                } else {
-                                    dispatch(addSell(values, elementRef, props.setBtnPending, resetForm));
-                                }
+                                    dispatch(addBuy(values, elementRef, props.setBtnPending, resetForm,props.isActive));
+                                } else if(isActive.sell) {
+                                    dispatch(addSell(values, elementRef, props.setBtnPending, resetForm,props.isActive));
+                                }   
 
                                 setSubmitting(false);
                             }}
@@ -419,9 +420,10 @@ const AddBuySell = (props) => {
                                                             }`}
                                                         value={values.amount = values.rate * values.weight}
                                                         placeholder="₹"
-                                                        disabled
+                                                        // disabled
 
                                                     />
+                                                   
                                                     {/* <ErrorMessage
                                                         className="error"
                                                         name="amount"
