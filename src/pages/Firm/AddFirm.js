@@ -78,6 +78,9 @@ const AddFirm = (props) => {
                               touched.name && error.name
                                 ? "input-error"
                                 : ""
+                            } ${values.name
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage

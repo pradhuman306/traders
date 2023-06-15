@@ -85,6 +85,9 @@ const AddInvestment = (props) => {
                               touched.amount && error.amount
                                 ? "input-error"
                                 : ""
+                            } ${values.amount
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -108,6 +111,9 @@ const AddInvestment = (props) => {
                               touched.date && error.date
                                 ? "input-error"
                                 : ""
+                            } ${values.date
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -130,7 +136,10 @@ const AddInvestment = (props) => {
                           />
                           <ErrorMessage
                             className="error"
-                            name="description"
+                            name={`form-control ${values.description
+                              ? "filled"
+                              : ""
+                            }`}
                             component="span"
                           />
                         </div>

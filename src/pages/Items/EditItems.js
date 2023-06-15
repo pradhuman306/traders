@@ -88,6 +88,9 @@ const EditItems = (props) => {
                                 className={`form-control ${touched.item && error.item
                                     ? "input-error"
                                     : ""
+                                  } ${values.item
+                                    ? "filled"
+                                    : ""
                                   }`}
                               />
                               <ErrorMessage

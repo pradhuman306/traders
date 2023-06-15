@@ -81,6 +81,9 @@ const AddGoDown = (props) => {
                               touched.name && error.name
                                 ? "input-error"
                                 : ""
+                            } ${values.name
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -104,6 +107,9 @@ const AddGoDown = (props) => {
                               touched.place && error.place
                                 ? "input-error"
                                 : ""
+                            } ${values.place
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage

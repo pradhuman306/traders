@@ -11,6 +11,7 @@ import EditGoDown from './EditGoDown';
 import AddGoDown from './AddGoDown';
 import { deleteGoDown, getGoDownList } from '../../actions/godown';
 import Header from '../Header/Header';
+import { titleCase } from '../../actions/common';
 
 
 const StocksGodown = (props) => {
@@ -97,7 +98,7 @@ const StocksGodown = (props) => {
                 return (
             
                     <div className="user-wrap">
-                        <div className="user-detail">{row.name}</div>
+                        <div className="user-detail">{titleCase(row.name)}</div>
                     </div>
                  
                 );

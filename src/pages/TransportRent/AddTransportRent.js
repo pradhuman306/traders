@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { getParty } from '../../actions/balancesheet';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
+import { titleCase } from '../../actions/common';
 
 
 const AddTransportRent = (props) => {
@@ -28,7 +29,7 @@ dispatch(getParty(user_id));
     useEffect(()=>{
       let newPartyList = [];
       partyList.forEach((item)=>{
-        newPartyList.push({label:item.name,value:item.id});
+        newPartyList.push({label:titleCase(item.name),value:item.id});
       })
       setPartyListOptions([...newPartyList]);
   
@@ -127,6 +128,9 @@ dispatch(getParty(user_id));
                               touched.party && error.party
                                 ? "input-error"
                                 : ""
+                            } ${values.party
+                              ? "filled"
+                              : ""
                             }`} 
                             isSearchable={true}
                             options={partyListOpt} 
@@ -139,8 +143,8 @@ dispatch(getParty(user_id));
                               borderRadius: 8,
                               colors: {
                                 ...theme.colors,
-                                primary25: 'rgba(5,131,107,0.1)',
-                                primary: '#05836b',
+                                primary25: 'rgb(0 120 219 / 10%);',
+                                primary: '#0078db',
                               },
                             })}
                             />
@@ -165,6 +169,9 @@ dispatch(getParty(user_id));
                               touched.destination && error.destination
                                 ? "input-error"
                                 : ""
+                            } ${values.destination
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -190,6 +197,9 @@ dispatch(getParty(user_id));
                               touched.weight && error.weight
                                 ? "input-error"
                                 : ""
+                            } ${values.weight
+                              ? "filled"
+                              : ""
                             }`}
                           />
                        
@@ -208,6 +218,9 @@ dispatch(getParty(user_id));
                               touched.rate && error.rate
                                 ? "input-error"
                                 : ""
+                            } ${values.rate
+                              ? "filled"
+                              : ""
                             }`}
                           />
                        
@@ -226,6 +239,9 @@ dispatch(getParty(user_id));
                             className={`form-control ${touched.advance && error.advance
                               ? "input-error"
                               : ""
+                              } ${values.advance
+                                ? "filled"
+                                : ""
                               }`}
                           />
                     
@@ -265,6 +281,9 @@ dispatch(getParty(user_id));
                                 error.date
                                   ? "input-error"
                                   : ""
+                              } ${values.date
+                                ? "filled"
+                                : ""
                               }`}
                               name="date"
                             />
@@ -290,7 +309,10 @@ dispatch(getParty(user_id));
                           <Field
                             as="textarea"
                             name="description"
-                            className="form-control"
+                            className={`form-control ${values.description
+                              ? "filled"
+                              : ""
+                            }`}
                           />
                         </div>
                       </div>

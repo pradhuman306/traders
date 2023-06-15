@@ -26,7 +26,7 @@ const Signin = (props) => {
     setTimeout(() => {
       setsignInPending(false);
     }, 1000);
- 
+    // dispatch(getLogo());
   }, []);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ const Signin = (props) => {
                       setSubmitting(false);
                     }}
                   >
-                    {({ isSubmitting, dirty, handleReset, touched }) => (
+                    {({ isSubmitting, dirty, handleReset, touched, values }) => (
                       <Form action="" id="loginForm">
                         <div className="form-group mb-3">
                           <label>Email Address <span className="error-badge">*</span></label>
@@ -90,6 +90,9 @@ const Signin = (props) => {
                             type="text"
                             name="email"
                             className={`form-control icon icon-email ${touched.email && error.email ? "input-error" : ""
+                              } ${values.email
+                                ? "filled"
+                                : ""
                               }`}
                             placeholder="Enter your email"
                           />
@@ -107,6 +110,9 @@ const Signin = (props) => {
                             className={`form-control icon icon-lock ${touched.password && error.password
                               ? "input-error"
                               : ""
+                              } ${values.password
+                                ? "filled"
+                                : ""
                               }`}
                             placeholder="Enter your password"
                           />

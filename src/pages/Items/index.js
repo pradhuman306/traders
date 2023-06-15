@@ -14,6 +14,7 @@ import AddItems from './AddItems';
 import EditItems from './EditItems';
 import DeleteSelected from '../../component/DeleteSelected';
 import Header from '../Header/Header';
+import { titleCase } from '../../actions/common';
 
 const Items = (props) => {
     const userId = props.auth.userdata.id;
@@ -73,7 +74,7 @@ const Items = (props) => {
                 return (
          
                     <div className="user-wrap">
-                        <div className="user-detail">{row.item}</div>
+                        <div className="user-detail">{titleCase(row.item)}</div>
                     </div>
                  
                 );

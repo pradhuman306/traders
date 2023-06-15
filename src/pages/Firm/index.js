@@ -10,6 +10,7 @@ import Header from '../Header/Header';
 import AddFirm from './AddFirm';
 import EditFirm from './EditFirm';
 import { deleteFirm, getFirm } from '../../actions/firm';
+import { titleCase } from '../../actions/common';
 
 const Firm = (props) => {
     const userId = props.auth.userdata.id;
@@ -69,7 +70,7 @@ const Firm = (props) => {
                 return (
          
                     <div className="user-wrap">
-                        <div className="user-detail">{row.name}</div>
+                        <div className="user-detail">{titleCase(row.name)}</div>
                     </div>
                  
                 );

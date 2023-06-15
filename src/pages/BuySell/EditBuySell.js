@@ -8,6 +8,7 @@ import { getParty } from '../../actions/balancesheet';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
 import { updateBuy, updateSell } from '../../actions/buysell';
+import { titleCase } from '../../actions/common';
 
 
 const EditBuySell = (props) => {
@@ -39,19 +40,31 @@ const EditBuySell = (props) => {
     }, [])
     useEffect(() => {
         setRowData({ ...props.row_data })
-        setValueParty({ label: props.row_data.party, value: props.row_data.party_id });
-        setValueItem({ label: props.row_data.item, value: props.row_data.item_id });
-        setGodownValue({ label: props.row_data.godown, value: props.row_data.godown_id });
+        setValueParty({ label: titleCase(props.row_data.party), value: props.row_data.party_id });
+        setValueItem({ label: titleCase(props.row_data.item), value: props.row_data.item_id });
+        setGodownValue({ label: titleCase(props.row_data.godown), value: props.row_data.godown_id });
         setCheckedURD(props.row_data.URD == 1 ? true : false);
         console.log(props.row_data);
-    }, [props.row_data])
-    useEffect(() => {
-        setIsActive({ ...props.isActive });
-    }, [props.isActive])
+        let newIsActive = {...props.isActive};
+
+        if(props.row_data.type == 'Buy'){
+newIsActive.buy = true;
+newIsActive.sell = false;
+newIsActive.all = false;
+
+        }else if(props.row_data.type == 'Sale'){
+            newIsActive.buy = false;
+newIsActive.sell = true;
+newIsActive.all = false;
+
+        }
+        console.log(newIsActive);
+        setIsActive({ ...newIsActive });
+    }, [props.row_data,props.isActive])
     useEffect(() => {
         let newPartyList = [];
         partyList.forEach((item) => {
-            newPartyList.push({ label: item.name, value: item.id });
+            newPartyList.push({ label: titleCase(item.name), value: item.id });
         })
         setPartyListOptions([...newPartyList]);
     }, [partyList])
@@ -65,7 +78,7 @@ const EditBuySell = (props) => {
     useEffect(() => {
         let newItemsList = [];
         props.itemListAll.forEach(element => {
-            newItemsList.push({ label: element.item, value: element.id })
+            newItemsList.push({ label: titleCase(element.item), value: element.id })
         });
         setNewListItems(newItemsList);
     }, [props.itemListAll])
@@ -93,7 +106,7 @@ const EditBuySell = (props) => {
     useEffect(() => {
         let godownList = [];
         props.godownListAll.forEach((item) => {
-            godownList.push({ label: item.name, value: item.id });
+            godownList.push({ label: titleCase(item.name), value: item.id });
         })
         setGoDownList([...godownList]);
     }, [props.godownListAll])
@@ -154,9 +167,8 @@ const EditBuySell = (props) => {
                             values.amount = values.rate * values.weight;
                             console.log(values);
                             if (isActive.buy) {
-
                                 dispatch(updateBuy(values, elementRef, props.setBtnPending));
-                            } else {
+                            } else if(isActive.sell){
 
                                 dispatch(updateSell(values, elementRef, props.setBtnPending));
                             }
@@ -231,7 +243,10 @@ const EditBuySell = (props) => {
                                                         className={`${touched.party && error.party
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.party
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         options={partyListOpt}
                                                         value={valueParty}
                                                         name="party"
@@ -241,8 +256,8 @@ const EditBuySell = (props) => {
                                                             borderRadius: 8,
                                                             colors: {
                                                                 ...theme.colors,
-                                                                primary25: 'rgba(5,131,107,0.1)',
-                                                                primary: '#05836b',
+                                                                primary25: 'rgb(0 120 219 / 10%);',
+                                                                primary: '#0078db',
                                                             },
                                                         })}
                                                     />
@@ -268,7 +283,10 @@ const EditBuySell = (props) => {
                                                         className={`form-control ${touched.bill_no && error.bill_no
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.bill_no
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                     />
                                                     <ErrorMessage
                                                         className="error"
@@ -288,9 +306,12 @@ const EditBuySell = (props) => {
                                                         className={`${touched.godown && error.godown
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.godown
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         options={godown}
-                                                        name="item"
+                                                        name="godown"
                                                         value={godownValue}
                                                         onChange={(e) => handleSelectChangeGoDown(e, setFieldValue)}
                                                         theme={(theme) => ({
@@ -298,15 +319,15 @@ const EditBuySell = (props) => {
                                                             borderRadius: 8,
                                                             colors: {
                                                                 ...theme.colors,
-                                                                primary25: 'rgba(5,131,107,0.1)',
-                                                                primary: '#05836b',
+                                                                primary25: 'rgb(0 120 219 / 10%);',
+                                                                primary: '#0078db',
                                                             },
                                                         })}
                                                     />
 
                                                     <ErrorMessage
                                                         className="error"
-                                                        name="item"
+                                                        name="godown"
                                                         component="span"
                                                     />
                                                 </div>
@@ -322,7 +343,10 @@ const EditBuySell = (props) => {
                                                         className={`${touched.item && error.item
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.item
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         options={newListItems}
                                                         name="item"
                                                         value={valueItem}
@@ -332,8 +356,8 @@ const EditBuySell = (props) => {
                                                             borderRadius: 8,
                                                             colors: {
                                                                 ...theme.colors,
-                                                                primary25: 'rgba(5,131,107,0.1)',
-                                                                primary: '#05836b',
+                                                                primary25: 'rgb(0 120 219 / 10%);',
+                                                                primary: '#0078db',
                                                             },
                                                         })}
                                                     />
@@ -362,7 +386,10 @@ const EditBuySell = (props) => {
                                                         className={`form-control ${touched.weight && error.weight
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.weight
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                     />
 
                                                 </div>
@@ -370,7 +397,7 @@ const EditBuySell = (props) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                    ₹   Rate
+                                                    ₹ Rate
                                                     </label>
                                                     <Field
                                                         type="text"
@@ -378,7 +405,10 @@ const EditBuySell = (props) => {
                                                         className={`form-control ${touched.rate && error.rate
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.rate
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         placeholder="₹"
 
 
@@ -420,7 +450,10 @@ const EditBuySell = (props) => {
                                                         className={`form-control ${touched.debit && error.debit
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.debit
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         placeholder="₹"
 
                                                     />
@@ -447,7 +480,10 @@ const EditBuySell = (props) => {
                                                         className={`form-control ${touched.commission && error.commission
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.commission
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         placeholder="%"
 
                                                     />
@@ -469,7 +505,10 @@ const EditBuySell = (props) => {
                                                         className={`form-control ${touched.gst && error.gst
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.gst
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         placeholder="%"
 
                                                     />
@@ -519,7 +558,10 @@ const EditBuySell = (props) => {
                                                                 error.date
                                                                 ? "input-error"
                                                                 : ""
-                                                                }`}
+                                                                } ${values.date
+                                                                    ? "filled"
+                                                                    : ""
+                                                                  }`}
                                                             name="date"
                                                         />
 
@@ -544,7 +586,10 @@ const EditBuySell = (props) => {
                                                     <Field
                                                         as="textarea"
                                                         name="description"
-                                                        className="form-control"
+                                                        className={`form-control ${values.description
+                                                            ? "filled"
+                                                            : ""
+                                                          }`}
                                                     />
                                                 </div>
                                             </div>

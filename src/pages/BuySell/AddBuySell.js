@@ -8,6 +8,7 @@ import { getParty } from '../../actions/balancesheet';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
 import { addBuy, addSell } from '../../actions/buysell';
+import { titleCase } from '../../actions/common';
 
 
 const AddBuySell = (props) => {
@@ -45,7 +46,7 @@ const AddBuySell = (props) => {
     useEffect(() => {
         let newPartyList = [];
         props.partyList.forEach((item) => {
-            newPartyList.push({ label: item.name, value: item.id });
+            newPartyList.push({ label: titleCase(item.name), value: item.id });
         })
         setPartyListOptions([...newPartyList]);
     }, [props.partyList])
@@ -53,7 +54,7 @@ const AddBuySell = (props) => {
     useEffect(() => {
         let godownList = [];
         props.godownListAll.forEach((item) => {
-            godownList.push({ label: item.name, value: item.id });
+            godownList.push({ label: titleCase(item.name), value: item.id });
         })
         setGoDownList([...godownList]);
 
@@ -76,7 +77,7 @@ const AddBuySell = (props) => {
     useEffect(() => {
         let newItemsList = [];
         props.itemListAll.forEach(element => {
-            newItemsList.push({ label: element.item, value: element.id })
+            newItemsList.push({ label: titleCase(element.item), value: element.id })
         });
         setNewListItems(newItemsList);
     }, [props.itemListAll])
@@ -225,7 +226,10 @@ const AddBuySell = (props) => {
                                                         className={`${touched.party && error.party
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.party
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         options={partyListOpt}
                                                         name="party"
                                                         isSearchable={true}
@@ -237,8 +241,8 @@ const AddBuySell = (props) => {
                                                             borderRadius: 8,
                                                             colors: {
                                                                 ...theme.colors,
-                                                                primary25: 'rgba(5,131,107,0.1)',
-                                                                primary: '#05836b',
+                                                                primary25: 'rgb(0 120 219 / 10%);',
+                                                                primary: '#0078db',
                                                             },
                                                         })}
                                                     />
@@ -264,7 +268,10 @@ const AddBuySell = (props) => {
                                                         className={`form-control ${touched.bill_no && error.bill_no
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.bill_no
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                     />
                                                     <ErrorMessage
                                                         className="error"
@@ -283,10 +290,13 @@ const AddBuySell = (props) => {
                                                     </label>
 
                                                     <Select
-                                                        className={`${touched.item && error.item
+                                                        className={`${touched.godown && error.godown
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.godown
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         options={godown}
                                                         isSearchable={true}
                                                         isClearable={true}
@@ -298,8 +308,8 @@ const AddBuySell = (props) => {
                                                             borderRadius: 8,
                                                             colors: {
                                                                 ...theme.colors,
-                                                                primary25: 'rgba(5,131,107,0.1)',
-                                                                primary: '#05836b',
+                                                                primary25: 'rgb(0 120 219 / 10%);',
+                                                                primary: '#0078db',
                                                             },
                                                         })}
                                                     />
@@ -322,7 +332,10 @@ const AddBuySell = (props) => {
                                                         className={`${touched.item && error.item
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.item
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         options={newListItems}
                                                         isSearchable={true}
                                                         isClearable={true}
@@ -334,8 +347,8 @@ const AddBuySell = (props) => {
                                                             borderRadius: 8,
                                                             colors: {
                                                                 ...theme.colors,
-                                                                primary25: 'rgba(5,131,107,0.1)',
-                                                                primary: '#05836b',
+                                                                primary25: 'rgb(0 120 219 / 10%);',
+                                                                primary: '#0078db',
                                                             },
                                                         })}
                                                     />
@@ -362,7 +375,10 @@ const AddBuySell = (props) => {
                                                         className={`form-control ${touched.weight && error.weight
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.weight
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                     />
 
                                                 </div>
@@ -378,7 +394,10 @@ const AddBuySell = (props) => {
                                                         className={`form-control ${touched.rate && error.rate
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.rate
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         placeholder="₹"
 
 
@@ -422,7 +441,10 @@ const AddBuySell = (props) => {
                                                         className={`form-control ${touched.debit && error.debit
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.debit
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         placeholder="₹"
                                                     // onChange={(e)=>handleChangeValues('debit',e,setFieldValue,values)}
                                                     />
@@ -449,7 +471,10 @@ const AddBuySell = (props) => {
                                                         className={`form-control ${touched.commission && error.commission
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.commission
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         placeholder="%"
 
 
@@ -472,7 +497,10 @@ const AddBuySell = (props) => {
                                                         className={`form-control ${touched.gst && error.gst
                                                             ? "input-error"
                                                             : ""
-                                                            }`}
+                                                            } ${values.gst
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
                                                         placeholder="%"
                                                     />
                                                     {/* <ErrorMessage
@@ -522,7 +550,10 @@ const AddBuySell = (props) => {
                                                                 error.date
                                                                 ? "input-error"
                                                                 : ""
-                                                                }`}
+                                                                } ${values.date
+                                                                    ? "filled"
+                                                                    : ""
+                                                                  }`}
                                                             name="date"
                                                         />
 
@@ -547,7 +578,10 @@ const AddBuySell = (props) => {
                                                     <Field
                                                         as="textarea"
                                                         name="description"
-                                                        className="form-control"
+                                                        className={`form-control ${values.description
+                                                            ? "filled"
+                                                            : ""
+                                                          }`}
                                                     />
                                                 </div>
                                             </div>

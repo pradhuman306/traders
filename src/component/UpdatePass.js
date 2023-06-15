@@ -46,7 +46,7 @@ const UpdatePass = (props) => {
           setSubmitting(false);
         }}
       >
-        {({ isSubmitting, dirty, handleReset, touched }) => (
+        {({ isSubmitting, dirty, handleReset, touched,values }) => (
           <Form>
             <div className='nav card'>
               <div className="row">
@@ -59,6 +59,9 @@ const UpdatePass = (props) => {
                       className={`form-control icon icon-lock ${touched.current_password && error.current_password
                         ? "input-error"
                         : ""
+                        } ${values.current_password
+                          ? "filled"
+                          : ""
                         }`}
                       placeholder="Enter current password"
                       name="current_password"
@@ -78,6 +81,9 @@ const UpdatePass = (props) => {
                       className={`form-control icon icon-lock ${touched.new_password && error.new_password
                         ? "input-error"
                         : ""
+                        } ${values.new_password
+                          ? "filled"
+                          : ""
                         }`}
                       placeholder="Enter new password"
                       name="new_password"
@@ -97,6 +103,9 @@ const UpdatePass = (props) => {
                       className={`form-control icon icon-lock ${touched.confirm_password && error.confirm_password
                         ? "input-error"
                         : ""
+                        } ${values.confirm_password
+                          ? "filled"
+                          : ""
                         }`}
                       placeholder="Enter confirm password"
                       name="confirm_password"

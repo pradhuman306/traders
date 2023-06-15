@@ -6,7 +6,7 @@ import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
-import { formatDate, priceFormatter } from '../../actions/common';
+import { formatDate, priceFormatter,titleCase } from '../../actions/common';
 import { deleteStockDetails, getGoDownList, getStockById, getStockDetails } from '../../actions/godown';
 import AddStockDetails from './AddStockDetails';
 import EditStockDetails from './EditStockDetails';
@@ -21,7 +21,7 @@ const StockDetails = (props) => {
     const stockDetailsAll = useSelector((state) => state.godownReducer).stockDetails;
     const stockSingle = useSelector((state) => state.godownReducer).stockSingle;
     const itemListAll = useSelector((state) => state.itemReducer).itemList;
-    const firmListAll = useSelector((state)=>state.firmReducer).firmList;
+    const firmListAll = useSelector((state) => state.firmReducer).firmList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [stockDetails, setList] = useState([...stockDetailsAll]);
@@ -32,7 +32,7 @@ const StockDetails = (props) => {
     const [godownNameShort, setGodownShort] = useState("");
     const [allItems, setAllItems] = useState([]);
     const [totalAmount, setTotalAmount] = useState([]);
-    
+
 
 
     const handleSort = (column, sortDirection) =>
@@ -47,17 +47,17 @@ const StockDetails = (props) => {
     }, [stockid])
 
 
-    useEffect(()=>{
+    useEffect(() => {
         let stockData = props.godownListAll;
         let sum = 0;
-          if(stockData.length){
-           setAllItems(stockData[0].allitems);  
+        if (stockData.length) {
+            setAllItems(stockData[0].allitems);
             sum = stockData.reduce((accumulator, object) => {
-            return accumulator + parseInt(object.total);
-          }, 0);
-          setTotalAmount(sum);
-                }
-    },[props.godownListAll])
+                return accumulator + parseInt(object.total);
+            }, 0);
+            setTotalAmount(sum);
+        }
+    }, [props.godownListAll])
 
     useEffect(() => {
         if (props.godownListRow.name) {
@@ -67,7 +67,7 @@ const StockDetails = (props) => {
             if (newName[1]) {
                 lastC = newName[1][0].toUpperCase();
             }
-     
+
             setGodownShort(firstC + lastC);
         }
 
@@ -171,8 +171,8 @@ const StockDetails = (props) => {
 
     const columns = useMemo(
         () => [
-         
-               
+
+
             {
                 name: "Date",
                 selector: (row) => formatDate(row.date),
@@ -181,16 +181,16 @@ const StockDetails = (props) => {
                 // width: '120px',
 
             },
-           
+
             {
                 name: "Item",
-                selector: (row) => row.item,       
+                selector: (row) => titleCase(row.item),   
                 sortable: true,
 
 
             },
 
-         
+
             {
                 name: "Weight",
                 selector: (row) => row.weight + ' qt',
@@ -209,11 +209,11 @@ const StockDetails = (props) => {
             },
             {
                 name: "Amount",
-                selector: (row) =>{
+                selector: (row) => {
                     return (
-                        
+
                         <span className="badge rounded-pill bg-text text-bg-primary">
-                          {"₹" + parseInt(row.weight * row.rate).toLocaleString("en-IN")}
+                            {"₹" + parseInt(row.weight * row.rate).toLocaleString("en-IN")}
                         </span>
                     );
                 },
@@ -236,7 +236,7 @@ const StockDetails = (props) => {
             //     name: "Firm",
             //     selector: (row) =>{
             //         return (
-                        
+
             //             <span className="badge rounded-pill bg-text text-bg-secondary">
             //               {row.firm}
             //             </span>
@@ -259,16 +259,16 @@ const StockDetails = (props) => {
                         <>
                             <ul className='action-replay'>
                                 <li>
-                                <a onClick={(e) => {
-                                            e.preventDefault();
-                                            setDetailsListRow(row);
-                                            setId(row.id);
+                                    <a onClick={(e) => {
+                                        e.preventDefault();
+                                        setDetailsListRow(row);
+                                        setId(row.id);
 
-                                        }}
-                                            className="btn-sml"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#editaccountdetails"
-                                        >
+                                    }}
+                                        className="btn-sml"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editaccountdetails"
+                                    >
 
                                         <svg className="nofill" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <mask id="path-1-outside-1_1154_12363" maskUnits="userSpaceOnUse" x="3" y="4" width="17" height="17" fill="black">
@@ -281,16 +281,16 @@ const StockDetails = (props) => {
                                     </a>
                                 </li>
                                 <li>
-                                <a onClick={(e) => {
-                                            e.preventDefault();
-                                        }}
-                                            className="btn-sml"
-                                            data-bs-toggle="modal"
-                                            data-bs-target={`#confirm_${row.id}`}
-                                        >
+                                    <a onClick={(e) => {
+                                        e.preventDefault();
+                                    }}
+                                        className="btn-sml"
+                                        data-bs-toggle="modal"
+                                        data-bs-target={`#confirm_${row.id}`}
+                                    >
 
 
-                                       
+
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M10 15L10 12" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
                                             <path d="M14 15L14 12" stroke="#8F99B3" strokeWidth="2" strokeLinecap="round"></path>
@@ -299,13 +299,13 @@ const StockDetails = (props) => {
                                         </svg>
                                     </a>
                                     <ConfirmModal
-                                id={row.id}
-                                name={row.item}
-                                yes={(id) => {
-                                    dispatch(deleteStockDetails({ id: row.id, stock_id: props.godownListRow.id, name: row.item, user_id: userId }));
-                                }}
+                                        id={row.id}
+                                        name={row.item}
+                                        yes={(id) => {
+                                            dispatch(deleteStockDetails({ id: row.id, stock_id: props.godownListRow.id, name: row.item, user_id: userId }));
+                                        }}
 
-                            />
+                                    />
                                 </li>
                             </ul>
 
@@ -321,100 +321,85 @@ const StockDetails = (props) => {
 
     return (
         <>
-        <div className="body-content">
-            <div className="usermanagement-main">
-            <div className="nav inline-div">
-            <div className='two-row-content'>
-                    <ul className='st-dtl'>
-                   {allItems.map((item)=>(
-                   <li>
-                    <span>{item.name}</span>
-                    <span>{item.weight}qt</span>
-                    <span>{priceFormatter(item.total)}</span>
-                   </li> 
-                   ))}
-                      </ul>  
-                     <p className='total-am'> <span>Total:</span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{priceFormatter(totalAmount)}   </label> </p>
-                       </div>
-                    </div>
-            {props.godownListRow.id ? <div className="nav inline-div">
-                    <div className='two-row-content'>
-                  
-                         <div className={`user-wrap`}>
-                            <h5 className="user-icon">{godownNameShort}</h5>
-                            <div className="user-detail">{props.godownListRow.name}
+            <div className="body-content">
+                <div className="usermanagement-main">
+
+                    {props.godownListRow.id ? <div className="nav inline-div">
+                        <div className='two-row-content'>
+
+                            <div className={`user-wrap`}>
+                                <h5 className="user-icon">{godownNameShort}</h5>
+                                <div className="user-detail">{titleCase(props.godownListRow.name)}
+                                </div>
                             </div>
+                            <div className='godown-stock'>
+                                {props.godownListRow.items.map((item) => (
+                                    <>
+                                        <div><span>{titleCase(item.name)}</span>
+                                            <label>{item.weight} qt</label>
+                                        </div>
+
+                                    </>
+                                ))
+                                }
+                                {/* {props.godownListRow.items} */}
+
+                            </div>
+                            <p>Total <label className='badge rounded-pill bg-text text-bg-warning xl-text'>{priceFormatter(props.godownListRow.total)}</label></p>
+
+
+
                         </div>
-            <div className='godown-stock'>
-        {
-        props.godownListRow.items.map((item)=>(
-            <>
-            <div><span>{item.name}</span>
-            <label>{item.weight} qt</label>
+
+                    </div> : ""}
+                    {props.godownListRow.id ? <div className="datatable-filter-wrap">
+                        <div className="datatable-search">
+                            <input
+                                type="text"
+                                placeholder="Search stock details..."
+                                className="form-control"
+                                onChange={(e) => hanndleSearch(e.target.value)} />
+                        </div>
+                        <div className="datatable-filter-right">
+                            <ul className="btn-group">
+
+                                <li>
+                                    <button
+                                        className="btn btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#addstockdetails"
+                                    >
+
+                                        Add Stock
+
+
+                                    </button>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div> : ""}
+                </div>
+
+                <AddStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} godownList={props.godownListRow} />
+                <EditStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} row_id={id} row_data={stockDetailsListRow} godownList={props.godownListRow} />
+                <DataTable
+                    columns={columns}
+                    data={stockDetails}
+                    progressPending={props.pendingData}
+                    progressComponent={<CustomLoader />}
+                    paginationRowsPerPageOptions={[8, 25, 50, 100]}
+                    pagination
+                    paginationPerPage={8}
+                    expandableRows={isExpandable}
+                    expandableRowsComponent={ExpandedComponent}
+                    onSort={handleSort}
+
+                />
+
             </div>
-         
-            </>
-        ))
-}
-        {/* {props.godownListRow.items} */}
-               
-            </div>
-                        <p>Total: <label className='badge rounded-pill bg-text text-bg-warning xl-text'>{priceFormatter(props.godownListRow.total)}</label></p>
-                 
-                          
-                     
-                    </div>
 
-                </div> : ""}
-                {props.godownListRow.id ?     <div className="datatable-filter-wrap">
-                    <div className="datatable-search">
-                        <input
-                            type="text"
-                            placeholder="Search stock details..."
-                            className="form-control"
-                            onChange={(e) => hanndleSearch(e.target.value)}
-                        />
-                    </div>
-                    <div className="datatable-filter-right">
-                        <ul className="btn-group">
-
-                            <li>
-                                <button
-                                    className="btn btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addstockdetails"
-                                >
-
-                                    Add Stock
-
-
-                                </button>
-                            </li>
-
-
-                        </ul>
-                    </div>
-                </div>:""}
-            </div>
-          
-         <AddStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} godownList={props.godownListRow} />
-         <EditStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} row_id={id} row_data={stockDetailsListRow} godownList={props.godownListRow} />
-            <DataTable
-                columns={columns}
-                data={stockDetails}
-                progressPending={props.pendingData}
-                progressComponent={<CustomLoader />}
-                paginationRowsPerPageOptions={[8, 25, 50, 100]}
-                pagination
-                paginationPerPage={8}
-                expandableRows={isExpandable}
-                expandableRowsComponent={ExpandedComponent}
-                onSort={handleSort}
-
-            />
-             
-        </div>
-         
         </>
     )
 }

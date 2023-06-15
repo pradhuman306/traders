@@ -9,7 +9,7 @@ import { deleteAccount, getAccountDetails, getAccountList } from '../../actions/
 import { deleteTransportRentList, getRentHistoryByParty, getTransportRentList } from '../../actions/transportrent';
 import ConfirmModal from '../../common/confirmModal';
 import CustomLoader from '../Customloader';
-import { formatDate, priceFormatter } from '../../actions/common';
+import { formatDate, priceFormatter , titleCase} from '../../actions/common';
 import Select from 'react-select';
 import { getItems } from '../../actions/items';
 import AddTransportRent from './AddTransportRent';
@@ -37,10 +37,10 @@ const TransportDetails = (props) => {
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
     const [partyNameShort, setPartyShort] = useState("");
-    const [isDisplayDate,setDisplayDate] = useState(false);
-    const [dateFromTo,setDateFromTo] = useState({start:"",end:""});
-    const [totalPaid,setTotalPaid] = useState(0);
-    const [lastPaid,setLastPaid] = useState({});
+    const [isDisplayDate, setDisplayDate] = useState(false);
+    const [dateFromTo, setDateFromTo] = useState({ start: "", end: "" });
+    const [totalPaid, setTotalPaid] = useState(0);
+    const [lastPaid, setLastPaid] = useState({});
 
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
@@ -63,7 +63,7 @@ const TransportDetails = (props) => {
         }, {
             label: "This year",
             value: "1y"
-        },{
+        }, {
             label: "Custom date",
             value: "custom"
         }]
@@ -72,40 +72,40 @@ const TransportDetails = (props) => {
         // dispatch(getRentHistoryByParty(transid,newFilterItems[0].value));
     }, [transid])
 
-useEffect(()=>{
-    let totalPaid = 0;
-    if(props.transportRow.rent_paid){
-        let rent_paid = JSON.parse(props.transportRow.rent_paid);
-        totalPaid = rent_paid.reduce((accumulator, object) => {
-            return accumulator + parseInt(object.amount);
-          }, 0);
-          setLastPaid(rent_paid[rent_paid.length-1]);
-    }else{
-        setLastPaid({});
-    }
-    setTotalPaid(totalPaid);
-},[props.transRentList,props.transportRow])
+    useEffect(() => {
+        let totalPaid = 0;
+        if (props.transportRow.rent_paid) {
+            let rent_paid = JSON.parse(props.transportRow.rent_paid);
+            totalPaid = rent_paid.reduce((accumulator, object) => {
+                return accumulator + parseInt(object.amount);
+            }, 0);
+            setLastPaid(rent_paid[rent_paid.length - 1]);
+        } else {
+            setLastPaid({});
+        }
+        setTotalPaid(totalPaid);
+    }, [props.transRentList, props.transportRow])
     const handleSelectChange = (e) => {
         if (e && e.value != "custom") {
-            dispatch(getRentHistoryByParty(props.transportRow.party_id,e.value));
+            dispatch(getRentHistoryByParty(props.transportRow.party_id, e.value));
             console.log(transid);
             setValueFilter(e);
             setDisplayDate(false);
-        }else if(e.value === "custom"){
+        } else if (e.value === "custom") {
             setDisplayDate(true);
             setValueFilter(e);
         }
     }
     const handleSearch = () => {
-        dispatch(getRentHistoryByParty(props.transportRow.party_id,'custom',dateFromTo));
+        dispatch(getRentHistoryByParty(props.transportRow.party_id, 'custom', dateFromTo));
 
     }
-    const handleChangeDate = (e,param) => {
-        let fromToDate = {...dateFromTo};
-        if(param === 'start'){
+    const handleChangeDate = (e, param) => {
+        let fromToDate = { ...dateFromTo };
+        if (param === 'start') {
             fromToDate.start = e.target.value;
         }
-        if(param === 'end'){
+        if (param === 'end') {
             fromToDate.end = e.target.value;
         }
         setDateFromTo(fromToDate);
@@ -198,13 +198,13 @@ useEffect(()=>{
             });
             setList([...tmp]);
         } else {
-            
+
             setList([...transRentListAll]);
         }
 
-  
-        
-     
+
+
+
     }, [filterText, transRentListAll]);
 
     const hanndleSearch = (value) => {
@@ -224,7 +224,7 @@ useEffect(()=>{
             },
             {
                 name: "Destination",
-                selector: (row) => row.destination,
+                selector: (row) => titleCase(row.destination),
                 sortable: true,
                 // width: "200px",
                 hide: "sm",
@@ -264,19 +264,14 @@ useEffect(()=>{
                 selector: (row) => {
                     return (
 
-                        <span className="badge rounded-pill bg-text text-bg-warning">
+                        <span className="badge rounded-pill bg-text text-bg-light">
                             {"₹" + parseInt(row.rate * row.weight - row.advance).toLocaleString("en-IN")}
                         </span>
                     );
                 },
             },
 
-            {
-                name: "Description",
-                selector: (row) => row.description,
-                sortable: true,
-                hide: "md",
-            },
+
 
             {
                 name: "Actions",
@@ -348,7 +343,7 @@ useEffect(()=>{
         ],
         [props.transportRow]
     );
-  
+
     useEffect(() => {
         if (props.transportRow.party) {
             let newName = props.transportRow.party.split(" ");
@@ -363,27 +358,58 @@ useEffect(()=>{
     return (
         <div className="body-content">
             <div className="usermanagement-main">
-            <div className="nav inline-div">
-            <div className='two-row-content'>
-                        <p className='total-am'><span>Total Pending Amount:</span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{"₹" + parseInt(props.totalPending-props.totalAllPaid).toLocaleString("en-IN")}</label></p>      
-                       </div>
-                    </div>
-                {props.transportRow.party ? <div className="nav inline-div">
-                    <div className='two-row-content'>
-                         <div className={`user-wrap`}>
-                            <h5 className="user-icon">{partyNameShort}</h5>
-                            <div className="user-detail">{props.transportRow.party}
-                            {/* <label className='badge rounded-pill bg-text text-bg-primary mx-2' data-bs-toggle="modal"
-                                data-bs-target="#editparty"     > 
-                                 Edit party
-                            </label> */}
+
+                {props.transportRow.party ?
+
+                    <div className='row'>
+
+                        <div className='col-md-12'>
+                            <div className="nav inline-div">
+                                <div className='two-row-content'>
+                                    <div className={`user-wrap`}>
+                                        <h5 className="user-icon">{partyNameShort}</h5>
+                                        <div className="user-detail">
+                                            <span className='pay-rent-btn'>{titleCase(props.transportRow.party)}
+                                                <button
+                                                    className={`${totalPaid >= props.transportRow.total_rent ? "anchor pay-btn paid-btn" : "anchor pay-btn"}`}
+                                                    data-bs-toggle={`${totalPaid >= props.transportRow.total_rent ? false : "modal"}`}
+                                                    data-bs-target={`${totalPaid >= props.transportRow.total_rent ? false : "#payRent"}`}
+                                                >
+                                                    {totalPaid >= props.transportRow.total_rent ? "Paid" : "Pay"}
+                                                </button></span>
+                                            <div className='user-payment'>{lastPaid.amount ? `Last paid on` : ""} {lastPaid.amount ? <b>{formatDate(lastPaid.date)}</b> : ""} {lastPaid.amount ? `amount was` : ""} {lastPaid.amount ? <b>{priceFormatter(lastPaid.amount)}</b> : ""}</div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <p className='total-am'><span>Pending Amount   </span> <label className='badge rounded-pill bg-text text-bg-warning xl-text'>{"₹" + parseInt(props.transportRow.total_rent - totalPaid).toLocaleString("en-IN")}</label></p>
+                                    {/* <div className="datatable-filter-right">
+                                        {props.transportRow.party_id ?
+                                            <ul className="btn-group">
+                                                <li>
+
+                                                    
+                                                </li>
+                                                { <li>
+                                                    <button
+                                                        className="btn btn-primary"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#addtransportrent"
+                                                    >
+                                                        Add Transport
+                                                    </button>
+                                                </li> }
+                                                </ul> : ""}
+                                    </div> */}
+                                </div>
+
                             </div>
                         </div>
-                        {/* <div>{lastPaid.amount?`Last paid on ${formatDate(lastPaid.date)} amount ${priceFormatter(lastPaid.amount)}`:""}</div> */}
-                        <div>{lastPaid.amount? `Last paid on`:""} {lastPaid.amount?<b>{formatDate(lastPaid.date)}</b>:""} {lastPaid.amount? `amount`:""} {lastPaid.amount?<b>{priceFormatter(lastPaid.amount)}</b>:""}</div>
-                        <p><span>Total Pending Amount :</span> <label className='badge rounded-pill bg-text text-bg-warning xl-text'>{"₹" + parseInt(props.transportRow.total_rent-totalPaid).toLocaleString("en-IN")}</label></p>
+
                     </div>
-                </div> : ""}
+                    : ""}
                 {props.transportRow.party ? <div><div className="datatable-filter-wrap">
                     <div className="datatable-search">
                         <input
@@ -391,70 +417,47 @@ useEffect(()=>{
                             placeholder="Search transport details..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
-                        />                 
+                        />
                     </div>
                     <div className='select-filter form-group'>
-                    <Select
-                        options={newListItems}
-                        onChange={(e) => handleSelectChange(e)}
-                        value={valueFilter}
-                        theme={(theme) => ({
-                            ...theme,
-                            borderRadius: 8,
-                            colors: {
-                                ...theme.colors,
-                                primary25: 'rgba(5,131,107,0.1)',
-                                primary: '#05836b',
-                            },
-                        })}
-                    />
-                    
-                </div>
-                    <div className="datatable-filter-right">
-                            {props.transportRow.party_id ? 
-                                         <ul className="btn-group">
-                          <li> 
-                             
-                        <button
-                        className={`${totalPaid >= props.transportRow.total_rent?"anchor pay-btn paid-btn":"anchor pay-btn"}`}
-                        // onClick={() => setRowData(row)}
-                        data-bs-toggle={`${totalPaid >= props.transportRow.total_rent ? false : "modal"}`}
-                        data-bs-target={`${totalPaid >= props.transportRow.total_rent ? false : "#payRent"}`}
-                    >
-                     {totalPaid >= props.transportRow.total_rent?"Paid":"Pay"}
-                    </button>
-                    </li>   
-                            <li>
-                                <button
-                                    className="btn btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#addtransportrent"
-                                >
-                                    Add Transport
-                                </button>
-                            </li></ul> : ""}
+                        <Select
+                            options={newListItems}
+                            onChange={(e) => handleSelectChange(e)}
+                            value={valueFilter}
+                            theme={(theme) => ({
+                                ...theme,
+                                borderRadius: 8,
+                                colors: {
+                                    ...theme.colors,
+                                    primary25: 'rgb(0 120 219 / 10%);',
+                                    primary: '#0078db',
+                                },
+                            })}
+                        />
+
                     </div>
-                </div><div className={`${!isDisplayDate?"d-none":"date-filter"}`}>
-                    <label>From: <input
-                        type="date"
-                        name="from"
-                        onChange={(e)=>handleChangeDate(e,'start')}
-                        className="form-control"
-                    /></label>
-              
-                      <label>To:   <input
-                        type="date"
-                        name="to"
-                        onChange={(e)=>handleChangeDate(e,'end')}
-                        className="form-control"
-                    /></label>
-                    <button className='btn btn-primary' onClick={()=>handleSearch()} type="button">Search</button>
-                </div></div>:""}
+
+                </div><div className={`${!isDisplayDate ? "d-none" : "date-filter"}`}>
+                        <label>From: <input
+                            type="date"
+                            name="from"
+                            onChange={(e) => handleChangeDate(e, 'start')}
+                            className="form-control"
+                        /></label>
+
+                        <label>To:   <input
+                            type="date"
+                            name="to"
+                            onChange={(e) => handleChangeDate(e, 'end')}
+                            className="form-control"
+                        /></label>
+                        <button className='btn btn-primary' onClick={() => handleSearch()} type="button">Search</button>
+                    </div></div> : ""}
             </div>
-                 
+
             <EditTransportRent {...props} row_data={transportRow} row_id={id} partyList={partyList} />
             <EditParty {...props} row_id={props.partyDetails.id} row_data={props.partyDetails} btnPending={btnPending} />
-            <PayRent {...props} row_data={props.transportRow} filterValue={valueFilter} userId={userId} pendingAmount={parseInt(props.transportRow.total_rent-totalPaid)}  />
+            <PayRent {...props} row_data={props.transportRow} filterValue={valueFilter} userId={userId} pendingAmount={parseInt(props.transportRow.total_rent - totalPaid)} />
 
 
             <DataTable

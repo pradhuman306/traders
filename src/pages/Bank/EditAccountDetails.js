@@ -100,6 +100,9 @@ const EditAccountDetails = (props) => {
                               touched.amount && error.amount
                                 ? "input-error"
                                 : ""
+                            } ${values.amount
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -123,6 +126,9 @@ const EditAccountDetails = (props) => {
                               touched.date && error.date
                                 ? "input-error"
                                 : ""
+                            } ${values.date
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -141,7 +147,10 @@ const EditAccountDetails = (props) => {
                           <Field
                             as="textarea"
                             name="description"
-                            className={`form-control`}
+                            className={`form-control ${values.description
+                              ? "filled"
+                              : ""
+                            }`}
                           />
                           <ErrorMessage
                             className="error"

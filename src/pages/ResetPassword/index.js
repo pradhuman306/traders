@@ -51,7 +51,7 @@ function ResetPassword(props) {
                     setSubmitting(false);
                   }}
                 >
-                  {({ isSubmitting, dirty, handleReset }) => (
+                  {({ isSubmitting, dirty, handleReset, values }) => (
                     <Form action="" id="loginForm">
                       <div className="form-group mb-3">
                         <label>Email Address <span className="error-badge">*</span></label>
@@ -60,6 +60,9 @@ function ResetPassword(props) {
                           name="email"
                           className={`form-control icon icon-email ${
                             error.email ? "input-error" : ""
+                          } ${values.email
+                            ? "filled"
+                            : ""
                           }`}
                           placeholder="Enter your email"
                         />

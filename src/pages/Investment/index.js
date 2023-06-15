@@ -162,7 +162,7 @@ const Investment = (props) => {
     );
 
     return ( <>
-    
+              <Header heading="Investment" {...props} />
         <div className="body-content">
             <div className="usermanagement-main">
                 <div className="datatable-filter-wrap">

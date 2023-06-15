@@ -121,7 +121,7 @@ const PaySlip = (props) => {
                 <div className="modal-body">
                   <div className="">
                     <div className="modal-body-row">
-                      <h6>Main Amount:</h6>
+                      <h6>Main Amount</h6>
                       <p>
                         ₹
                         {parseInt(props.rowData.amount).toLocaleString("en-IN")}
@@ -134,7 +134,7 @@ const PaySlip = (props) => {
                       </p>
                     </div>
                     <div className="modal-body-row">
-                      <h6>Commision:</h6>
+                      <h6>Commision</h6>
                       <p>
                         ₹
                         {parseInt(
@@ -147,22 +147,22 @@ const PaySlip = (props) => {
                       </p>
                     </div>
                     <div className="modal-body-row">
-                      <h6>Debit Amount:</h6>
+                      <h6>Debit Amount</h6>
                       <p>{priceFormatter(totalAmountCalculateRaw(props.rowData))}</p>
                     </div>
                     <div className="modal-body-row">
-                      <h6>GST Amount:</h6>
+                      <h6>GST Amount</h6>
                       <p>
                         
                         {priceFormatter(gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst))} <span class="badge rounded-pill text-bg-success">{props.rowData.gst}%</span>
                       </p>
                     </div>
                     <div className="modal-body-row">
-                      <h6>Total Amount:</h6>
+                      <h6>Total Amount</h6>
                       <p>₹{parseInt(totalAmount).toLocaleString("en-IN")}</p>
                     </div>
                     <div className="modal-body-row">
-                      <h6>Pending Amount:</h6>
+                      <h6>Pending Amount</h6>
                       <p>
                         ₹
                         {parseInt(
@@ -171,7 +171,7 @@ const PaySlip = (props) => {
                       </p>
                     </div>
                     <div className="modal-body-row">
-                      <h6>Pending GST:</h6>
+                      <h6>Pending GST</h6>
                       <p>
                         
                      {priceFormatter(gstCalculate(totalAmountCalculateRaw(props.rowData),props.rowData.gst)-parseInt(totalPaidWithGST))}
@@ -209,6 +209,9 @@ const PaySlip = (props) => {
                               touched.amount && error.amount
                                 ? "input-error"
                                 : ""
+                            } ${values.amount
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage

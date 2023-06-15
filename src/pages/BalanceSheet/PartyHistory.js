@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import CustomLoader from '../Customloader';
 import { getAllPartyHistory, getPartyById } from '../../actions/balancesheet';
-import { formatDate, gstCalculate, makePositive, priceFormatter, totalAmountBuy, totalAmountCalculateRaw, totalAmountSell } from '../../actions/common';
+import { formatDate, gstCalculate, makePositive,titleCase, priceFormatter, totalAmountBuy, totalAmountCalculateRaw, totalAmountSell } from '../../actions/common';
 import Select from 'react-select';
 import Header from '../Header/Header';
 import PaySlip from './PaySlip';
@@ -252,7 +252,7 @@ const PartyHistory = (props) => {
                 selector: (row) => {
                     return (
                         <>
-                            <div className="user-detail xl-text">{row.item} <div className='bysellopt'>{row.type === 'Buy' ? <span className='badge rounded-pill text-bg-primary'>Buy</span> : <span className='badge rounded-pill text-bg-danger'>Sell</span>}</div></div>
+                            <div className="user-detail xl-text">{titleCase(row.item)}  <div className='bysellopt'>{row.type === 'Buy' ? <span className='badge rounded-pill text-bg-primary'>Buy</span> : <span className='badge rounded-pill text-bg-danger'>Sell</span>}</div></div>
                             <div className='c-date'>{formatDate(row.date?.split(" ")[0])}</div>
                         </>
 
@@ -393,16 +393,18 @@ const PartyHistory = (props) => {
             <Header heading={!props.pendingData ? partyDetails.name : ""} {...props} />
             <div className='mr-minus'>
                 <div className="usermanagement-main">
-                    <p class="extra-stuff"><a className='anchor-link' onClick={()=>navigate(-1)}> <img src="/assets/images/back.svg" alt="" /> Back </a>
+                    <p class="extra-stuff">
+                        
+                        {/* <a className='anchor-link' onClick={()=>navigate(-1)}> <img src="/assets/images/back.svg" alt="" /> Back </a> */}
 
                         <div className='amount-dtl'>
                             {!props.pendingData ? <>   
                             {/* <p className='total-am'><span>Total Debit Amount : </span><label className='badge rounded-pill bg-text text-bg-primary xl-text'>₹{parseInt(totalAmount).toLocaleString("en-IN")}</label></p> */}
                      
-                            <p className='total-am'><span>Total Amount : </span><label className={`badge rounded-pill bg-text ${(parseInt(totalWithoutGST))-(parseInt(totalPaidWithoutGSTSellDiffBuy))<0?"text-bg-success":"text-bg-danger"}  xl-text`}>{priceFormatter(makePositive(parseInt((totalWithoutGST) - (totalPaidWithoutGSTSellDiffBuy))))+`${(parseInt(totalWithoutGST))-(parseInt(totalPaidWithoutGSTSellDiffBuy))<0?" CR.":" DR."}`}</label></p>
-                            <p className='total-am'><span>Total GST Amount : </span><label className={`badge rounded-pill bg-text ${(totalSellGST-totalBuyGST)-(totalPaidWithGSTSellDIffBuy)<0?"text-bg-success":"text-bg-danger"} xl-text`}>₹{makePositive(parseInt((totalSellGST-totalBuyGST)-totalPaidWithGSTSellDIffBuy)).toLocaleString("en-IN")+`${(totalSellGST-totalBuyGST)-(totalPaidWithGSTSellDIffBuy)<0?" CR.":" DR."}`}</label></p>
+                            <p className='total-am'><span>Total Amount  </span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{priceFormatter(makePositive(parseInt((totalWithoutGST) - (totalPaidWithoutGSTSellDiffBuy))))+`${(parseInt(totalWithoutGST))-(parseInt(totalPaidWithoutGSTSellDiffBuy))<0?" CR.":" DR."}`}</label></p>
+                            <p className='total-am'><span>Total GST Amount  </span><label className='badge rounded-pill bg-text text-bg-primary xl-text'>₹{makePositive(parseInt((totalSellGST-totalBuyGST)-totalPaidWithGSTSellDIffBuy)).toLocaleString("en-IN")+`${(totalSellGST-totalBuyGST)-(totalPaidWithGSTSellDIffBuy)<0?" CR.":" DR."}`}</label></p>
             
-                                <p className='pending-am'><span>Total Pending Amount :</span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{parseInt(totalAmount)<0  ? priceFormatter(makePositive(makePositive(totalAmount)))+`${" CR."}`:priceFormatter(makePositive((makePositive(totalAmount))))+`${(makePositive(totalAmount))<0?" CR.":" DR."}`}</label></p></> : ""}
+                                <p className='pending-am'><span>Total Pending Amount </span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{parseInt(totalAmount)<0  ? priceFormatter(makePositive(makePositive(totalAmount)))+`${" CR."}`:priceFormatter(makePositive((makePositive(totalAmount))))+`${(makePositive(totalAmount))<0?" CR.":" DR."}`}</label></p></> : ""}
                         </div>
                     </p>
                     
@@ -430,8 +432,8 @@ const PartyHistory = (props) => {
                             borderRadius: 8,
                             colors: {
                                 ...theme.colors,
-                                primary25: 'rgba(5,131,107,0.1)',
-                                primary: '#05836b',
+                                primary25: 'rgb(0 120 219 / 10%);',
+                                primary: '#0078db',
                             },
                         })}
                     />

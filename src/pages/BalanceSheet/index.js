@@ -6,7 +6,7 @@ import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { deleteParty, getParty } from '../../actions/balancesheet';
-import { makePositive, priceFormatter } from '../../actions/common';
+import { makePositive, priceFormatter, titleCase } from '../../actions/common';
 import ConfirmModal from '../../common/confirmModal';
 import DeleteSelected from '../../component/DeleteSelected';
 import CustomLoader from '../Customloader';
@@ -121,7 +121,7 @@ const BalanceSheet = (props) => {
                       <Link className='anchor' to={`/balancesheet/${row.id}`}>
                         <div className="user-wrap">
                         <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5>
-                            <div className="user-detail">{row.name}</div>
+                        <div className="user-detail">{titleCase(row.name)}</div>
                         </div>
                         </Link>
                     );
@@ -194,9 +194,9 @@ const BalanceSheet = (props) => {
                                     </a>
                                     <ConfirmModal
                                 id={row.id}
-                                name={row.name}
+                                name={titleCase(row.name)}
                                 yes={(id) => {
-                                    dispatch(deleteParty({id:row.id,name:row.name,user_id:userId}));
+                                    dispatch(deleteParty({id:row.id,name:titleCase(row.name),user_id:userId}));
                                 }}
                              
                             />
@@ -222,9 +222,9 @@ const BalanceSheet = (props) => {
                     <p class="extra-stuff">
 
                         <div className='amount-dtl'>
-                            <p className='total-am'><span>Total Amount : </span><label className={`badge rounded-pill bg-text ${(totalAmount)<0?"text-bg-success":"text-bg-danger"} xl-text`}>{priceFormatter(makePositive(parseInt(totalAmount)))+`${(totalAmount)<0?" CR.":" DR."}`}</label></p>
-                            <p className='total-am'><span>Total GST Amount : </span><label className={`badge rounded-pill bg-text ${(totalGSTAmount)<0?"text-bg-success":"text-bg-danger"} xl-text`}>₹{makePositive(parseInt(totalGSTAmount)).toLocaleString("en-IN")+`${totalGSTAmount<0?" CR.":" DR."}`}</label></p>
-                            <p className='pending-am'><span>Total Pending Amount :</span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{parseInt(totalPendingAmount)<0  ? priceFormatter(makePositive(makePositive(totalPendingAmount)))+`${" CR."}`:priceFormatter(makePositive((makePositive(totalPendingAmount))))+`${(totalPendingAmount)<0?" CR.":" DR."}`}</label></p>
+                            <p className='total-am'><span>Total Amount</span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{priceFormatter(makePositive(parseInt(totalAmount)))+`${(totalAmount)<0?" CR.":" DR."}`}</label></p>
+                            <p className='total-am'><span>Total GST Amount</span><label className='badge rounded-pill bg-text text-bg-light xl-text'>₹{makePositive(parseInt(totalGSTAmount)).toLocaleString("en-IN")+`${totalGSTAmount<0?" CR.":" DR."}`}</label></p>
+                            <p className='pending-am'><span>Total Pending Amount</span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{parseInt(totalPendingAmount)<0  ? priceFormatter(makePositive(makePositive(totalPendingAmount)))+`${" CR."}`:priceFormatter(makePositive((makePositive(totalPendingAmount))))+`${(totalPendingAmount)<0?" CR.":" DR."}`}</label></p>
                         </div>
                     </p>
                     
@@ -251,7 +251,7 @@ const BalanceSheet = (props) => {
                                     data-bs-toggle="modal"
                                     data-bs-target="#addparty"
                                 >
-                                  Add Party
+                                  Add New Party
                                 </button>
                             </li>
                         </ul>

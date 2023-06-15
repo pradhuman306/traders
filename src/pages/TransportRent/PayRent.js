@@ -69,9 +69,9 @@ const PayRent = (props) => {
                 </div>
                 <div className="modal-body">
                 <div className="">
-                    <div className="modal-body-row">
-                      <h6>Pending Amount:</h6>
-                      <p className="badge rounded-pill bg-text text-bg-warning xl-text">
+                    <div className="modal-body-row alert alert-primary">
+                      <h6>Pending Amount</h6>
+                      <p className="badge rounded-pill bg-text text-bg-primary xl-text">
                         ₹
                         {parseInt(props.pendingAmount).toLocaleString("en-IN")}
                       </p>
@@ -93,6 +93,9 @@ const PayRent = (props) => {
                               touched.amount && error.amount
                                 ? "input-error"
                                 : ""
+                            } ${values.amount
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -120,7 +123,10 @@ const PayRent = (props) => {
                        touched.date && error.date
                          ? "input-error"
                          : ""
-                     }`}
+                     } ${values.date
+                      ? "filled"
+                      : ""
+                    }`}
                    />
                    <ErrorMessage
                      className="error"
@@ -138,7 +144,10 @@ const PayRent = (props) => {
                    <Field
                      as="textarea"
                      name="description"
-                     className={`form-control`}
+                     className={`form-control ${values.description
+                      ? "filled"
+                      : ""
+                    }`}
                    />
              
                  </div>

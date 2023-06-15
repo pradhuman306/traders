@@ -8,6 +8,7 @@ import {  addAccountDetails } from '../../actions/accounts';
 import Select from 'react-select';
 import { addStockDetails } from '../../actions/godown';
 import ButtonLoader from '../Customloader/ButtonLoader';
+import { titleCase } from '../../actions/common';
 
 
 const AddStockDetails = (props) => {
@@ -52,13 +53,13 @@ const AddStockDetails = (props) => {
       let newGodownList = [];
 
       props.itemListAll.forEach(element => {
-        newItemsList.push({label:element.item,value:element.id})
+        newItemsList.push({label:titleCase(element.item),value:element.id})
       });
       props.firmListAll.forEach(element => {
         newFirmList.push({label:element.name,value:element.id})
       });
       props.godownListAll.forEach(element => {
-        newGodownList.push({label:element.name,value:element.id})
+        newGodownList.push({label:titleCase(element.name),value:element.id})
       });
       setNewListItems(newItemsList);
       setNewListFirm(newFirmList);
@@ -66,7 +67,7 @@ const AddStockDetails = (props) => {
     },[props.itemListAll,props.firmListAll,props.godownListAll])
     useEffect(()=>{
    
-      setValueGodown({label:props.godownList.name,value:props.godownList.id});
+      setValueGodown({label:titleCase(props.godownList.name),value:props.godownList.id});
   
     },[props.godownList])
   return (
@@ -148,6 +149,9 @@ const AddStockDetails = (props) => {
                               touched.godown && error.godown
                                 ? "input-error"
                                 : ""
+                            } ${values.godown
+                              ? "filled"
+                              : ""
                             }`} 
                             options={newListGodown} 
                             isSearchable={true}
@@ -160,8 +164,8 @@ const AddStockDetails = (props) => {
                               borderRadius: 8,
                               colors: {
                                 ...theme.colors,
-                                primary25: 'rgba(5,131,107,0.1)',
-                                primary: '#05836b',
+                                primary25: 'rgb(0 120 219 / 10%);',
+                                primary: '#0078db',
                               },
                             })}
                             />
@@ -185,6 +189,9 @@ const AddStockDetails = (props) => {
                               touched.item && error.item
                                 ? "input-error"
                                 : ""
+                            } ${values.item
+                              ? "filled"
+                              : ""
                             }`} 
                             options={newListItems} 
                             isSearchable={true}
@@ -196,8 +203,8 @@ const AddStockDetails = (props) => {
                               borderRadius: 8,
                               colors: {
                                 ...theme.colors,
-                                primary25: 'rgba(5,131,107,0.1)',
-                                primary: '#05836b',
+                                primary25: 'rgb(0 120 219 / 10%);',
+                                primary: '#0078db',
                               },
                             })}
                             />
@@ -232,8 +239,8 @@ const AddStockDetails = (props) => {
                               borderRadius: 8,
                               colors: {
                                 ...theme.colors,
-                                primary25: 'rgba(5,131,107,0.1)',
-                                primary: '#05836b',
+                                primary25: 'rgb(0 120 219 / 10%);',
+                                primary: '#0078db',
                               },
                             })}
                             />
@@ -258,7 +265,10 @@ const AddStockDetails = (props) => {
                           <Field
                             type="number"
                             name="quantity"
-                            className={`form-control`}
+                            className={`form-control ${values.quantity
+                              ? "filled"
+                              : ""
+                            }`}
                           />
                      
                         </div>
@@ -272,7 +282,10 @@ const AddStockDetails = (props) => {
                           <Field
                             type="number"
                             name="weight"
-                            className={`form-control`}
+                            className={`form-control ${values.weight
+                              ? "filled"
+                              : ""
+                            }`}
                           />
                      
                         </div>
@@ -286,7 +299,10 @@ const AddStockDetails = (props) => {
                           <Field
                             type="number"
                             name="rate"
-                            className={`form-control`}
+                            className={`form-control ${values.rate
+                              ? "filled"
+                              : ""
+                            }`}
                             placeholder="₹"
                           />
                      
@@ -318,7 +334,10 @@ const AddStockDetails = (props) => {
                           <Field
                             type="text"
                             name="vehicle_no"
-                            className={`form-control`}
+                            className={`form-control ${values.vehicle_no
+                              ? "filled"
+                              : ""
+                            }`}
                           />
                      
                         </div>
@@ -336,6 +355,9 @@ const AddStockDetails = (props) => {
                               touched.date && error.date
                                 ? "input-error"
                                 : ""
+                            } ${values.date
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage

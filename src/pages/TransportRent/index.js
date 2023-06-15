@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatDate, priceFormatter } from '../../actions/common';
+import { formatDate, priceFormatter , titleCase} from '../../actions/common';
 import { getRentHistoryByParty, getTransportRentList, setEmptyTransDetails } from '../../actions/transportrent';
 import Header from '../Header/Header';
 import AddTransportRent from './AddTransportRent';
@@ -12,25 +12,25 @@ import TransportDetails from './TransportDetails';
 
 const TransportRent = (props) => {
     const userId = props.auth.userdata.id;
-    const transRentList = useSelector((state)=>state.transportRentReducer).transportRentList;
-    const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
+    const transRentList = useSelector((state) => state.transportRentReducer).transportRentList;
+    const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
     const dispatch = useDispatch();
     const [filterText, setFilter] = useState("");
     const [transportRentList, setList] = useState([...transRentList]);
-    const [transportRow,setTransportRow]= useState({});
-    const [partyDetails,setPartyDetails]= useState({});
-    const [id,setId]= useState({});
+    const [transportRow, setTransportRow] = useState({});
+    const [partyDetails, setPartyDetails] = useState({});
+    const [id, setId] = useState({});
     const [isExpandable, setisExpandable] = useState(false);
-    const [totalPending,setTotalPending] = useState(0);
-    const [totalAllPaid,setTotalAllPaid] = useState(0);
-  
-    
+    const [totalPending, setTotalPending] = useState(0);
+    const [totalAllPaid, setTotalAllPaid] = useState(0);
+
+
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
-    useEffect(()=>{
+    useEffect(() => {
         dispatch(setEmptyTransDetails());
-    },[])
+    }, [])
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
         if (window.innerWidth <= 599) {
@@ -40,13 +40,13 @@ const TransportRent = (props) => {
                         <b>Destination:</b> {data.destination}
                     </p>
                     <p>
-                        <b>Rate:</b> {"₹"+parseInt(data.rate).toLocaleString("en-IN")}
+                        <b>Rate:</b> {"₹" + parseInt(data.rate).toLocaleString("en-IN")}
                     </p>
                     <p>
-                        <b>Advance:</b> {"₹"+parseInt(data.advance).toLocaleString("en-IN")}
+                        <b>Advance:</b> {"₹" + parseInt(data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
-                        <b>Pending amount:</b> {"₹"+parseInt(data.rate - data.advance).toLocaleString("en-IN")}
+                        <b>Pending amount:</b> {"₹" + parseInt(data.rate - data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
                         <b>Date:</b> {formatDate(data.date)}
@@ -56,40 +56,40 @@ const TransportRent = (props) => {
         } else if (window.innerWidth <= 959) {
             return (
                 <>
-               
+
                     <p>
-                        <b>Rate:</b> {"₹"+parseInt(data.rate).toLocaleString("en-IN")}
+                        <b>Rate:</b> {"₹" + parseInt(data.rate).toLocaleString("en-IN")}
                     </p>
                     <p>
-                        <b>Advance:</b> {"₹"+parseInt(data.advance).toLocaleString("en-IN")}
+                        <b>Advance:</b> {"₹" + parseInt(data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
-                        <b>Pending amount:</b> {"₹"+parseInt(data.rate - data.advance).toLocaleString("en-IN")}
+                        <b>Pending amount:</b> {"₹" + parseInt(data.rate - data.advance).toLocaleString("en-IN")}
                     </p>
                     <p>
                         <b>Date:</b> {formatDate(data.date)}
                     </p>
-                
+
                 </>
             );
         }
     };
 
-    useEffect(()=>{
-        let tmp = partyList.filter((item)=>item.id.toString() === transportRow.party_id);
-        console.log(tmp,'partyFilter');
-        if(tmp.length){
-            setPartyDetails(tmp[0]); 
+    useEffect(() => {
+        let tmp = partyList.filter((item) => item.id.toString() === transportRow.party_id);
+        console.log(tmp, 'partyFilter');
+        if (tmp.length) {
+            setPartyDetails(tmp[0]);
         }
-        if(Object.keys(transportRow).length){
-            let transList = transRentList.filter((item)=>item.party_id.toString() == transportRow.party_id);
-            if(transList.length){
-                setTransportRow(transList[0]); 
+        if (Object.keys(transportRow).length) {
+            let transList = transRentList.filter((item) => item.party_id.toString() == transportRow.party_id);
+            if (transList.length) {
+                setTransportRow(transList[0]);
             }
         }
-     
-  
-    },[transportRow,partyList,transRentList])
+
+
+    }, [transportRow, partyList, transRentList])
 
     var onresize = function () {
         //your code here
@@ -104,14 +104,14 @@ const TransportRent = (props) => {
 
     useEffect(() => {
         dispatch(getTransportRentList(userId));
- 
+
 
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
             setisExpandable(true);
         } else {
             setisExpandable(false);
         }
-      
+
     }, []);
 
     useEffect(() => {
@@ -123,7 +123,7 @@ const TransportRent = (props) => {
                     item.rate?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.advance?.toLowerCase().includes(filterText.toLowerCase()) ||
                     formatDate(item.date)?.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.description?.toLowerCase().includes(filterText.toLowerCase()) 
+                    item.description?.toLowerCase().includes(filterText.toLowerCase())
                 ) {
                     return true;
                 }
@@ -135,20 +135,20 @@ const TransportRent = (props) => {
         }
         let total = 0;
         let totalPaid = 0;
-        transRentList.map((item)=>{
-            total+=item.total_rent;
-     
-            if(item.rent_paid){
-              
+        transRentList.map((item) => {
+            total += item.total_rent;
+
+            if (item.rent_paid) {
+
                 let rent_paid = JSON.parse(item.rent_paid);
-                rent_paid.map((paid)=>{
-                    totalPaid+=parseInt(paid.amount)
-            })
+                rent_paid.map((paid) => {
+                    totalPaid += parseInt(paid.amount)
+                })
             }
         })
         setTotalPending(total);
         setTotalAllPaid(totalPaid);
-    }, [filterText,transRentList]);
+    }, [filterText, transRentList]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -169,83 +169,103 @@ const TransportRent = (props) => {
                         lastC = newName[1][0].toUpperCase();
                     }
                     return (
-        
-                    <a className={`anchor ${transportRow.party_id === row.party_id ? 'active':""}`} onClick={
-                        ()=>{
-                        dispatch(getRentHistoryByParty(row.party_id,"1m"));
-                        setTransportRow(row);
-                   
-                        }
-                    }>
-                        <div className={`user-wrap`}>
-                        {/* <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5> */}
-                            <div className="user-detail">{row.party}</div>
-                        </div>
+
+                        <a className={`anchor ${transportRow.party_id === row.party_id ? 'active' : ""}`} onClick={
+                            () => {
+                                dispatch(getRentHistoryByParty(row.party_id, "1m"));
+                                setTransportRow(row);
+
+                            }
+                        }>
+                            <div className={`user-wrap`}>
+                                {/* <h5 className="user-icon">{firstC.toUpperCase() + lastC}</h5> */}
+                                <div className="user-detail">{titleCase(row.party)}</div>
+                            </div>
                         </a>
                     );
                 },
                 sortable: true,
-              
+
             },
-            
+
             {
                 name: "Total Amount",
                 selector: (row) => {
                     let totalPaid = 0;
-                if(row.rent_paid){
-                    let rent_paid = JSON.parse(row.rent_paid);
-                    totalPaid = rent_paid.reduce((accumulator, object) => {
-                        return accumulator + parseInt(object.amount);
-                      }, 0);
-                }
-              return(
-                <span class="badge rounded-pill bg-text text-bg-warning">{priceFormatter(row.total_rent-totalPaid)}</span>
-              )
-                  
+                    if (row.rent_paid) {
+                        let rent_paid = JSON.parse(row.rent_paid);
+                        totalPaid = rent_paid.reduce((accumulator, object) => {
+                            return accumulator + parseInt(object.amount);
+                        }, 0);
+                    }
+                    return (
+                        <span class="badge rounded-pill bg-text text-bg-light">{priceFormatter(row.total_rent - totalPaid)}</span>
+                    )
+
                 },
                 sortable: true,
-              
+
             },
-            
-        
+
+
         ],
         [transportRow]
     );
 
     return (
-        <>
+        <div className='ts-rent'>
             <Header heading="Transport Management" {...props} />
-            
-       <div className='row'>
-        <div className='col-md-3'>
-        <div className="body-content st-fixed">
-        <div className="datatable-filter-wrap">
-                    <div className="datatable-search w-100">
-                        <input
-                            type="text"
-                            placeholder="Search parties..."
-                            className="form-control"
-                            onChange={(e) => hanndleSearch(e.target.value)}
+            <div class="mr-minus">
+                <div class="usermanagement-main">
+                    <p class="extra-stuff"><div class="amount-dtl justify-content-end align-items-center">
+
+                        <p class="pending-am">
+                            <span>Total Pending Amount</span>
+                            <label class="badge rounded-pill bg-text text-bg-warning xl-text">{(priceFormatter(totalPending - totalAllPaid))}
+                            </label>
+                        </p>
+                        <button
+                            className="btn btn-primary ms-3"
+                            data-bs-toggle="modal"
+                            data-bs-target="#addtransportrent"
+                        >
+                            Add Transport
+                        </button>
+                    </div>
+                    </p>
+
+                </div>
+            </div>
+            <div className='row'>
+                <div className='col-md-3'>
+                    <div className="body-content st-fixed">
+                        <div className="datatable-filter-wrap">
+                            <div className="datatable-search w-100">
+                                <input
+                                    type="text"
+                                    placeholder="Search parties..."
+                                    className="form-control"
+                                    onChange={(e) => hanndleSearch(e.target.value)}
+                                />
+                            </div>
+
+                        </div>
+                        <DataTable
+                            columns={columns}
+                            data={transportRentList}
+                            expandableRows={isExpandable}
+                            expandableRowsComponent={ExpandedComponent}
+                            onSort={handleSort}
+
                         />
                     </div>
-                 
                 </div>
-            <DataTable
-                columns={columns}
-                data={transportRentList}
-                expandableRows={isExpandable}
-                expandableRowsComponent={ExpandedComponent}
-                onSort={handleSort}
-           
-            />
+                <div className='col-md-9'>
+                    <TransportDetails transRentList={transRentList} partyDetails={partyDetails} {...props} transportRow={transportRow} totalPending={totalPending} totalAllPaid={totalAllPaid} />
+                </div>
+            </div>
+            <AddTransportRent {...props} partyList={partyList} transportRow={transportRow} setTransportRow={setTransportRow} />
         </div>
-        </div>
-        <div className='col-md-9'>
-            <TransportDetails transRentList={transRentList} partyDetails={partyDetails} {...props} transportRow={transportRow} totalPending={totalPending} totalAllPaid={totalAllPaid}  />
-        </div>
-       </div>
-       <AddTransportRent {...props} partyList={partyList} transportRow={transportRow} setTransportRow={setTransportRow}  />
-        </>
     )
 }
 export default TransportRent;

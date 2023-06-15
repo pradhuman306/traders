@@ -75,7 +75,7 @@ const AccountInfo = (props) => {
                       setSubmitting(false);
                     }}
                   >
-                    {({ isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
+                    {({ isSubmitting, dirty, handleReset, touched, setFieldValue, values }) => (
                       <Form action="" id="profile-form">
                         <div className='nav card'>
                         <div className="row">

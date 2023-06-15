@@ -95,6 +95,9 @@ const EditInvestment = (props) => {
                               touched.amount && error.amount
                                 ? "input-error"
                                 : ""
+                            } ${values.amount
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -118,6 +121,9 @@ const EditInvestment = (props) => {
                               touched.date && error.date
                                 ? "input-error"
                                 : ""
+                            } ${values.date
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -136,7 +142,10 @@ const EditInvestment = (props) => {
                           <Field
                             as="textarea"
                             name="description"
-                            className={`form-control`}
+                            className={`form-control ${values.description
+                              ? "filled"
+                              : ""
+                            }`}
                           />
                           <ErrorMessage
                             className="error"

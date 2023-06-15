@@ -4,11 +4,11 @@
 @import url(./responsive.css);
 
 :root {
-  --themeColor: 245, 247, 247;
+  --themeColor: 244, 244, 244;
   --baseColor: 36, 36, 36;
   --bs-blue: 5, 131, 107;
   --bs-primary: 5, 131, 107;
-  --primaryColor: 5, 131, 107;
+  --primaryColor: 0, 120, 219;
   --baseFont: "Source Sans Pro";
   --baseFontsize: 16px;
   --white: 255, 255, 255;
@@ -205,23 +205,39 @@ nav.sc-iIPllB.rdt_Pagination {
   border-bottom: 1px solid rgba(var(--border));
   justify-content: space-between;
 }
-
+.body-content.st-fixed .datatable-filter-wrap {
+  margin-bottom: 40px;
+}
 body .css-1xepz10-control,
-body .css-bftceo-control:hover {
+body .css-bftceo-control:hover{
   border-color: rgba(var(--border));
   border-radius: var(--radius);
   height: 41px;
   min-height: 41px;
   box-shadow: none;
 }
+body .filled .css-1xepz10-control{
+  border: 1px solid rgba(var(--primaryColor)) !important;
+  box-shadow: 0 0 0 0.05rem rgba(var(--primaryColor), 1) !important;
+}
+body .css-1f8moss-control,
+body .filled .css-1f8moss-control{
+  min-height: 40px;
+  border-color: rgba(var(--primaryColor), 0.5);
+    box-shadow: 0 0 0 0.25rem rgba(var(--primaryColor), 0.2);
+}
 
 body .css-bftceo-control:hover,
-body .css-1xepz10-control:hover {
+body .css-1xepz10-control:hover,
+body .filled .css-bftceo-control:hover,
+body .filled .css-1xepz10-control:hover {
   border-color: rgba(var(--border));
 }
 
 body .css-1xepz10-control:focus,
-body .css-bftceo-control {
+body .css-bftceo-control,
+body .filled .css-1xepz10-control:focus,
+body .filled .css-bftceo-control {
   border-color: rgba(var(--primaryColor), 0.5);
   box-shadow: 0 0 0 0.25rem rgba(var(--primaryColor), 0.2);
   height: 41px;
@@ -239,10 +255,14 @@ textarea.form-control {
 .sc-evZas {
   text-transform: uppercase;
   font-weight: 600;
-  color: rgba(var(--baseColor));
-  opacity: 0.5;
+  color: rgba(var(--baseColor), 0.5);
 }
-
+body .gJhVev:hover, body .gJhVev:focus {
+  opacity: 1;
+}
+.gJhVev:hover .sc-evZas, .gJhVev:focus .sc-evZas {
+  color: rgba(var(--baseColor), 1);
+}
 .badge.text-bg-primary {
   /* margin-left: 5px; */
   background: rgba(var(--primaryColor)) !important;
@@ -312,7 +332,7 @@ textarea.form-control {
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -370,9 +390,17 @@ textarea.form-control {
   background: rgba(var(--primaryColor), 0.1);
   color: rgba(var(--primaryColor));
 }
-
+.form-control.filled {
+  border-color: rgba(var(--primaryColor));
+  box-shadow: 0 0 0 0.05rem rgba(var(--primaryColor), 1);
+  /* color: rgba(var(--primaryColor)); */
+}
+body .eKwPae:hover:not(:disabled), .eKwPae:focus {
+  border-radius: 0 !important;
+  background: rgba(var(--primaryColor), 0.07) !important;
+}
 body .jVeafb:hover {
-  background: rgba(var(--primaryColor), 0.05);
+  background: rgba(var(--primaryColor), 0.03);
 }
 
 .bysellopt .badge {
@@ -381,7 +409,7 @@ body .jVeafb:hover {
 }
 
 .image-input label {
-  border: 1px solid rgba(var(--primaryColor), 0.1);
+  border: 1px solid rgba(var(--primaryColor), 0.3);
   border-radius: var(--radius);
   overflow: hidden;
   padding: 22px 15px;

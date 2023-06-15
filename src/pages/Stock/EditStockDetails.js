@@ -9,6 +9,7 @@ import { addAccount, addAccountDetails, updateAccountDetails } from '../../actio
 import Select from 'react-select';
 import { updateStockDetails } from '../../actions/godown';
 import ButtonLoader from '../Customloader/ButtonLoader';
+import { titleCase } from '../../actions/common';
 
 
 const EditStockDetails = (props) => {
@@ -28,9 +29,9 @@ const EditStockDetails = (props) => {
   const [error, setError] = useState({});
   useEffect(() => {
     setdataList({ ...props.row_data });
-    setValueItem({ label: props.row_data.item, value: props.row_data.id });
+    setValueItem({ label: titleCase(props.row_data.item), value: props.row_data.id });
     setValueFirm({ label: props.row_data.firm, value: props.row_data.firm_id });
-    setValueGoDown({ label: props.row_data.stock, value: props.row_data.stock_id });
+    setValueGoDown({ label: titleCase(props.row_data.stock), value: props.row_data.stock_id });
     console.log(props.row_data);
   }, [props.row_id])
   useEffect(()=>{
@@ -38,13 +39,13 @@ const EditStockDetails = (props) => {
     let newFirmList = [];
     let newGoDownList = [];
     props.itemListAll.forEach(element => {
-      newItemsList.push({label:element.item,value:element.id})
+      newItemsList.push({label:titleCase(element.item),value:element.id})
     });
     props.firmListAll.forEach(element => {
       newFirmList.push({label:element.name,value:element.id})
     });
     props.godownListAll.forEach(element => {
-      newGoDownList.push({label:element.name,value:element.id})
+      newGoDownList.push({label:titleCase(element.name),value:element.id})
     });
     setNewGodownList(newGoDownList);
     setNewListItems(newItemsList);
@@ -153,6 +154,9 @@ const EditStockDetails = (props) => {
                               touched.godown && error.godown
                                 ? "input-error"
                                 : ""
+                            }  ${values.godown
+                              ? "filled"
+                              : ""
                             }`} 
                             options={newListGodown} 
                             isSearchable={true}
@@ -164,8 +168,8 @@ const EditStockDetails = (props) => {
                               borderRadius: 8,
                               colors: {
                                 ...theme.colors,
-                                primary25: 'rgba(5,131,107,0.1)',
-                                primary: '#05836b',
+                                primary25: 'rgb(0 120 219 / 10%);',
+                                primary: '#0078db',
                               },
                             })}
                             />
@@ -188,6 +192,9 @@ const EditStockDetails = (props) => {
                                 className={`${touched.item && error.item
                                     ? "input-error"
                                     : ""
+                                  } ${values.item
+                                    ? "filled"
+                                    : ""
                                   }`}
                                 options={newListItems}
                                 name="item"
@@ -198,8 +205,8 @@ const EditStockDetails = (props) => {
                                   borderRadius: 8,
                                   colors: {
                                     ...theme.colors,
-                                    primary25: 'rgba(5,131,107,0.1)',
-                                    primary: '#05836b',
+                                    primary25: 'rgb(0 120 219 / 10%);',
+                                    primary: '#0078db',
                                   },
                                 })}
                               />
@@ -232,8 +239,8 @@ const EditStockDetails = (props) => {
                                   borderRadius: 8,
                                   colors: {
                                     ...theme.colors,
-                                    primary25: 'rgba(5,131,107,0.1)',
-                                    primary: '#05836b',
+                                    primary25: 'rgb(0 120 219 / 10%);',
+                                    primary: '#0078db',
                                   },
                                 })}
                               />
@@ -257,7 +264,10 @@ const EditStockDetails = (props) => {
                               <Field
                                 type="number"
                                 name="quantity"
-                                className={`form-control`}
+                                className={`form-control ${values.quantity
+                                  ? "filled"
+                                  : ""
+                                }`}
                               />
 
                             </div>
@@ -271,7 +281,10 @@ const EditStockDetails = (props) => {
                               <Field
                                 type="number"
                                 name="weight"
-                                className={`form-control`}
+                                className={`form-control ${values.weight
+                                  ? "filled"
+                                  : ""
+                                }`}
                               />
 
                             </div>
@@ -285,7 +298,10 @@ const EditStockDetails = (props) => {
                               <Field
                                 type="number"
                                 name="rate"
-                                className={`form-control`}
+                                className={`form-control ${values.rate
+                                  ? "filled"
+                                  : ""
+                                }`}
                                 placeholder="₹"
                               />
 
@@ -317,7 +333,10 @@ const EditStockDetails = (props) => {
                               <Field
                                 type="text"
                                 name="vehicle_no"
-                                className={`form-control`}
+                                className={`form-control ${values.vehicle_no
+                                  ? "filled"
+                                  : ""
+                                }`}
                               />
 
                             </div>
@@ -333,6 +352,9 @@ const EditStockDetails = (props) => {
                                 name="date"
                                 className={`form-control ${touched.date && error.date
                                     ? "input-error"
+                                    : ""
+                                  } ${values.date
+                                    ? "filled"
                                     : ""
                                   }`}
                               />

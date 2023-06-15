@@ -55,7 +55,7 @@ const AddAccountDetails = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({  isSubmitting, touched }) => (
+              {({  isSubmitting, touched, values }) => (
                 <Form action="" id="newcustomer">
         <div className="modal-head">
           <h4>{props.accType}</h4>
@@ -79,7 +79,7 @@ const AddAccountDetails = (props) => {
                         <div className="form-group mb-4">
                           <label>
                             
-                          Amount
+                          Amount <span className="error-badge">*</span>
                           </label>
                           <Field
 
@@ -90,6 +90,9 @@ const AddAccountDetails = (props) => {
                               touched.amount && error.amount
                                 ? "input-error"
                                 : ""
+                            } ${values.amount
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -113,6 +116,9 @@ const AddAccountDetails = (props) => {
                               touched.date && error.date
                                 ? "input-error"
                                 : ""
+                            } ${values.date
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -131,7 +137,10 @@ const AddAccountDetails = (props) => {
                           <Field
                             as="textarea"
                             name="description"
-                            className={`form-control`}
+                            className={`form-control ${values.description
+                              ? "description"
+                              : ""
+                            }`}
                           />
                           <ErrorMessage
                             className="error"

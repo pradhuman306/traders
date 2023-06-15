@@ -87,6 +87,10 @@ const EditParty = (props) => {
                               className={`form-control ${touched.name && error.name
                                 ? "input-error"
                                 : ""
+                                }
+                                ${values.name
+                                  ? "filled"
+                                  : ""
                                 }`}
                             />
                             <ErrorMessage
@@ -105,7 +109,10 @@ const EditParty = (props) => {
                             placeholder="Enter party mobile number"
                               type="number"
                               name="mobile"
-                              className={`form-control`}
+                              className={`form-control ${values.mobile
+                                ? "filled"
+                                : ""
+                              }`}
                             />
 
                           </div>

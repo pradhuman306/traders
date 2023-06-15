@@ -3,6 +3,28 @@ import * as ajaxCall from "../common/ajaxCall";
 import * as actionTypes from "../constants/actionTypes";
 import { setLoadedData, setPendingData } from "./common";
 
+
+
+export const getAllBuySellList = (payload) => (dispatch) => {
+  setPendingData(dispatch);
+    ajaxCall
+    .get(`${config.BASE_URL}alllistbuysale/${payload}`)
+    .then((res) => {
+      setLoadedData(dispatch);
+      console.log(res);
+      dispatch({
+        type: actionTypes.SET_ALL_BUYSELL,
+        payload: res.data.data,
+      });
+    })
+    .catch((error) => {
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    });
+}
+
 export const getBuyList = (payload) => (dispatch) => {
   setPendingData(dispatch);
     ajaxCall

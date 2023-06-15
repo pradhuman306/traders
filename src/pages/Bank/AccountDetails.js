@@ -219,10 +219,10 @@ const AccountDetails = (props) => {
             <Header heading={accountSingleDetails.name} {...props} />
             <div className='mr-minus'>
                 <div className="usermanagement-main">
-                    <p class="extra-stuff"><a className='anchor-link' onClick={()=>navigate(-1)}> <img src="/assets/images/back.svg" alt="" /> Back </a>
+                    <p class="extra-stuff"><a className='anchor-link' onClick={()=>navigate(-1)}> <img src="/assets/images/back.svg" alt="" /></a>
 
-                        <div className='amount-dtl'>
-                            <p className='total-am'><span>Balance Amount : </span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</label></p>
+                        <div className='amount-dtl justify-content-end'>
+                            <p className='total-am'><span>Balance Amount :</span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{"₹"+parseInt(remainAmount).toLocaleString("en-IN")}</label></p>
                         </div>
                     </p>
                     
@@ -255,7 +255,7 @@ const AccountDetails = (props) => {
                                 Credit
                                 </button>
                             </li>
-                            <li className='ms-2'>
+                            <li className='ms-1'>
                                 <button
                                     className="btn btn-danger"
                                     data-bs-toggle="modal"

@@ -4,8 +4,8 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteBuySellList, getBuyList, getSellList } from '../../actions/buysell';
-import { formatDate, priceFormatter, totalAmountCalculateRaw } from '../../actions/common';
+import { deleteBuySellList, getAllBuySellList, getBuyList, getSellList } from '../../actions/buysell';
+import { formatDate, priceFormatter,titleCase, totalAmountCalculateRaw } from '../../actions/common';
 import { getGoDownList } from '../../actions/godown';
 import { getItems } from '../../actions/items';
 import ConfirmModal from '../../common/confirmModal';
@@ -18,19 +18,21 @@ const BuySell = (props) => {
     const dispatch = useDispatch();
     const buyListAll = useSelector((state) => state.buySellReducer).buyList;
     const sellListAll = useSelector((state) => state.buySellReducer).sellList;
+    const buySellListAll = useSelector((state) => state.buySellReducer).buySellList;
     const itemListAll = useSelector((state) => state.itemReducer).itemList;
     const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
-    const godownListAll = useSelector((state)=>state.godownReducer).godownList;
+    const godownListAll = useSelector((state) => state.godownReducer).godownList;
     const [filterText, setFilter] = useState("");
-    const [buyList, setBuyList] = useState([...buyListAll]);
+    const [buyList, setBuyList] = useState([...buySellListAll]);
     const [buySellRow, setBuysell] = useState({});
     const [isActive, setIsActive] = useState({
-        "buy": true,
-        "sell": false
+        "buy": false,
+        "sell": false,
+        "all": true
     });
     const [id, setId] = useState({});
     const [isExpandable, setisExpandable] = useState(false);
-    
+
 
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
@@ -113,8 +115,15 @@ const BuySell = (props) => {
     };
     window.addEventListener("resize", onresize);
 
+    const getFilterUrd = () => {
+       let urdList = buySellListAll.filter((item)=>item['URD'] != 0);
+       console.log(urdList);
+       setBuyList([...urdList]);
+    }
+
+
     useEffect(() => {
-        dispatch(getBuyList(user_id));
+        dispatch(getAllBuySellList(user_id));
         dispatch(getItems(user_id));
         dispatch(getGoDownList(user_id));
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
@@ -128,9 +137,15 @@ const BuySell = (props) => {
         let activeTab = { ...isActive };
         if (param === 'buy') {
             activeTab.buy = true;
+            activeTab.all = false;
             activeTab.sell = false;
-        } else {
+        } else if (param === 'sell') {
             activeTab.sell = true;
+            activeTab.all = false;
+            activeTab.buy = false;
+        } else if (param === 'all') {
+            activeTab.sell = false;
+            activeTab.all = true;
             activeTab.buy = false;
         }
         setIsActive({ ...activeTab });
@@ -164,11 +179,13 @@ const BuySell = (props) => {
     useEffect(() => {
         if (isActive.buy) {
             filterValue(filterText, buyListAll);
-        } else {
+        } else if (isActive.sell) {
             filterValue(filterText, sellListAll);
+        } else if (isActive.all) {
+            filterValue(filterText, buySellListAll);
         }
 
-    }, [filterText, buyListAll, isActive, sellListAll]);
+    }, [filterText, buyListAll, isActive, sellListAll, buySellListAll]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -190,7 +207,7 @@ const BuySell = (props) => {
                     }
                     return (
                         <div className="user-wraps">
-                            <div className="user-detail">{row.party} {row.URD ? <span className='badge rounded-pill text-bg-warning'>URD</span> : ""}</div><div className='c-date'>{formatDate(row.date)}</div>
+                          <div className="user-detail">{titleCase(row.party)} {row.URD ? <span className='badge rounded-pill text-bg-warning'>URD</span> : ""}  {row.type == 'Buy' ? <span className='badge rounded-pill text-bg-success'>Buy</span> : row.type == 'Sale' ? <span className='badge rounded-pill text-bg-danger'>Sell</span>:""} </div><div className='c-date'>{formatDate(row.date)}</div>
                         </div>
                     );
                 },
@@ -199,14 +216,14 @@ const BuySell = (props) => {
             },
             {
                 name: "Godown",
-                selector: (row) => row.godown,
+                selector: (row) => titleCase(row.godown),
                 sortable: true,
                 hide: "md",
 
             },
             {
                 name: "Item",
-                selector: (row) => row.item,
+                selector: (row) => titleCase(row.item),
                 sortable: true,
                 hide: "md",
 
@@ -255,7 +272,7 @@ const BuySell = (props) => {
                 selector: (row) => {
                     return (
 
-                        <span className="badge rounded-pill bg-text text-bg-primary">
+                        <span className="badge rounded-pill bg-text text-bg-light">
                             {priceFormatter(totalAmountCalculateRaw(row))}
                         </span>
                     );
@@ -333,10 +350,18 @@ const BuySell = (props) => {
 
     return (
         <div className="body-content">
-            <Header heading={isActive.buy ? "Buy" : "Sell"} {...props} />
+             <Header heading={isActive.buy ? "Buy" : isActive.sell ? "Sell" : isActive.all ? "All" : ""} {...props} />
             <div className="usermanagement-main">
                 <div>
-                    <ul id="report-filter" className="report-filter tabs">
+                <ul id="report-filter" className="report-filter tabs">
+                        <li className={`filter-item pending-r ${isActive.all ? 'active' : ""}`}>
+                            <a onClick={() => {
+                                dispatch(getAllBuySellList(user_id));
+                                handleSetActive('all');
+
+                            }
+                            }>All</a>
+                        </li>
                         <li className={`filter-item pending-r ${isActive.buy ? 'active' : ""}`}>
                             <a onClick={() => {
                                 dispatch(getBuyList(user_id))
@@ -350,8 +375,16 @@ const BuySell = (props) => {
                         ><a onClick={() => {
                             dispatch(getSellList(user_id))
                             handleSetActive('sell');
-                        }}>Sell</a></li>
+                        }}>Sell</a>
+                        </li>
+                        <li className={`filter-item complete-r ${isActive.urd ? 'active' : ""}`}
+
+                        ><a onClick={() => {
+                            getFilterUrd();
+                            handleSetActive('sell');
+                        }}>URD</a></li>
                     </ul>
+                    
                 </div>
                 <div className="datatable-filter-wrap">
 
@@ -359,7 +392,7 @@ const BuySell = (props) => {
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder={`Search ${isActive.buy ? "Buy" : "Sell"}...`}
+                            placeholder={`Search ${isActive.buy ? "Buy" : isActive.sell? "Sell":"buy/sell"}...`}
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
@@ -373,7 +406,7 @@ const BuySell = (props) => {
                                     data-bs-toggle="modal"
                                     data-bs-target="#addbuysell"
                                 >
-                                    Add New {isActive.buy ? "Buy" : "Sell"}
+                                               Add New {isActive.buy ? "Buy" : isActive.sell? "Sell":"Buy/Sell"}
                                 </button>
                             </li>
 

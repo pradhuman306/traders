@@ -81,6 +81,9 @@ const AddParty = (props) => {
                             className={`form-control ${touched.name && error.name
                                 ? "input-error"
                                 : ""
+                              } ${values.name
+                                ? "filled"
+                                : ""
                               }`}
                           />
                           <ErrorMessage
@@ -99,7 +102,10 @@ const AddParty = (props) => {
                           placeholder="Enter party mobile number"
                             type="number"
                             name="mobile"
-                            className={`form-control`}
+                            className={`form-control ${values.mobile
+                              ? "filled"
+                              : ""
+                            }`}
                           />
 
                         </div>
@@ -118,7 +124,7 @@ const AddParty = (props) => {
                             disabled={isSubmitting}
                             className="btn btn-primary m-auto"
                           >
-                            {btnPending ? <ButtonLoader /> : "Add"}
+                            {btnPending ? <ButtonLoader /> : "Add Party"}
 
                           </button>
           </div>

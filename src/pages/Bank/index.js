@@ -12,6 +12,7 @@ import EditAccount from './EditAccount';
 import AddAccount from './AddAccount';
 import DeleteSelected from '../../component/DeleteSelected';
 import Header from '../Header/Header';
+import { titleCase } from '../../actions/common';
 
 const Bank = (props) => {
     const userId = props.auth.userdata.id;
@@ -69,7 +70,7 @@ const Bank = (props) => {
                 return (
                   <Link className='anchor' to={`/accountdetails/${row.id}`}>
                     <div className="user-wrap">
-                        <div className="user-detail">{row.name}</div>
+                    <div className="user-detail">{titleCase(row.name)}</div>
                     </div>
                     </Link>
                 );
@@ -129,9 +130,9 @@ const Bank = (props) => {
                                     </a>
                                     <ConfirmModal
                                 id={row.id}
-                                name={row.name}
+                                name={titleCase(row.name)}
                                 yes={(id) => {
-                                    dispatch(deleteAccount({id:row.id,name:row.name,user_id:userId}));
+                                    dispatch(deleteAccount({id:row.id,name:titleCase(row.name),user_id:userId}));
                                 }}
                              
                             />

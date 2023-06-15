@@ -8,6 +8,7 @@ import Select from 'react-select';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
 import { useNavigate } from 'react-router-dom';
+import { titleCase } from '../../actions/common';
 
 
 const EditTransportRent = (props) => {
@@ -21,14 +22,14 @@ const EditTransportRent = (props) => {
   const [error, setError] = useState({});
   useEffect(() => {
     setdataList({ ...props.row_data });
-    setValueParty({ label: props.row_data.party_name, value: props.row_data.party });
+    setValueParty({ label: titleCase(props.row_data.party_name), value: props.row_data.party });
     console.log(props.row_data);
   }, [props.row_id])
   useEffect(() => {
     let newPartyList = [];
     props.partyList.forEach(element => {
       console.log(element);
-      newPartyList.push({ label: element.name, value: element.id })
+      newPartyList.push({ label: titleCase(element.name), value: element.id })
     });
     setNewListParty(newPartyList);
   }, [props.partyList])
@@ -118,6 +119,9 @@ const EditTransportRent = (props) => {
                             className={`${touched.party && error.party
                               ? "input-error"
                               : ""
+                              } ${values.party
+                                ? "filled"
+                                : ""
                               }`}
                             options={newListParty}
                             name="party"
@@ -128,8 +132,8 @@ const EditTransportRent = (props) => {
                               borderRadius: 8,
                               colors: {
                                 ...theme.colors,
-                                primary25: 'rgba(5,131,107,0.1)',
-                                primary: '#05836b',
+                                primary25: 'rgb(0 120 219 / 10%);',
+                                primary: '#0078db',
                               },
                             })}
                           />
@@ -152,6 +156,9 @@ const EditTransportRent = (props) => {
                             className={`form-control ${touched.destination && error.destination
                               ? "input-error"
                               : ""
+                              } ${values.destination
+                                ? "filled"
+                                : ""
                               }`}
                           />
                           <ErrorMessage
@@ -176,6 +183,9 @@ const EditTransportRent = (props) => {
                               touched.weight && error.weight
                                 ? "input-error"
                                 : ""
+                            }  ${values.weight
+                              ? "filled"
+                              : ""
                             }`}
                           />
                        
@@ -192,6 +202,9 @@ const EditTransportRent = (props) => {
                             className={`form-control ${touched.rate && error.rate
                               ? "input-error"
                               : ""
+                              } ${values.rate
+                                ? "filled"
+                                : ""
                               }`}
                           />
                       
@@ -209,6 +222,9 @@ const EditTransportRent = (props) => {
                             className={`form-control ${touched.advance && error.advance
                               ? "input-error"
                               : ""
+                              } ${values.advance
+                                ? "filled"
+                                : ""
                               }`}
                           />
                     
@@ -248,6 +264,9 @@ const EditTransportRent = (props) => {
                                 error.date
                                 ? "input-error"
                                 : ""
+                                } ${values.date
+                                  ? "filled"
+                                  : ""
                                 }`}
                               name="date"
 
@@ -270,7 +289,10 @@ const EditTransportRent = (props) => {
                           <Field
                             as="textarea"
                             name="description"
-                            className="form-control"
+                            className={`form-control ${values.description
+                              ? "filled"
+                              : ""
+                            }`}
                           />
                         </div>
                       </div>

@@ -30,6 +30,7 @@ import Stocks from "../pages/Stock/Stocks";
 import StocksGodown from "../pages/Stock/StocksGodown";
 import Investment from "../pages/Investment";
 
+
 function Router(props) {
   const auth = props.auth;
   return (
@@ -94,16 +95,19 @@ function Router(props) {
               </PrivateRoute>
             }
           />
-          <Route
-            key="items"
-            path="items"
+    
+
+<Route
+            key="investment"
+            path="investment"
             element={
               <PrivateRoute>
-                <LayoutContainer
-                  auth={auth}
-                  children={<Items {...props} />}
-                />
-              </PrivateRoute>
+              <LayoutContainer
+                auth={auth}
+                children={<Investment {...props} />}
+              />
+            </PrivateRoute>
+             
             }
           />
 
@@ -144,7 +148,7 @@ function Router(props) {
               </PrivateRoute>
             }
           />
-   
+
           <Route
             key="partyhistory"
             path="balancesheet/:partyid"
@@ -293,15 +297,6 @@ function Router(props) {
               </PrivateRoute>
             }
           />
-             <Route
-            key="investment"
-            path="investment"
-            element={
-               <PrivateRoute>
-         <Investment {...props} />
-               </PrivateRoute>
-            }
-          />
               <Route
             key="updatePass"
             path="updatepass"
@@ -320,7 +315,6 @@ function Router(props) {
               </PrivateRoute>
             }
           />
-           
               <Route
             key="firm"
             path="firm"

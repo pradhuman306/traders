@@ -92,6 +92,9 @@ const EditGoDown = (props) => {
                               touched.name && error.name
                                 ? "input-error"
                                 : ""
+                            } ${values.name
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage
@@ -115,6 +118,9 @@ const EditGoDown = (props) => {
                               touched.place && error.place
                                 ? "input-error"
                                 : ""
+                            } ${values.place
+                              ? "filled"
+                              : ""
                             }`}
                           />
                           <ErrorMessage

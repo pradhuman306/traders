@@ -114,3 +114,8 @@ return parseInt(-amount);
  }
     
     }
+
+    export const titleCase = (name) => {
+ return name?.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+}  
+ 

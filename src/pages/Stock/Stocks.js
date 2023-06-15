@@ -7,7 +7,7 @@ import { getGoDownList } from '../../actions/godown';
 import GoDown from '.';
 import Header from '../Header/Header';
 import StockDetails from './StockDetails';
-import { priceFormatter } from '../../actions/common';
+import { priceFormatter,titleCase } from '../../actions/common';
 const Stocks = (props) => {
     const hanndleSearch = (value) => {
         setFilter(value);
@@ -20,6 +20,8 @@ const Stocks = (props) => {
     const [godownListRow, setGodownRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
+    const [allItems, setAllItems] = useState([]);
+    const [totalAmount, setTotalAmount] = useState([]);
     const handleSort = (column, sortDirection) =>
         console.log(column.selector, sortDirection);
     // data provides access to your row data
@@ -65,10 +67,21 @@ const Stocks = (props) => {
                 setGodownRow(godownList[0]); 
             }
         }
-     
+        let stockData = godownListAll;
+        let sum = 0;
+          if(stockData.length){
+           setAllItems(stockData[0].allitems);  
+            sum = stockData.reduce((accumulator, object) => {
+            return accumulator + parseInt(object.total);
+          }, 0);
+          setTotalAmount(sum);
+                }
     
     },[godownListAll])
   
+
+
+
 
     // const hideColumns = () => {};
 
@@ -92,7 +105,7 @@ const Stocks = (props) => {
                     }
                 }>
                     <div className="user-wrap">
-                        <div className="user-detail">{row.name}</div>
+                    <div className="user-detail">{titleCase(row.name)}</div>
                     </div>
                     </a>
                 );
@@ -102,7 +115,7 @@ const Stocks = (props) => {
         },
         {
             name: "Total Amount",
-            selector: (row) => <span class="badge rounded-pill bg-text text-bg-warning">{priceFormatter(row.total)}</span>,
+            selector: (row) => <span class="badge rounded-pill bg-text text-bg-light">{priceFormatter(row.total)}</span>,
             sortable: true,
           
         },
@@ -117,6 +130,26 @@ const Stocks = (props) => {
     return (
         <>
           <Header heading="Stock Management" {...props} />
+          <div class="mr-minus">
+                <div class="usermanagement-main">
+                    <p class="extra-stuff"><div class="amount-dtl justify-content-end">
+                       
+                   
+                    <ul className='st-dtl'>
+                   {allItems.map((item)=>(
+                   <li>
+                 <span>{titleCase(item.name)}</span>
+                    <span>{item.weight}qt</span>
+                    <span>{priceFormatter(item.total)}</span>
+                   </li> 
+                   ))}
+                      </ul>  
+                     <p className='total-am'> <span>Total</span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{priceFormatter(totalAmount)}   </label> </p>
+                       </div>
+                    
+                    </p>
+                </div>
+            </div>
            <div className='row'>
         <div className='col-md-3'>
         <div className="body-content st-fixed">

@@ -51,14 +51,17 @@ function CreateNewPassword(props) {
                     setSubmitting(false);
                   }}
                 >
-                  {({ isSubmitting, dirty, handleReset, touched }) => (
+                  {({ isSubmitting, dirty, handleReset, touched, values }) => (
                     <Form action="" id="loginForm">
                       <div className="form-group mb-3">
                         <label>Password <span className="error-badge">*</span></label>
                         <Field
                           type="password"
                           name="password"
-                          className={`form-control icon icon-lock ${touched.password && error.password ? "input-error" : ""}`}
+                          className={`form-control icon icon-lock ${touched.password && error.password ? "input-error" : ""} ${values.password
+                            ? "filled"
+                            : ""
+                          }`}
                           placeholder="Enter your password"
                         />
                         <ErrorMessage className="error" name="password" component="span" />
@@ -68,7 +71,10 @@ function CreateNewPassword(props) {
                         <Field
                           type="password"
                           name="password_confirmation"
-                          className={`form-control icon icon-lock ${touched.password_confirmation && error.password_confirmation ? "input-error" : ""}`}
+                          className={`form-control icon icon-lock ${touched.password_confirmation && error.password_confirmation ? "input-error" : ""} ${values.password_confirmation
+                            ? "filled"
+                            : ""
+                          }`}
                           placeholder="Enter your password"
                         />
                         <ErrorMessage className="error"
