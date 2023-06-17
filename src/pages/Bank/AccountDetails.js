@@ -328,7 +328,15 @@ const AccountDetails = (props) => {
       <Header heading={accountSingleDetails.name} {...props} />
       <div className="mr-minus">
         <div className="usermanagement-main">
-          <div className="extra-stuff">
+          <div className="datatable-filter-wrap mb-0">
+          <div className="datatable-search">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="form-control"
+              onChange={(e) => hanndleSearch(e.target.value)}
+            />
+          </div>
             <div className="amount-dtl justify-content-end align-items-center">
               <p className="total-am">
                 <span>Balance Amount :</span>
@@ -336,7 +344,7 @@ const AccountDetails = (props) => {
                   {"₹" + parseInt(remainAmount).toLocaleString("en-IN")}
                 </label>
               </p>
-              <ul className="btn-group ms-3">
+              <ul className="btn-group">
               <li>
                 <button
                   className="btn btn-success"
@@ -359,18 +367,6 @@ const AccountDetails = (props) => {
               </li>
             </ul>
             </div>
-          </div>
-        </div>
-      </div>
-      <div className="usermanagement-main">
-        <div className="datatable-filter-wrap">
-          <div className="datatable-search">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="form-control"
-              onChange={(e) => hanndleSearch(e.target.value)}
-            />
           </div>
         </div>
       </div>

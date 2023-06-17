@@ -6,18 +6,11 @@ function LayoutContainer({ children, auth }) {
   return (
     <>
       <AuthContext.Provider value={{ ...auth }}>
-  
         <main className="d-flex">
-            <>
-              <SideNav
-                role={auth}
-  
-              />
-                <section className="body-main" >
-                  {children}
-                </section>
-              
-            </>
+          <>
+            <SideNav role={auth} />
+            <section className="body-main">{children}</section>
+          </>
         </main>
       </AuthContext.Provider>
     </>

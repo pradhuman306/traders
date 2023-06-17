@@ -12,8 +12,14 @@ function App() {
   const message = useSelector((state) => state.toasterReducer);
   const pendingData = useSelector((state) => state.loaderReducer).pending;
   const profilePic = useSelector((state) => state.logoReducer).logo;
-  const [btnPending,setBtnPending] = useState(false);
+  const [btnPending, setBtnPending] = useState(false);
   const dispatch = useDispatch();
+
+  const handleClick = (e) => {
+    document.body.classList.toggle("menu-open");
+    const navIcon = document.getElementById("nav-icon");
+    navIcon.classList.toggle("open");
+  };
 
   useEffect(() => {
     switch (message.type) {
@@ -43,7 +49,7 @@ function App() {
         break;
     }
 
-    dispatch({type:SET_LOADED});
+    dispatch({ type: SET_LOADED });
   }, [message]);
 
 
@@ -51,11 +57,17 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <Router auth={auth} setBtnPending={setBtnPending} btnPending={btnPending} pendingData={pendingData} profilePic={profilePic} />
-        <ToastContainer limit={2} autoClose={1000}  />
+        <Router
+          auth={auth}
+          setBtnPending={setBtnPending}
+          btnPending={btnPending}
+          pendingData={pendingData}
+          profilePic={profilePic}
+          handleClick={handleClick}
+        />
+        <ToastContainer limit={2} autoClose={1000} />
       </BrowserRouter>
     </>
   );
 }
-
 export default App;

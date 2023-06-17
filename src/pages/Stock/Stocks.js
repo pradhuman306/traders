@@ -126,7 +126,7 @@ const Stocks = (props) => {
       <div className="mr-minus">
         <div className="usermanagement-main">
           <div className="extra-stuff">
-            <div className="amount-dtl justify-content-end">
+            <div className="amount-dtl stock-am-dtl justify-content-end">
               <ul className="st-dtl">
                 {allItems.map((item,i) => (
                   <li key={i}>
@@ -148,8 +148,8 @@ const Stocks = (props) => {
           </div>
         </div>
       </div>
-      <div className="row">
-        <div className="col-md-3">
+      <div className="row wrap-div">
+        <div className="col-lg-4 col-md-3">
           <div className="body-content st-fixed">
             <GoDown
               {...props}
@@ -160,7 +160,7 @@ const Stocks = (props) => {
             />
           </div>
         </div>
-        <div className="col-md-9">
+        <div className="col-lg-8 col-md-9">
           <div className="body-content">
             <StockDetails
               {...props}

@@ -1,7 +1,53 @@
+@media(max-width:1359px) {
+
+    .wrap-div .col-md-3,
+    .wrap-div .col-md-9 {
+        width: 100%;
+    }
+
+    .ts-rent .wrap-div .st-fixed {
+        margin-top: 0;
+        position: initial;
+    }
+
+    .st-fixed {
+        position: initial;
+        margin-top: 0;
+    }
+
+    .body-content.st-fixed .datatable-filter-wrap {
+        margin-bottom: 15px;
+    }
+
+    .ts-rent .wrap-div .body-content.st-fixed .datatable-filter-wrap {
+        margin-bottom: 15px;
+    }
+
+    .amount-dtl.stock-am-dtl {
+        margin-left: 0;
+        justify-content: space-between !important;
+    }
+
+    .amount-dtl.justify-content-end.align-items-center {
+        justify-content: space-between !important;
+    }
+}
+
+@media(max-width:1190px) {
+    .ts-rent .wrap-div .body-content.st-fixed .datatable-filter-wrap {
+        max-width: 230px;
+    }
+}
+
 @media(max-width:991px) {
     body.menu-open {
         overflow: hidden;
-    }    
+    }
+
+    .sidebar-body ul {
+        padding: 15px;
+    }
+
     .sideToggle {
         width: 33px;
         height: 33px;
@@ -107,18 +153,20 @@
         transition: -webkit-transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
         transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
         transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), -webkit-transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1);
-        border-radius: 0 20px 20px 0;
     }
+
     .body-main {
         max-width: 100%;
         flex: 0 0 100%;
         margin-left: 0;
         padding: 0 15px;
     }
+
     .menu-open .sidebar {
         -webkit-transform: none;
         transform: none;
     }
+
     .overlay-close {
         position: fixed;
         width: 100%;
@@ -135,47 +183,172 @@
         transition: 300ms all;
         display: block;
     }
+
     .menu-open .overlay-close {
         opacity: 1;
         visibility: visible;
     }
+
     .main-header {
         padding: 10px 15px;
         margin: 0 -15px;
     }
+
     .report-filter {
         margin: 0 -15px;
         margin-bottom: 20px;
         overflow: auto;
+        padding: 0 15px;
     }
+
     .mr-minus {
         margin: 0 -15px;
         padding: 15px;
         margin-bottom: 20px;
     }
+
     .ts-rent .st-fixed {
         margin-top: -76px;
     }
+
     .amount-dtl {
         flex-wrap: wrap;
         gap: 10px;
-        justify-content: start;
+        justify-content: start !important;
+    }
+
+    .after-layer,
+    .login-head {
+        flex: 0 0 50%;
+        max-width: 50%;
     }
 }
 
 @media(max-width:767px) {
+    body {
+        font-size: 14px;
+    }
+
+    .column {
+        flex-direction: column-reverse;
+    }
+
+    .login-head {
+        flex: 0 0 170px;
+        max-width: 100%;
+        border-radius: 0 0 25px 25px;
+        overflow: hidden;
+    }
+
+    .after-layer {
+        flex: 0 0 calc(100% - 170px);
+        max-width: 100%;
+        max-height: calc(100% - 170px);
+        justify-content: space-between;
+    }
+
+    .after-layer .c-card-wrap {
+        padding: 40px;
+        overflow: auto;
+    }
+
+    .after-layer,
+    .login-head {
+        width: 100%;
+    }
+
+    .footer {
+        display: none;
+    }
+
+    .login-logo {
+        margin-top: 0;
+    }
+
+    .login-logo img {
+        max-width: 120px;
+    }
+
+    .login-in {
+        justify-content: center;
+    }
+
+    .mobile-footer .footer {
+        display: block;
+    }
+
+    .mobile-footer .footer p {
+        color: rgba(var(--black));
+    }
+
     .navbar-left img {
         width: 125px;
     }
+
     .ts-rent .st-fixed {
         margin-top: 0;
     }
-    .datatable-search, .datatable-filter-right {
+
+    .datatable-search {
         width: 100%;
     }
+
     .datatable-filter-wrap {
         flex-wrap: wrap;
         flex-direction: column-reverse;
         gap: 15px;
+        align-items: self-start;
+    }
+
+    .ts-rent .wrap-div .body-content.st-fixed .datatable-filter-wrap {
+        max-width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .select-filter {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .datatable-dtllist p {
+        padding: 10px 15px;
+    }
+
+    .amount-dtl label {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    .total-am span,
+    .pending-am span {
+        font-size: 14px;
+    }
+
+    .rdt_ExpanderRow p {
+        margin-bottom: 10px;
+    }
+
+    .main-header h2 {
+        font-size: 20px;
+    }
+
+    ul.st-dtl {
+        gap: 10px;
+    }
+
+    .firm-select label {
+        display: none;
+    }
+
+    .firm-select {
+        padding-left: 15px;
+    }
+
+    .l-items {
+        gap: 10px 15px;
+    }
+
+    div#firmSelect {
+        min-width: 135px;
     }
 }

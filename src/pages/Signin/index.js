@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import * as Cokkie from "../../common/Cookies";
 import ButtonLoader from "../Customloader/ButtonLoader";
 const Signin = (props) => {
-
   const dispatch = useDispatch();
   const message = useSelector((state) => state.toasterReducer);
   // const logo = useSelector((state) => state.logoReducer).logo;
@@ -33,20 +32,15 @@ const Signin = (props) => {
     setPendingLogin(false);
   }, [message]);
 
-
   return (
     <>
       <section className="login-main">
         <div className="login-main-wrapper">
           <div className="column">
-
             <div className="c-card  after-layer before-layer">
               <div className="c-card-wrap">
                 <div className="form-header">
-                  <img
-                    src="/assets/images/icon.svg" alt=""
-                    className="image"
-                  />
+                  <img src="/assets/images/icon.svg" alt="" className="image" />
                   <h1>Login</h1>
                   <h4>Welcome to Pankaj Traders</h4>
                 </div>
@@ -82,18 +76,24 @@ const Signin = (props) => {
                       setSubmitting(false);
                     }}
                   >
-                    {({ isSubmitting, dirty, handleReset, touched, values }) => (
+                    {({
+                      isSubmitting,
+                      dirty,
+                      handleReset,
+                      touched,
+                      values,
+                    }) => (
                       <Form action="" id="loginForm">
                         <div className="form-group mb-3">
-                          <label>Email Address <span className="error-badge">*</span></label>
+                          <label>
+                            Email Address <span className="error-badge">*</span>
+                          </label>
                           <Field
                             type="text"
                             name="email"
-                            className={`form-control icon icon-email ${touched.email && error.email ? "input-error" : ""
-                              } ${values.email
-                                ? "filled"
-                                : ""
-                              }`}
+                            className={`form-control icon icon-email ${
+                              touched.email && error.email ? "input-error" : ""
+                            } ${values.email ? "filled" : ""}`}
                             placeholder="Enter your email"
                           />
                           <ErrorMessage
@@ -103,17 +103,17 @@ const Signin = (props) => {
                           />
                         </div>
                         <div className="form-group">
-                          <label>Password <span className="error-badge">*</span></label>
+                          <label>
+                            Password <span className="error-badge">*</span>
+                          </label>
                           <Field
                             type="password"
                             name="password"
-                            className={`form-control icon icon-lock ${touched.password && error.password
-                              ? "input-error"
-                              : ""
-                              } ${values.password
-                                ? "filled"
+                            className={`form-control icon icon-lock ${
+                              touched.password && error.password
+                                ? "input-error"
                                 : ""
-                              }`}
+                            } ${values.password ? "filled" : ""}`}
                             placeholder="Enter your password"
                           />
                           <ErrorMessage
@@ -122,9 +122,7 @@ const Signin = (props) => {
                             component="span"
                           />
                         </div>
-                        <div>
-
-                        </div>
+                        <div></div>
                         <div className="mb-3 mt-3 form-group d-flex align-items-center justify-content-between cus-pd">
                           <div className="form-check">
                             <Field
@@ -140,15 +138,16 @@ const Signin = (props) => {
                               Remember me
                             </label>
                           </div>
-                          <Link to="/reset-password" className="f-name">Forgot Password?</Link>
+                          <Link to="/reset-password" className="f-name">
+                            Forgot Password?
+                          </Link>
                         </div>
 
                         <div className="form-group">
-
                           <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="btn btn-primary w-100"
+                            className="btn btn-primary w-100 center-btn"
                           >
                             {pendingLogin ? <ButtonLoader /> : "Login"}
                           </button>
@@ -158,21 +157,21 @@ const Signin = (props) => {
                   </Formik>
                 </div>
               </div>
+              <div className="mobile-footer">
+                <Footer />
+              </div>
             </div>
             <div className="login-head text-center">
               <div className="login-in">
-               <div className="login-logo">
-               <img  src="/assets/images/logo.svg" alt=""/>
-               </div>
-               <Footer />
+                <div className="login-logo">
+                  <img src="/assets/images/logo.svg" alt="" />
+                </div>
+                <Footer />
               </div>
             </div>
           </div>
-
-         
         </div>
       </section>
-
     </>
   );
 };

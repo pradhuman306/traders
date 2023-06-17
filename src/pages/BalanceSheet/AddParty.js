@@ -94,7 +94,7 @@ const AddParty = (props) => {
                         </div>
                       </div>
                       <div className="col-md-12">
-                        <div className="form-group mb-4">
+                        <div className="form-group">
                           <label>
                             Mobile
                           </label>

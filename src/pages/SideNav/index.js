@@ -12,11 +12,9 @@ function SideNav(props) {
   const params = useParams();
 
   const handleClick = () => {
-    document.body.classList.toggle("menu-open");
-
+    document.body.classList.remove("menu-open");
     const navIcon = document.getElementById("nav-icon");
-
-    navIcon.classList.toggle("open");
+    navIcon.classList.remove("open");
   };
 
   return (
@@ -35,9 +33,12 @@ function SideNav(props) {
           </div>
           <ul className="main-nav">
             <li className={`${pathname === "/dashboard" ? "active" : ""}`}>
-              <Link to="/dashboard" onClick={(e) => {
-                handleClick(e);
-              }}>
+              <Link
+                to="/dashboard"
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
                 <svg
                   className="icon-dashboard"
                   width="24px"
@@ -52,9 +53,12 @@ function SideNav(props) {
               </Link>
             </li>
             <li className={`${pathname === "/buysell" ? "active" : ""}`}>
-              <Link to="/buysell" onClick={(e) => {
-                handleClick(e);
-              }}>
+              <Link
+                to="/buysell"
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
                 <svg
                   width="24"
                   height="24"
@@ -82,9 +86,12 @@ function SideNav(props) {
                   : ""
               }`}
             >
-              <Link to="/balancesheet" onClick={(e) => {
-                handleClick(e);
-              }}>
+              <Link
+                to="/balancesheet"
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
                 <svg
                   width="24"
                   height="24"
@@ -101,9 +108,12 @@ function SideNav(props) {
               </Link>
             </li>
             <li className={`${pathname === "/transportrent" ? "active" : ""}`}>
-              <Link to="/transportrent" onClick={(e) => {
-                handleClick(e);
-              }}>
+              <Link
+                to="/transportrent"
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
                 <svg
                   width="24"
                   height="24"
@@ -137,9 +147,12 @@ function SideNav(props) {
                   : ""
               }`}
             >
-              <Link to="/stock" onClick={(e) => {
-                handleClick(e);
-              }}>
+              <Link
+                to="/stock"
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
                 <svg
                   width="24"
                   height="24"
@@ -166,9 +179,12 @@ function SideNav(props) {
               </Link>
             </li>
             <li className={`${pathname === "/investment" ? "active" : ""}`}>
-              <Link to="/investment" onClick={(e) => {
-                handleClick(e);
-              }}>
+              <Link
+                to="/investment"
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
                 <svg
                   width="25px"
                   height="25px"
@@ -190,9 +206,12 @@ function SideNav(props) {
                   : ""
               }`}
             >
-              <Link to="/bank" onClick={(e) => {
-                handleClick(e);
-              }}>
+              <Link
+                to="/bank"
+                onClick={(e) => {
+                  handleClick(e);
+                }}
+              >
                 <svg
                   width="24"
                   height="24"

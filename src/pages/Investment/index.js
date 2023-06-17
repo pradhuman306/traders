@@ -279,7 +279,7 @@ window.addEventListener("resize", onresize);
                   {priceFormatter(totalInvestment)}
                 </label>
               </p>
-            <div className="datatable-filter-right ms-3">
+            <div className="datatable-filter-right">
               <ul className="btn-group">
                 <li>
                   <button

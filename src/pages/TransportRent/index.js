@@ -225,7 +225,7 @@ const TransportRent = (props) => {
             <div className="mr-minus">
                 <div className="usermanagement-main">
                     <div className="extra-stuff">
-                        <div className="amount-dtl justify-content-end align-items-center">
+                        <div className="amount-dtl stock-am-dtl justify-content-end align-items-center">
                         <p className="pending-am">
                             
                             <span>Total Pending Amount</span>
@@ -233,7 +233,7 @@ const TransportRent = (props) => {
                             </label>
                         </p>
                         <button
-                            className="btn btn-primary ms-3"
+                            className="btn btn-primary"
                             data-bs-toggle="modal"
                             data-bs-target="#addtransportrent"
                         >
@@ -243,8 +243,8 @@ const TransportRent = (props) => {
                     </div>
                 </div>
             </div>
-            <div className='row'>
-                <div className='col-md-3'>
+            <div className='row wrap-div'>
+                <div className='col-lg-4 col-md-3'>
                     <div className="body-content st-fixed">
                         <div className="datatable-filter-wrap">
                             <div className="datatable-search w-100">
@@ -267,7 +267,7 @@ const TransportRent = (props) => {
                         />
                     </div>
                 </div>
-                <div className='col-md-9'>
+                <div className='col-lg-8 col-md-9'>
                     <TransportDetails transRentList={transRentList} partyDetails={partyDetails} {...props} transportRow={transportRow} totalPending={totalPending} totalAllPaid={totalAllPaid} />
                 </div>
             </div>

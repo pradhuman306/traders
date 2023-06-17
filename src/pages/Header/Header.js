@@ -3,31 +3,62 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { signout } from "../../actions/auth";
 import { titleCase } from "../../actions/common";
+import Select from "react-select";
+import { useState } from "react";
+import { useEffect } from "react";
 export default function Header(props) {
   const dispatch = useDispatch();
+  const [firmList, setFirmList] = useState([]);
   const logout = (e) => {
     dispatch(signout());
   };
 
-  const handleClick = () => {
-    document.body.classList.toggle("menu-open");
-
-    const navIcon = document.getElementById("nav-icon");
-
-    navIcon.classList.toggle("open");
+  const handleSelectChange = (e) => {
+    props.handleSelectChange(e);
   };
 
+  useEffect(() => {
+   if(props.firmListAll&&props.firmListAll.length){
+    let firmList = [{ label: "All", value: 0 }];
+    props.firmListAll.map((item) => {
+      firmList.push({ label: item.name, value: item.id });
+    });
+
+    setFirmList(firmList);
+  }
+  }, [props.firmListAll]);
 
   let name = props.auth.userdata.name;
   return (
     <div className="">
       <div className="main-header">
-        
-      <div className="overlay-close" onClick={(e) => {
-                handleClick(e);
-              }}></div>
+        <div
+          className="overlay-close"
+          onClick={(e) => {
+            props.handleClick(e);
+          }}
+        ></div>
         <div className="l-items">
           <h2>{titleCase(props.heading)}</h2>
+          {props.firmListAll?<div className="firm-select">
+            <label htmlFor="firmSelect">Select Firm :</label>
+            <Select
+              id="firmSelect"
+              options={firmList}
+              onChange={(e) => handleSelectChange(e)}
+              value={props.firmValue}
+              theme={(theme) => ({
+                ...theme,
+                borderRadius: 8,
+                colors: {
+                  ...theme.colors,
+                  primary25: "rgb(0 120 219 / 10%);",
+                  primary: "#0078db",
+                },
+              })}
+            />
+          </div>:""}
+          
         </div>
         <div className="r-items">
           <div className="account-info-wrapper">
@@ -120,15 +151,15 @@ export default function Header(props) {
             </div>
           </div>
           <div
-              className="sideToggle"
-              onClick={(e) => {
-                handleClick(e);
-              }}
-            >
-              <div id="nav-icon">
-                <span></span> <span></span> <span></span>
-              </div>
+            className="sideToggle"
+            onClick={(e) => {
+              props.handleClick(e);
+            }}
+          >
+            <div id="nav-icon">
+              <span></span> <span></span> <span></span>
             </div>
+          </div>
         </div>
       </div>
     </div>
