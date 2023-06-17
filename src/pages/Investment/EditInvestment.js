@@ -58,7 +58,7 @@ const EditInvestment = (props) => {
                     values.id = dataList.id;
                     props.setBtnPending(true);
                     dispatch(updateInvestment(values, elementRef, props.setBtnPending));
-                    console.log(values);
+              
                     setSubmitting(false);
                   }}
                 >

@@ -54,7 +54,7 @@ const EditGoDown = (props) => {
                 values.id = dataList.id;
                 props.setBtnPending(true);
                 dispatch(updateGoDown(values,elementRef,props.setBtnPending));
-                console.log(values);
+             
                 setSubmitting(false);
               }}
             >

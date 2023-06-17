@@ -66,8 +66,10 @@ const AddStockDetails = (props) => {
       setNewGodownList(newGodownList);
     },[props.itemListAll,props.firmListAll,props.godownListAll])
     useEffect(()=>{
-   
-      setValueGodown({label:titleCase(props.godownList.name),value:props.godownList.id});
+   if(props.godownList.name){
+    setValueGodown({label:titleCase(props.godownList.name),value:props.godownList.id});
+   }
+
   
     },[props.godownList])
   return (
@@ -84,7 +86,7 @@ const AddStockDetails = (props) => {
                 enableReinitialize
               initialValues={{
                 // firm:"",
-                godown:props.godownList.id,
+                godown:props.godownList.id?props.godownList.id:"",
                 item:"",
                 quantity:"",
                 weight:"",

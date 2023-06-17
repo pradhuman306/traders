@@ -32,7 +32,7 @@ const EditStockDetails = (props) => {
     setValueItem({ label: titleCase(props.row_data.item), value: props.row_data.id });
     setValueFirm({ label: props.row_data.firm, value: props.row_data.firm_id });
     setValueGoDown({ label: titleCase(props.row_data.stock), value: props.row_data.stock_id });
-    console.log(props.row_data);
+    
   }, [props.row_id])
   useEffect(()=>{
     let newItemsList = [];
@@ -55,12 +55,12 @@ const EditStockDetails = (props) => {
   const handleSelectChange = (e, setFieldValue) => {
     setFieldValue('item', e.value);
     setValueItem(e);
-    console.log(e.value);
+
   }
   const handleSelectChangeFirm = (e, setFieldValue) => {
     setFieldValue('firm', e.value);
     setValueFirm(e);
-    console.log(e.value);
+  
   }
 
   const handleSelectChangeGoDown = (e,setFieldValue) => {

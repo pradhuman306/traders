@@ -71,7 +71,7 @@ export const deleteInvestment = (payload) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}deleteinvestment/${payload.id}`)
     .then((res) => {
-        console.log(payload);
+  
         dispatch(getInvestment(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,

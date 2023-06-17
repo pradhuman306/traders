@@ -71,7 +71,7 @@ export const deleteAccount = (payload) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}deleteaccount/${payload.id}`)
     .then((res) => {
-        console.log(payload);
+   
         dispatch(getAccountList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
@@ -111,7 +111,7 @@ export const getAccountById = (payload) => (dispatch) => {
     ajaxCall
     .get(`${config.BASE_URL}getaccount/${payload}`)
     .then((res) => {
-      console.log(res.data.data);
+
         dispatch({
             type: actionTypes.SET_SINGLE_ACCOUNT,
             payload: res.data.data,
@@ -176,7 +176,7 @@ export const deleteAccountDetails = (payload) => (dispatch) => {
   ajaxCall
   .post(`${config.BASE_URL}deleteaccountrecord/${payload.id}`)
   .then((res) => {
-      console.log(payload);
+   
       dispatch(getAccountDetails({user_id:payload.user_id,id:payload.accountid}));
       dispatch({
           type: actionTypes.SUCCESS_MESSAGE,

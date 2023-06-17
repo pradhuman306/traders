@@ -52,7 +52,7 @@ const EditItems = (props) => {
                     values.id = dataList.id;
                     props.setBtnPending(true);
                     dispatch(updateItems(values, elementRef, props.setBtnPending));
-                    console.log(values);
+        
                     setSubmitting(false);
                   }}
                 >

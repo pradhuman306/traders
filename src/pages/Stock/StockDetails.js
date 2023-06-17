@@ -16,7 +16,7 @@ import { getFirm } from '../../actions/firm';
 
 const StockDetails = (props) => {
     const stockid = props.godownListRow.id;
-    console.log(props);
+
     const userId = props.auth.userdata.id;
     const stockDetailsAll = useSelector((state) => state.godownReducer).stockDetails;
     const stockSingle = useSelector((state) => state.godownReducer).stockSingle;
@@ -35,8 +35,7 @@ const StockDetails = (props) => {
 
 
 
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
+
     // data provides access to your row data
 
     useEffect(() => {
@@ -81,20 +80,20 @@ const StockDetails = (props) => {
         if (window.innerWidth <= 599) {
             return (
                 <>
-                    <p>
-                        <b>Quantity:</b> {data.quantity}
+                  <p>
+                        <b>Item:</b> {titleCase(data.item)}
+                    </p>
+                        <p>
+                        <b>Weight:</b> {data.weight+ ' qt'}
                     </p>
                     <p>
-                        <b>Weight:</b> {data.weight}
+                        <b>Rate:</b> {priceFormatter(data.rate)}
                     </p>
                     <p>
-                        <b>Date:</b> {data.date}
+                        <b>Amount:</b> {priceFormatter(data.weight * data.rate)}
                     </p>
                     <p>
                         <b>Vehicle:</b> {data.vehicle_no}
-                    </p>
-                    <p>
-                        <b>Firm:</b> {data.firm}
                     </p>
 
                 </>
@@ -104,17 +103,18 @@ const StockDetails = (props) => {
                 <>
 
                     <p>
-                        <b>Weight:</b> {data.weight}
+                        <b>Weight:</b> {data.weight+ ' qt'}
                     </p>
                     <p>
-                        <b>Date:</b> {data.date}
+                        <b>Rate:</b> {priceFormatter(data.rate)}
+                    </p>
+                    <p>
+                        <b>Amount:</b> {priceFormatter(data.weight * data.rate)}
                     </p>
                     <p>
                         <b>Vehicle:</b> {data.vehicle_no}
                     </p>
-                    <p>
-                        <b>Firm:</b> {data.firm}
-                    </p>
+                  
 
                 </>
             );
@@ -177,7 +177,7 @@ const StockDetails = (props) => {
                 name: "Date",
                 selector: (row) => formatDate(row.date),
                 sortable: true,
-                hide: 'sm',
+            
                 // width: '120px',
 
             },
@@ -186,7 +186,7 @@ const StockDetails = (props) => {
                 name: "Item",
                 selector: (row) => titleCase(row.item),   
                 sortable: true,
-
+                hide: 'sm',
 
             },
 
@@ -333,13 +333,13 @@ const StockDetails = (props) => {
                                 </div>
                             </div>
                             <div className='godown-stock'>
-                                {props.godownListRow.items.map((item) => (
-                                    <>
-                                        <div><span>{titleCase(item.name)}</span>
+                                {props.godownListRow.items.map((item,i) => (
+                                  
+                                        <div key={i}><span>{titleCase(item.name)}</span>
                                             <label>{item.weight} qt</label>
                                         </div>
 
-                                    </>
+                                 
                                 ))
                                 }
                                 {/* {props.godownListRow.items} */}
@@ -394,7 +394,7 @@ const StockDetails = (props) => {
                     paginationPerPage={8}
                     expandableRows={isExpandable}
                     expandableRowsComponent={ExpandedComponent}
-                    onSort={handleSort}
+              
 
                 />
 

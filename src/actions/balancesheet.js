@@ -12,7 +12,7 @@ export const getParty = (payload) => (dispatch) => {
     .get(`${config.BASE_URL}parties/${payload}`)
     .then((res) => {
       setLoadedData(dispatch);
-        console.log(res);
+    
         dispatch({
             type: actionTypes.SET_PARTY,
             payload: res.data.data,
@@ -132,7 +132,7 @@ export const deleteParty = (payload) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}deleteparty/${payload.id}`)
     .then((res) => {
-        console.log(payload);
+    
         dispatch(getParty(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,

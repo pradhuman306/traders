@@ -5,7 +5,7 @@ import {  Link, useParams } from "react-router-dom";
 import { signout } from "../../actions/auth";
 function HeaderContainer(props) {
   const params = useParams();
-  console.log(params,'from header contianer');
+
   const dispatch = useDispatch();
   const stockSingle = useSelector((state)=>state.godownReducer).stockSingle;
   const accountSingleAll = useSelector((state)=>state.accountReducer).accountSingle;

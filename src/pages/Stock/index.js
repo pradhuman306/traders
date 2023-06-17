@@ -5,8 +5,7 @@ import DataTable from 'react-data-table-component';
 import { useSelector } from 'react-redux';
 const GoDown = (props) => {
     const godownListAll = useSelector((state)=>state.godownReducer).godownList;
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
+   
         const [godownList, setList] = useState([...godownListAll]);
         const [filterText, setFilter] = useState("");
         const hanndleSearch = (value) => {
@@ -54,7 +53,7 @@ const GoDown = (props) => {
                 data={godownList}
                 expandableRows={props.isExpandable}
                 expandableRowsComponent={props.ExpandedComponent}
-                onSort={handleSort}
+               
             
             />
         </div>

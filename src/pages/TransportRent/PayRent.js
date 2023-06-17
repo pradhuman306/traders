@@ -10,9 +10,7 @@ const PayRent = (props) => {
     const [error, setError] = useState({});
     const [btnPending, setBtnPending] = useState(false);
     const dispatch = useDispatch();
-    useEffect(()=>{
-        console.log("ROW DATA",props.row_data);
-    },[props.row_data])
+
   return (
     <div
       className="modal fade"
@@ -47,7 +45,7 @@ const PayRent = (props) => {
               values.id = props.row_data.party_id;
               values.user_id = props.userId;
               setBtnPending(true);
-              console.log(values);
+          
               dispatch(payRentAmount(values,elementRef,setBtnPending,resetForm,props.filterValue));
               setSubmitting(false);
             }}

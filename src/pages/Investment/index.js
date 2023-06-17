@@ -27,13 +27,59 @@ const Investment = (props) => {
   const [isExpandable, setisExpandable] = useState(false);
   const [totalInvestment, setTotalInvestment] = useState(0);
 
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection);
+
   // data provides access to your row data
 
   useEffect(() => {
     dispatch(getInvestment(userId));
+    if (window.innerWidth <= 599 || window.innerWidth <= 959) {
+      setisExpandable(true);
+  } else {
+      setisExpandable(false);
+  }
   }, []);
+
+
+  const ExpandedComponent = ({ data }) => {
+    // window.innerWidth <= 599 ? <></> : "";
+    if (window.innerWidth <= 599) {
+        return (
+            <>
+               
+              
+                <p>
+                    <b>Amount:</b>  {priceFormatter(data.amount)}
+                </p>
+                
+                <p>
+                    <b>Description:</b> {data.description}
+                </p>
+            </>
+        );
+    } else if (window.innerWidth <= 959) {
+        return (
+            <>
+               
+               <p>
+                    <b>Description:</b> {data.description}
+                </p>
+             
+
+            </>
+        );
+    }
+};
+
+var onresize = function () {
+    //your code here
+    //this is just an example
+    if (window.innerWidth <= 599 || window.innerWidth <= 959) {
+        setisExpandable(true);
+    } else {
+        setisExpandable(false);
+    }
+};
+window.addEventListener("resize", onresize);
 
   useEffect(() => {
     let sum = 0;
@@ -81,11 +127,13 @@ const Investment = (props) => {
           );
         },
         sortable: true,
+        hide:"sm"
       },
       {
         name: "Description",
         selector: (row) => row.description,
         sortable: true,
+        hide:"md"
       },
 
       {
@@ -259,7 +307,9 @@ const Investment = (props) => {
           paginationRowsPerPageOptions={[8, 25, 50, 100]}
           pagination
           paginationPerPage={8}
-          onSort={handleSort}
+          expandableRows={isExpandable}
+          expandableRowsComponent={ExpandedComponent}
+    
         />
       </div>
     </>

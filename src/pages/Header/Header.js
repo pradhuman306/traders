@@ -17,7 +17,7 @@ export default function Header(props) {
     navIcon.classList.toggle("open");
   };
 
-  console.log(props);
+
   let name = props.auth.userdata.name;
   return (
     <div className="">

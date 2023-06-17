@@ -15,6 +15,7 @@ const AddBuySell = (props) => {
     const elementRef = useRef(null);
     const itemSelectRef = useRef("");
     const godownSelectRef = useRef("");
+    const firmSelectRef = useRef("");
     const partySelectRef = useRef("");
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
@@ -24,7 +25,10 @@ const AddBuySell = (props) => {
     const [newListItems, setNewListItems] = useState([]);
     const [partyValue, setPartyValue] = useState({});
     const [itemValue, setItemValue] = useState({});
+
     const [godown,setGoDownList]=useState([]);
+    const [firm,setFirmList]=useState([]);
+
     const [godownValue,setGodownValue]=useState({});
     
 
@@ -33,7 +37,13 @@ const AddBuySell = (props) => {
         if (e) {
             setFieldValue('item', e.value);
             setItemValue(e);
-            console.log(e.value);
+          
+        }
+
+    }
+    const handleSelectChangeFirm = (e, setFieldValue) => {
+        if (e) {
+            setFieldValue('firm', e.value);
         }
 
     }
@@ -53,12 +63,18 @@ const AddBuySell = (props) => {
 
     useEffect(() => {
         let godownList = [];
+        let firmList = [];
         props.godownListAll.forEach((item) => {
             godownList.push({ label: titleCase(item.name), value: item.id });
         })
         setGoDownList([...godownList]);
 
-    }, [props.godownListAll])
+        props.firmListAll.forEach((item) => {
+            firmList.push({ label: titleCase(item.name), value: item.id });
+        })
+        setFirmList([...firmList]);
+
+    }, [props.godownListAll,props.firmListAll])
 
     const handleSelectChange = (e, setFieldValue) => {
         if (e) {
@@ -107,11 +123,13 @@ const AddBuySell = (props) => {
             <div className="modal-dialog">
                 <div className="modal-content right-modal">
                 <Formik
+                
                             initialValues={{
                                 party: "",
                                 bill_no: "",
                                 godown:"",
                                 rate: "",
+                                firm:"",
                                 amount: "",
                                 debit: "",
                                 gst: "",
@@ -146,12 +164,11 @@ const AddBuySell = (props) => {
                             onSubmit={(values, { setSubmitting, resetForm, setFieldValue }) => {
                                 props.setBtnPending(true);
                                 values.user_id = user_id;
-                                console.log(values);
-                                console.log(itemSelectRef);
+                              
                                 itemSelectRef.current.clearValue();
                                 partySelectRef.current.clearValue();
                                 godownSelectRef.current.clearValue();
-                                console.log(isActive);
+                             
                                 if (isActive.buy) {
                                     dispatch(addBuy(values, elementRef, props.setBtnPending, resetForm,props.isActive));
                                 } else if(isActive.sell) {
@@ -283,6 +300,41 @@ const AddBuySell = (props) => {
                                             </div>
                                         </div>
                                         <div className='row'>
+                                        <div className='col-md-6'>
+                                                <div className="form-group mb-4">
+                                                    <label>
+
+                                                        Firm 
+                                                    </label>
+
+                                                    <Select
+                                                        className={`${touched.firm && error.firm
+                                                            ? "input-error"
+                                                            : ""
+                                                            } ${values.firm
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
+                                                        options={firm}
+                                                        isSearchable={true}
+                                                        isClearable={true}
+                                                        name="firm"
+                                                        ref={firmSelectRef}
+                                                        onChange={(e) => handleSelectChangeFirm(e, setFieldValue)}
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            borderRadius: 8,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary25: 'rgb(0 120 219 / 10%);',
+                                                                primary: '#0078db',
+                                                            },
+                                                        })}
+                                                    />
+
+                                                
+                                                </div>
+                                            </div>
                                         <div className='col-md-6'>
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -457,10 +509,6 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="row">
-
-                                           
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -488,6 +536,11 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className="row">
+
+                                           
+                                            
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -538,7 +591,7 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-                                            <div className="col-md-6">
+                                            <div className="col-md-12">
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         Date <span className="error-badge">*</span>

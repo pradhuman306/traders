@@ -12,8 +12,7 @@ import { titleCase } from '../../actions/common';
 
 
 const EditBuySell = (props) => {
-    console.log(props.row_data);
-    console.log(props.row_id);
+
     const elementRef = useRef(null);
     const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
     const user_id = props.auth.userdata.id;
@@ -24,17 +23,23 @@ const EditBuySell = (props) => {
     const [newListItems, setNewListItems] = useState([]);
     const [valueParty, setValueParty] = useState({});
     const [valueItem, setValueItem] = useState({});
-    const [valueGodown, setValueGodown] = useState({});
+    const [firmValue, setValueFirm] = useState({});
     const [rowData, setRowData] = useState(props.row_data);
     const [checkedURD, setCheckedURD] = useState({});
     const [godown,setGoDownList]=useState([]);
+    const [firm,setFirmList]=useState([]);
     const [godownValue,setGodownValue]=useState({});
-    const godownSelectRef = useRef("");
     const handleSelectChangeItem = (e, setFieldValue) => {
         setFieldValue('item', e.value);
         setValueItem(e);
-        console.log(e.value);
+  
     }
+    const handleSelectChangeFirm = (e, setFieldValue) => {
+        setFieldValue('firm', e.value);
+        setValueFirm(e);
+  
+    }
+ 
     useEffect(() => {
         dispatch(getParty(user_id));
     }, [])
@@ -43,8 +48,10 @@ const EditBuySell = (props) => {
         setValueParty({ label: titleCase(props.row_data.party), value: props.row_data.party_id });
         setValueItem({ label: titleCase(props.row_data.item), value: props.row_data.item_id });
         setGodownValue({ label: titleCase(props.row_data.godown), value: props.row_data.godown_id });
+        setValueFirm({ label: titleCase(props.row_data.firm), value: props.row_data.firm_id });
+
         setCheckedURD(props.row_data.URD == 1 ? true : false);
-        console.log(props.row_data);
+      
         let newIsActive = {...props.isActive};
 
         if(props.row_data.type == 'Buy'){
@@ -58,7 +65,7 @@ newIsActive.sell = true;
 newIsActive.all = false;
 
         }
-        console.log(newIsActive);
+       
         setIsActive({ ...newIsActive });
     }, [props.row_data,props.isActive])
     useEffect(() => {
@@ -72,7 +79,7 @@ newIsActive.all = false;
     const handleSelectChange = (e, setFieldValue) => {
         setFieldValue('party', e.value);
         setValueParty(e);
-        console.log(e.value);
+    
     }
 
     useEffect(() => {
@@ -81,7 +88,12 @@ newIsActive.all = false;
             newItemsList.push({ label: titleCase(element.item), value: element.id })
         });
         setNewListItems(newItemsList);
-    }, [props.itemListAll])
+        let newFirmList = [];
+        props.firmListAll.forEach(element => {
+            newFirmList.push({ label: titleCase(element.name), value: element.id })
+        });
+        setFirmList(newFirmList);
+    }, [props.itemListAll,props.firmListAll])
 
     const handleRadioChange = (e) => {
 
@@ -93,12 +105,12 @@ newIsActive.all = false;
             newActive.sell = true;
             newActive.buy = false;
         }
-        console.log(isActive);
+       
         setIsActive({ ...newActive });
     }
 
     const handleChangeCheck = (e, setFieldValue) => {
-        console.log(e.target.checked);
+     
         setFieldValue('URD', e.target.checked)
         setCheckedURD(e.target.checked);
     }
@@ -132,8 +144,9 @@ newIsActive.all = false;
                         initialValues={{
                             party: rowData.party_id,
                             bill_no: rowData.bill_no,
-                            godown:rowData.godown,
+                            godown:rowData.godown_id,
                             amount: rowData.amount,
+                            firm:rowData.firm_id,
                             debit: rowData.debit,
                             gst: rowData.gst,
                             item: rowData.item_id,
@@ -165,7 +178,7 @@ newIsActive.all = false;
                             values.user_id = user_id;
                             values.id = props.row_id;
                             values.amount = values.rate * values.weight;
-                            console.log(values);
+                         
                             if (isActive.buy) {
                                 dispatch(updateBuy(values, elementRef, props.setBtnPending,props.isActive));
                             } else if(isActive.sell){
@@ -299,6 +312,39 @@ newIsActive.all = false;
                                                 <div className="form-group mb-4">
                                                     <label>
 
+                                                        Firm 
+                                                    </label>
+
+                                                    <Select
+                                                        className={`${touched.firm && error.firm
+                                                            ? "input-error"
+                                                            : ""
+                                                            } ${values.firm
+                                                                ? "filled"
+                                                                : ""
+                                                              }`}
+                                                        options={firm}
+                                                        name="firm"
+                                                        value={firmValue}
+                                                        onChange={(e) => handleSelectChangeFirm(e, setFieldValue)}
+                                                        theme={(theme) => ({
+                                                            ...theme,
+                                                            borderRadius: 8,
+                                                            colors: {
+                                                                ...theme.colors,
+                                                                primary25: 'rgb(0 120 219 / 10%);',
+                                                                primary: '#0078db',
+                                                            },
+                                                        })}
+                                                    />
+
+                                                
+                                                </div>
+                                            </div>
+                                            <div className='col-md-6'>
+                                                <div className="form-group mb-4">
+                                                    <label>
+
                                                         Godown <span className="error-badge">*</span>
                                                     </label>
 
@@ -369,9 +415,6 @@ newIsActive.all = false;
                                                     />
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className='row'>
-                                         
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -394,6 +437,10 @@ newIsActive.all = false;
 
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className='row'>
+                                         
+                                        
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -464,10 +511,6 @@ newIsActive.all = false;
                                                     /> */}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="row">
-
-                                         
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -494,6 +537,11 @@ newIsActive.all = false;
                                                     /> */}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className="row">
+
+                                         
+                                         
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -544,7 +592,7 @@ newIsActive.all = false;
                                                     /> */}
                                                 </div>
                                             </div>
-                                            <div className="col-md-6">
+                                            <div className="col-md-12">
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         Date <span className="error-badge">*</span>

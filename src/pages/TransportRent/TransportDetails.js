@@ -43,8 +43,7 @@ const TransportDetails = (props) => {
     const [totalPaid, setTotalPaid] = useState(0);
     const [lastPaid, setLastPaid] = useState({});
 
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
+
     // data provides access to your row data
 
     useEffect(() => {
@@ -89,7 +88,7 @@ const TransportDetails = (props) => {
     const handleSelectChange = (e) => {
         if (e && e.value != "custom") {
             dispatch(getRentHistoryByParty(props.transportRow.party_id, e.value));
-            console.log(transid);
+           
             setValueFilter(e);
             setDisplayDate(false);
         } else if (e.value === "custom") {
@@ -122,20 +121,20 @@ const TransportDetails = (props) => {
         if (window.innerWidth <= 599) {
             return (
                 <>
-                    <p>
-                        <b>Quantity:</b> {data.quantity}
+                   <p>
+                        <b>Destination:</b> {data.destination}
                     </p>
                     <p>
                         <b>Weight:</b> {data.weight}
                     </p>
                     <p>
-                        <b>Date:</b> {data.date}
+                        <b>Rate:</b> {priceFormatter(data.rate)}
                     </p>
                     <p>
-                        <b>Vehicle:</b> {data.vehicle_no}
+                        <b>Advance:</b> {priceFormatter(data.advance)}
                     </p>
                     <p>
-                        <b>Firm:</b> {data.firm}
+                        <b>Pending amount:</b> {priceFormatter(data.rate * data.weight - data.advance)}
                     </p>
 
                 </>
@@ -147,14 +146,15 @@ const TransportDetails = (props) => {
                     <p>
                         <b>Weight:</b> {data.weight}
                     </p>
+                   
                     <p>
-                        <b>Date:</b> {data.date}
+                        <b>Rate:</b> {priceFormatter(data.rate)}
                     </p>
                     <p>
-                        <b>Vehicle:</b> {data.vehicle_no}
+                        <b>Advance:</b> {priceFormatter(data.advance)}
                     </p>
                     <p>
-                        <b>Firm:</b> {data.firm}
+                        <b>Pending amount:</b> {priceFormatter(data.rate * data.weight - data.advance)}
                     </p>
 
                 </>
@@ -221,7 +221,7 @@ const TransportDetails = (props) => {
                 name: "Date",
                 selector: (row) => formatDate(row.date),
                 sortable: true,
-                hide: "md",
+           
             },
             {
                 name: "Destination",
@@ -512,7 +512,7 @@ m760 -27 c21 -47 239 -830 275 -983 20 -88 38 -162 40 -164 4 -4 16 38 49 181
                 paginationPerPage={8}
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
-                onSort={handleSort}
+             
 
             />
         </div>

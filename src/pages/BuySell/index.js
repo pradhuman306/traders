@@ -4,8 +4,10 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
+import Select from 'react-select';
 import { deleteBuySellList, getAllBuySellList, getBuyList, getSellList } from '../../actions/buysell';
 import { formatDate, priceFormatter,titleCase, totalAmountCalculateRaw } from '../../actions/common';
+import { getFirm } from '../../actions/firm';
 import { getGoDownList } from '../../actions/godown';
 import { getItems } from '../../actions/items';
 import ConfirmModal from '../../common/confirmModal';
@@ -19,12 +21,18 @@ const BuySell = (props) => {
     const buyListAll = useSelector((state) => state.buySellReducer).buyList;
     const sellListAll = useSelector((state) => state.buySellReducer).sellList;
     const buySellListAll = useSelector((state) => state.buySellReducer).buySellList;
+    const firmListAll = useSelector((state) => state.firmReducer).firmList;
     const itemListAll = useSelector((state) => state.itemReducer).itemList;
     const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
     const godownListAll = useSelector((state) => state.godownReducer).godownList;
     const [filterText, setFilter] = useState("");
     const [buyList, setBuyList] = useState([...buySellListAll]);
+    const [firmList, setFirmList] = useState([]);
     const [buySellRow, setBuysell] = useState({});
+    const [firmId, setFirmId] = useState(0);
+    const [firmValue, setFirmValue] = useState({label:'All',value:0});
+    
+    
     const [isActive, setIsActive] = useState({
         "buy": false,
         "sell": false,
@@ -35,20 +43,21 @@ const BuySell = (props) => {
     const [isExpandable, setisExpandable] = useState(false);
 
 
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
+
 
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
         if (window.innerWidth <= 599) {
             return (
                 <>
-                    <p>
-                        <b>Date:</b> {formatDate(data.date)}
-                    </p>
+                   
                     <p>
                         <b>Item:</b> {data.item}
                     </p>
+                    <p>
+                        <b>Godown:</b> {titleCase(data.godown)}
+                    </p>
+                    
                     <p>
                         <b>Bill no.:</b> {data.bill_no}
                     </p>
@@ -75,11 +84,9 @@ const BuySell = (props) => {
         } else if (window.innerWidth <= 959) {
             return (
                 <>
-                    <p>
-                        <b>Date:</b> {formatDate(data.date)}
-                    </p>
-                    <p>
-                        <b>Item:</b> {data.item}
+                   
+                   <p>
+                        <b>Godown:</b> {titleCase(data.godown)}
                     </p>
                     <p>
                         <b>Amount:</b> {data.amount}
@@ -118,7 +125,7 @@ const BuySell = (props) => {
 
     const getFilterUrd = () => {
        let urdList = buySellListAll.filter((item)=>item['URD'] != 0);
-       console.log(urdList);
+     
        setBuyList([...urdList]);
     }
 
@@ -128,9 +135,19 @@ const BuySell = (props) => {
     }
     }, [buySellListAll]);
 
+    useEffect(() => {
+        let firmList = [{label:'All',value:0}];
+        firmListAll.map((item)=>{
+            firmList.push({label:item.name,value:item.id});
+        })
+        
+        setFirmList(firmList);
+        }, [firmListAll]);
+
 
     useEffect(() => {
         dispatch(getAllBuySellList(user_id));
+        dispatch(getFirm(user_id));
         dispatch(getItems(user_id));
         dispatch(getGoDownList(user_id));
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
@@ -194,19 +211,50 @@ const BuySell = (props) => {
 
 
     useEffect(() => {
-        if (isActive.buy) {
-            filterValue(filterText, buyListAll);
-        } else if (isActive.sell) {
-            filterValue(filterText, sellListAll);
-        } else if (isActive.all) {
-            filterValue(filterText, buySellListAll);
-        } 
+if(firmId){
+    filterValueByFirm({value:firmId});
+}else{
+    if (isActive.buy) {
+        filterValue(filterText, buyListAll);
+    } else if (isActive.sell) {
+        filterValue(filterText, sellListAll);
+    } else if (isActive.all) {
+        filterValue(filterText, buySellListAll);
+    } else if (isActive.urd){
+        let urdList = buySellListAll.filter((item)=>item['URD'] != 0);
+        filterValue(filterText, urdList);
+    }
+}
+       
 
-    }, [filterText, buyListAll, isActive, sellListAll, buySellListAll]);
+    }, [filterText, buyListAll, isActive, sellListAll, buySellListAll,firmId]);
 
     const hanndleSearch = (value) => {
         setFilter(value);
     };
+const filterValueByFirm = (e) => {
+    if (isActive.buy) {
+        let buyList = buyListAll.filter((item)=>item.firm_id?.toString() === e.value.toString());
+        filterValue(filterText, buyList);
+    } else if (isActive.sell) {
+        let sellList = sellListAll.filter((item)=>item.firm_id?.toString() === e.value.toString());
+        filterValue(filterText, sellList);
+    } else if (isActive.all) {
+        let allList = buySellListAll.filter((item)=>item.firm_id?.toString() === e.value.toString());
+        filterValue(filterText, allList);
+    } else if (isActive.urd){
+        let urdList = buySellListAll.filter((item)=>(item.firm_id?.toString() === e.value.toString() && item['URD'] != 0));
+        filterValue(filterText, urdList);
+    }
+
+    
+   
+}
+    const handleSelectChange = (e) => {
+        filterValueByFirm(e);
+        setFirmId(e.value);
+        setFirmValue(e);
+    }
 
     // const hideColumns = () => {};
 
@@ -242,7 +290,7 @@ const BuySell = (props) => {
                 name: "Item",
                 selector: (row) => titleCase(row.item),
                 sortable: true,
-                hide: "md",
+                hide: "sm",
 
             },
             {
@@ -369,7 +417,27 @@ const BuySell = (props) => {
         <div className="body-content">
              <Header heading={isActive.buy ? "Buy" : isActive.sell ? "Sell" : isActive.all ? "All" : "URD"} {...props} />
             <div className="usermanagement-main">
+                <div className='row'>   
+                <div className='col-md-3'>
+                <h2>Select Firm</h2>
+                  
+                  <Select
+                          options={firmList}
+                          onChange={(e) => handleSelectChange(e)}
+                          defaultValue={firmList[0]}
+                          value={firmValue}
+                          theme={(theme) => ({
+                              ...theme,
+                              borderRadius: 8,
+                              colors: {
+                                  ...theme.colors,
+                                  primary25: 'rgb(0 120 219 / 10%);',
+                                  primary: '#0078db',
+                              },
+                          })}
+                      /></div></div>
                 <div>
+                 
                 <ul id="report-filter" className="report-filter tabs">
                         <li className={`filter-item pending-r ${isActive.all ? 'active' : ""}`}>
                             <a onClick={() => {
@@ -431,8 +499,8 @@ const BuySell = (props) => {
                     </div>
                 </div>
             </div>
-            <AddBuySell godownListAll={godownListAll} itemListAll={itemListAll} {...props} isActive={isActive} partyList={partyList} />
-            <EditBuySell godownListAll={godownListAll} itemListAll={itemListAll} {...props} isActive={isActive} partyList={partyList} row_id={id} row_data={buySellRow} />
+            <AddBuySell firmListAll={firmListAll} godownListAll={godownListAll} itemListAll={itemListAll} {...props} isActive={isActive} partyList={partyList} />
+            <EditBuySell firmListAll={firmListAll} godownListAll={godownListAll} itemListAll={itemListAll} {...props} isActive={isActive} partyList={partyList} row_id={id} row_data={buySellRow} />
 
             <DataTable
                 columns={columns}
@@ -445,7 +513,7 @@ const BuySell = (props) => {
                 paginationPerPage={8}
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
-                onSort={handleSort}
+           
 
             />
         </div>

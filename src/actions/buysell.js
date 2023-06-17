@@ -11,7 +11,7 @@ export const getAllBuySellList = (payload) => (dispatch) => {
     .get(`${config.BASE_URL}alllistbuysale/${payload}`)
     .then((res) => {
       setLoadedData(dispatch);
-      console.log(res);
+  
       dispatch({
         type: actionTypes.SET_ALL_BUYSELL,
         payload: res.data.data,
@@ -31,7 +31,7 @@ export const getBuyList = (payload) => (dispatch) => {
     .get(`${config.BASE_URL}buy/${payload}`)
     .then((res) => {
       setLoadedData(dispatch);
-      console.log(res);
+   
       dispatch({
         type: actionTypes.SET_BUY,
         payload: res.data.data,
@@ -79,7 +79,7 @@ export const updateBuy = (payload,elementRef,setBtnPending,isActive) => (dispatc
     elementRef.current.click();
     setBtnPending(false);
 
-    if(isActive.sell){
+    if(isActive.buy){
       dispatch(getBuyList(payload.user_id));
     }else{
     dispatch(getAllBuySellList(payload.user_id));
@@ -156,7 +156,7 @@ export const deleteBuySellList = (payload,isActive) => (dispatch) => {
   ajaxCall
   .post(`${config.BASE_URL}${isActive.buy?"deletebuy":"deletesale"}/${payload.id}`)
   .then((res) => {
-      console.log(payload);
+   
       if(isActive.buy){
         dispatch(getBuyList(payload.user_id));
       }else if(isActive.sell){

@@ -27,8 +27,6 @@ const Items = (props) => {
     const [isExpandable, setisExpandable] = useState(false);
 
 
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
     // data provides access to your row data
 
 
@@ -196,7 +194,7 @@ const Items = (props) => {
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination
                 paginationPerPage={8}
-                onSort={handleSort}
+            
                
             />
         </div>

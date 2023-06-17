@@ -22,8 +22,7 @@ const Stocks = (props) => {
   const [isExpandable, setisExpandable] = useState(false);
   const [allItems, setAllItems] = useState([]);
   const [totalAmount, setTotalAmount] = useState([]);
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection);
+
   // data provides access to your row data
 
   const ExpandedComponent = ({ data }) => {
@@ -32,7 +31,7 @@ const Stocks = (props) => {
       return (
         <>
           <p>
-            <b>Place:</b> {data.place}
+            <b>Total:</b>   {priceFormatter(data.total)}
           </p>
         </>
       );
@@ -115,6 +114,7 @@ const Stocks = (props) => {
           </span>
         ),
         sortable: true,
+        hide:"sm"
       },
     ],
     [godownListRow]
@@ -128,8 +128,8 @@ const Stocks = (props) => {
           <div className="extra-stuff">
             <div className="amount-dtl justify-content-end">
               <ul className="st-dtl">
-                {allItems.map((item) => (
-                  <li>
+                {allItems.map((item,i) => (
+                  <li key={i}>
                     <span>{titleCase(item.name)}</span>
                     <span>{item.weight}qt</span>
                     <span>{priceFormatter(item.total)}</span>
@@ -140,7 +140,8 @@ const Stocks = (props) => {
                 {" "}
                 <span>Total</span>
                 <label className="badge rounded-pill bg-text text-bg-danger xl-text">
-                  {priceFormatter(totalAmount)}{" "}
+              
+                  {totalAmount != ''?priceFormatter(totalAmount):"0"}{" "}
                 </label>{" "}
               </p>
             </div>

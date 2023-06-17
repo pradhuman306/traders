@@ -23,8 +23,7 @@ const StocksGodown = (props) => {
     const [godownListRow, setGodownRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
+
     // data provides access to your row data
 
     const ExpandedComponent = ({ data }) => {
@@ -236,7 +235,7 @@ const StocksGodown = (props) => {
                 paginationPerPage={8}
                 expandableRows={isExpandable}
                 expandableRowsComponent={ExpandedComponent}
-                onSort={handleSort}
+              
             
             />
         </div>

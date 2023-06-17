@@ -19,7 +19,7 @@ const EditFirm = (props) => {
   const [error, setError] = useState({});
   useEffect(() => {
     setdataList({ ...props.row_data });
-    console.log(props.row_data);
+
   }, [props.row_id])
   return (
     <div
@@ -53,7 +53,7 @@ const EditFirm = (props) => {
                     values.id = dataList.id;
                     props.setBtnPending(true);
                     dispatch(updateFirm(values, elementRef, props.setBtnPending));
-                    console.log(values);
+            
                     setSubmitting(false);
                   }}
                 >

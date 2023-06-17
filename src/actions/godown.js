@@ -71,7 +71,7 @@ export const deleteGoDown = (payload) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}deletestock/${payload.id}`)
     .then((res) => {
-        console.log(payload);
+      
         dispatch(getGoDownList(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,
@@ -179,7 +179,7 @@ export const deleteStockDetails = (payload) => (dispatch) => {
   ajaxCall
   .post(`${config.BASE_URL}deletestockrecord/${payload.id}`)
   .then((res) => {
-      console.log(payload);
+  
       dispatch(getStockDetails({user_id:payload.user_id,id:payload.stock_id}));
       dispatch(getGoDownList(payload.user_id));
       dispatch({

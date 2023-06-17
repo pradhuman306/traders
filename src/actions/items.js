@@ -71,7 +71,7 @@ export const deleteItems = (payload) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}deleteitem/${payload.id}`)
     .then((res) => {
-        console.log(payload);
+
         dispatch(getItems(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,

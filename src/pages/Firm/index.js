@@ -22,9 +22,6 @@ const Firm = (props) => {
     const [id, setId] = useState("");
 
 
-
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
     // data provides access to your row data
 
 
@@ -193,7 +190,7 @@ const Firm = (props) => {
                 paginationRowsPerPageOptions={[8, 25, 50, 100]}
                 pagination
                 paginationPerPage={8}
-                onSort={handleSort}
+              
                
             />
         </div>

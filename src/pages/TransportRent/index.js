@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { formatDate, priceFormatter , titleCase} from '../../actions/common';
+import { formatDate, makePositive, priceFormatter , titleCase} from '../../actions/common';
 import { getRentHistoryByParty, getTransportRentList, setEmptyTransDetails } from '../../actions/transportrent';
 import Header from '../Header/Header';
 import AddTransportRent from './AddTransportRent';
@@ -25,8 +25,7 @@ const TransportRent = (props) => {
     const [totalAllPaid, setTotalAllPaid] = useState(0);
 
 
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
+
     // data provides access to your row data
     useEffect(() => {
         dispatch(setEmptyTransDetails());
@@ -34,50 +33,52 @@ const TransportRent = (props) => {
     const ExpandedComponent = ({ data }) => {
         // window.innerWidth <= 599 ? <></> : "";
         if (window.innerWidth <= 599) {
+            let totalPaid = 0;
+            if (data.rent_paid) {
+                let rent_paid = JSON.parse(data.rent_paid);
+                totalPaid = rent_paid.reduce((accumulator, object) => {
+                    return accumulator + parseInt(object.amount);
+                }, 0);
+            }
             return (
                 <>
                     <p>
-                        <b>Destination:</b> {data.destination}
+                        <b>Total:</b>   <span className="badge rounded-pill bg-text text-bg-light">{priceFormatter(data.total_rent - totalPaid)}</span>
                     </p>
-                    <p>
-                        <b>Rate:</b> {"₹" + parseInt(data.rate).toLocaleString("en-IN")}
-                    </p>
-                    <p>
-                        <b>Advance:</b> {"₹" + parseInt(data.advance).toLocaleString("en-IN")}
-                    </p>
-                    <p>
-                        <b>Pending amount:</b> {"₹" + parseInt(data.rate - data.advance).toLocaleString("en-IN")}
-                    </p>
-                    <p>
-                        <b>Date:</b> {formatDate(data.date)}
-                    </p>
+                  
                 </>
             );
-        } else if (window.innerWidth <= 959) {
-            return (
-                <>
-
-                    <p>
-                        <b>Rate:</b> {"₹" + parseInt(data.rate).toLocaleString("en-IN")}
-                    </p>
-                    <p>
-                        <b>Advance:</b> {"₹" + parseInt(data.advance).toLocaleString("en-IN")}
-                    </p>
-                    <p>
-                        <b>Pending amount:</b> {"₹" + parseInt(data.rate - data.advance).toLocaleString("en-IN")}
-                    </p>
-                    <p>
-                        <b>Date:</b> {formatDate(data.date)}
-                    </p>
-
-                </>
-            );
-        }
+        } 
     };
 
+    const sortBuyAmount = (transData) => {
+        transData.sort(function(a, b) {
+            let totalPaida = 0;
+            let totalPaidb = 0;
+            
+            if (a.rent_paid) {
+                let rent_paid = JSON.parse(a.rent_paid);
+                totalPaida = rent_paid.reduce((accumulator, object) => {
+                    return accumulator + parseInt(object.amount);
+                }, 0);
+            }
+            if (b.rent_paid) {
+                let rent_paid = JSON.parse(b.rent_paid);
+                totalPaidb = rent_paid.reduce((accumulator, object) => {
+                    return accumulator + parseInt(object.amount);
+                }, 0);
+            }
+          var keyA = makePositive(parseInt(a.total_rent)-parseInt(totalPaida)),
+            keyB = makePositive(parseInt(b.total_rent)-parseInt(totalPaidb));
+       
+          if (keyA > keyB) return -1;
+          if (keyA < keyB) return 1;
+          return 0;
+        });
+      }
     useEffect(() => {
         let tmp = partyList.filter((item) => item.id.toString() === transportRow.party_id);
-        console.log(tmp, 'partyFilter');
+    
         if (tmp.length) {
             setPartyDetails(tmp[0]);
         }
@@ -88,13 +89,14 @@ const TransportRent = (props) => {
             }
         }
 
+     
 
     }, [transportRow, partyList, transRentList])
 
     var onresize = function () {
         //your code here
         //this is just an example
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
+        if (window.innerWidth <= 599) {
             setisExpandable(true);
         } else {
             setisExpandable(false);
@@ -106,7 +108,7 @@ const TransportRent = (props) => {
         dispatch(getTransportRentList(userId));
 
 
-        if (window.innerWidth <= 599 || window.innerWidth <= 959) {
+        if (window.innerWidth <= 599) {
             setisExpandable(true);
         } else {
             setisExpandable(false);
@@ -129,8 +131,13 @@ const TransportRent = (props) => {
                 }
                 return false;
             });
+            sortBuyAmount(tmp);
+            console.log(tmp);
             setList([...tmp]);
         } else {
+           
+            sortBuyAmount(transRentList);
+             console.log(transRentList);
             setList([...transRentList]);
         }
         let total = 0;
@@ -204,7 +211,7 @@ const TransportRent = (props) => {
 
                 },
                 sortable: true,
-
+                hide:"sm"
             },
 
 
@@ -255,7 +262,7 @@ const TransportRent = (props) => {
                             data={transportRentList}
                             expandableRows={isExpandable}
                             expandableRowsComponent={ExpandedComponent}
-                            onSort={handleSort}
+                        
 
                         />
                     </div>

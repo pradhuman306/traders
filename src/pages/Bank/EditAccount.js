@@ -10,7 +10,7 @@ import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const EditAccount = (props) => {
-  console.log(props);
+
     const elementRef = useRef(null);
     const nav = useNavigate();
     const user_id = props.auth.userdata.id;
@@ -54,7 +54,7 @@ const EditAccount = (props) => {
                 values.id = dataList.id;
                 props.setBtnPending(true);
                 dispatch(updateAccount(values,elementRef,props.setBtnPending));
-                console.log(values);
+           
                 setSubmitting(false);
               }}
             >

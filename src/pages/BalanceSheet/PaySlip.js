@@ -43,7 +43,7 @@ const PaySlip = (props) => {
     setTotalPaidWithoutGST(totalPaidWithoutGST);
     setTotalPaidGST(toalPaid - totalPaidWithoutGST);
     setTotalPaidAmount(toalPaid);
-    console.log(props.rowData);
+  
     let isActiveValue = { main: true, gst: false };
     setIsActive(isActiveValue);
   }, [props.rowData]);
@@ -92,7 +92,7 @@ const PaySlip = (props) => {
               values.user_id = user_id;
               values.id = props.rowData.id;
               setBtnPending(true);
-              console.log(values);
+          
               dispatch(
                 payAmount(
                   values,

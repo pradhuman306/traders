@@ -29,8 +29,8 @@ const BalanceSheet = (props) => {
   const [totalGSTAmount, setTotalGSTAmount] = useState(0);
   const [totalPendingAmount, setTotalPendingAmount] = useState(0);
 
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection);
+ 
+  
   // data provides access to your row data
 
   const ExpandedComponent = ({ data }) => {
@@ -49,7 +49,7 @@ const BalanceSheet = (props) => {
   var onresize = function () {
     //your code here
     //this is just an example
-    if (window.innerWidth <= 599 || window.innerWidth <= 959) {
+    if (window.innerWidth <= 599) {
       setisExpandable(true);
     } else {
       setisExpandable(false);
@@ -59,13 +59,22 @@ const BalanceSheet = (props) => {
 
   useEffect(() => {
     dispatch(getParty(userId));
-    if (window.innerWidth <= 599 || window.innerWidth <= 959) {
+    if (window.innerWidth <= 599) {
       setisExpandable(true);
     } else {
       setisExpandable(false);
     }
   }, []);
-
+const sortBuyAmount = (partyData) => {
+  partyData.sort(function(a, b) {
+    var keyA = makePositive(a.finalpendingamount),
+      keyB = makePositive(b.finalpendingamount);
+    // Compare the 2 dates
+    if (keyA > keyB) return -1;
+    if (keyA < keyB) return 1;
+    return 0;
+  });
+}
   useEffect(() => {
     let sum = 0;
     let gstsum = 0;
@@ -80,10 +89,20 @@ const BalanceSheet = (props) => {
         }
         return false;
       });
+      sortBuyAmount(tmp);
       setList([...tmp]);
     } else {
+      sortBuyAmount(partyData);
       setList([...partyData]);
     }
+
+
+    
+ 
+
+
+
+
     sum = partyData.reduce((accumulator, object) => {
       return accumulator + object.finalamount;
     }, 0);
@@ -102,6 +121,8 @@ const BalanceSheet = (props) => {
     setFilter(value);
   };
 
+
+  
   // const hideColumns = () => {};
 
   const columns = useMemo(
@@ -125,7 +146,20 @@ const BalanceSheet = (props) => {
           );
         },
         sortable: true,
-        width: "50%",
+        width: "500px",
+      },
+
+      {
+        name: "Total Amount",
+        selector: (row) => makePositive(row.finalpendingamount),
+        cell: (row) => {
+     
+          return (
+            <span className={`badge rounded-pill bg-text ${parseInt(row.finalpendingamount)<0?" text-bg-success":" text-bg-danger"}`}>{(priceFormatter(makePositive(row.finalpendingamount)))}{parseInt(row.finalpendingamount)<0?" CR.":" DR."}</span>
+          );
+        },
+        sortable: true,
+        width: "200px",
       },
 
       {
@@ -262,6 +296,7 @@ const BalanceSheet = (props) => {
     []
   );
 
+
   return (
     <>
       <Header heading="Balance Sheet" {...props} />
@@ -272,14 +307,14 @@ const BalanceSheet = (props) => {
               <div className="amount-dtl">
                 <p className="total-am">
                   <span>Total Amount</span>
-                  <label className="badge rounded-pill bg-text text-bg-danger xl-text">
+                  <label className={`badge rounded-pill bg-text ${totalAmount < 0 ? " text-bg-success" : " text-bg-danger"} xl-text`}>
                     {priceFormatter(makePositive(parseInt(totalAmount))) +
                       `${totalAmount < 0 ? " CR." : " DR."}`}
                   </label>
                 </p>
                 <p className="total-am">
                   <span>Total GST Amount</span>
-                  <label className="badge rounded-pill bg-text text-bg-light xl-text">
+                  <label className={`badge rounded-pill bg-text ${totalGSTAmount < 0 ? " text-bg-success" : " text-bg-danger"}  xl-text`}>
                     ₹
                     {makePositive(parseInt(totalGSTAmount)).toLocaleString(
                       "en-IN"
@@ -345,7 +380,8 @@ const BalanceSheet = (props) => {
           paginationPerPage={8}
           expandableRows={isExpandable}
           expandableRowsComponent={ExpandedComponent}
-          onSort={handleSort}
+
+                      
         />
       </div>
     </>

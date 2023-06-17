@@ -46,7 +46,7 @@ function App() {
     dispatch({type:SET_LOADED});
   }, [message]);
 
-  console.log(auth);
+
 
   return (
     <>

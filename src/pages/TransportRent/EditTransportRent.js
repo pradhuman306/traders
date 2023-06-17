@@ -23,12 +23,12 @@ const EditTransportRent = (props) => {
   useEffect(() => {
     setdataList({ ...props.row_data });
     setValueParty({ label: titleCase(props.row_data.party_name), value: props.row_data.party });
-    console.log(props.row_data);
+  
   }, [props.row_id])
   useEffect(() => {
     let newPartyList = [];
     props.partyList.forEach(element => {
-      console.log(element);
+    
       newPartyList.push({ label: titleCase(element.name), value: element.id })
     });
     setNewListParty(newPartyList);
@@ -37,7 +37,7 @@ const EditTransportRent = (props) => {
   const handleSelectChange = (e, setFieldValue) => {
     setFieldValue('party', e.value);
     setValueParty(e);
-    console.log(e.value);
+   
   }
 
 

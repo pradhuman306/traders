@@ -11,7 +11,7 @@ import { UpdateProfile, getLogo, updateLogo } from '../actions/auth';
 
 
 const AccountInfo = (props) => {
-    console.log(props);
+
     const auth = useContext(authContext);
     const [img, setImg] = useState(props.profilePic);
     const dispatch = useDispatch();
@@ -71,7 +71,7 @@ const AccountInfo = (props) => {
                         delete values.logo;
                       }
                       dispatch(updateLogo(values, props.setBtnPending));
-                      console.log(values);
+                    
                       setSubmitting(false);
                     }}
                   >

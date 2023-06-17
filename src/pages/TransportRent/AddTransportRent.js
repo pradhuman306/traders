@@ -13,7 +13,7 @@ import { titleCase } from '../../actions/common';
 
 
 const AddTransportRent = (props) => {
-  console.log(props);
+
     const elementRef = useRef(null);
     const partyRef = useRef(null);
     const partyList = useSelector((state)=>state.balanceSheetReducer).partyList;
@@ -36,8 +36,9 @@ dispatch(getParty(user_id));
     },[partyList])
 
     useEffect(()=>{
-   
-      setValueParty({label:props.transportRow.party,value:props.transportRow.party_id});
+   if(props.transportRow.party){
+      setValueParty({label:titleCase(props.transportRow.party),value:props.transportRow.party_id});
+   }
   
     },[props.transportRow])
 
@@ -64,7 +65,7 @@ dispatch(getParty(user_id));
       <Formik
       enableReinitialize
               initialValues={{
-                party:props.transportRow.party_id,
+                party:props.transportRow.party_id?props.transportRow.party_id:"",
                 destination:"",
                 rate:"",
                 advance:"",

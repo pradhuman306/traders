@@ -71,7 +71,7 @@ export const deleteFirm = (payload) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}deletefirm/${payload.id}`)
     .then((res) => {
-        console.log(payload);
+   
         dispatch(getFirm(payload.user_id));
         dispatch({
             type: actionTypes.SUCCESS_MESSAGE,

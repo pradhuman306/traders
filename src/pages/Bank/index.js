@@ -23,8 +23,8 @@ const Bank = (props) => {
     const [accountListRow, setAccountRow] = useState({});
     const [id, setId] = useState("");
     const [isExpandable, setisExpandable] = useState(false);
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
+   
+   
     // data provides access to your row data
 
     useEffect(() => {
@@ -192,7 +192,7 @@ const Bank = (props) => {
                 pagination
                 paginationPerPage={8}
                 expandableRows={isExpandable}
-                onSort={handleSort}
+          
             />
         </div>
         </>

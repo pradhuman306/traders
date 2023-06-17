@@ -19,7 +19,7 @@ const EditAccountDetails = (props) => {
     useEffect(()=>{
       setdataList({...props.row_data});
   },[props.row_id])
-  console.log(dataList);
+
   return (
     <div
     className="modal fade"

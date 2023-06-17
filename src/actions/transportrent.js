@@ -73,7 +73,7 @@ export const updateTransportRent = (payload,elementRef,setBtnPending,transportRo
     .post(`${config.BASE_URL}updaterent`,payload)
     .then((res) => {
       setBtnPending(false);
-      console.log(transportRow);
+
         dispatch(getRentHistoryByParty(transportRow.party));
       dispatch(getTransportRentList(payload.user_id));
         dispatch({
@@ -96,7 +96,7 @@ export const deleteTransportRentList = (payload) => (dispatch) => {
     ajaxCall
     .post(`${config.BASE_URL}deleterent/${payload.id}`)
     .then((res) => {
-        console.log(payload);
+       
         dispatch(getRentHistoryByParty(payload.party_id));
         dispatch(getTransportRentList(payload.user_id));
         dispatch({

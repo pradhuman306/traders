@@ -41,8 +41,7 @@ const AccountDetails = (props) => {
   const [accType, setType] = useState("");
   const [remainAmount, setRemainAmount] = useState(0);
 
-  const handleSort = (column, sortDirection) =>
-    console.log(column.selector, sortDirection);
+
 
   useEffect(() => {
     dispatch(getAccountDetails({ user_id: userId, id: accountid }));
@@ -94,6 +93,9 @@ const AccountDetails = (props) => {
             ) : (
               ""
             )}
+          </p>
+          <p>
+            <b>Description:</b> {data.description}
           </p>
         </>
       );
@@ -177,7 +179,7 @@ const AccountDetails = (props) => {
             ""
           ),
         sortable: true,
-        hide: "md",
+        hide: "sm",
       },
 
       {
@@ -197,7 +199,7 @@ const AccountDetails = (props) => {
         name: "Description",
         selector: (row) => row.description,
         sortable: true,
-        hide: "sm",
+        hide: "md",
       },
       {
         name: "Actions",
@@ -390,7 +392,7 @@ const AccountDetails = (props) => {
         paginationPerPage={8}
         expandableRows={isExpandable}
         expandableRowsComponent={ExpandedComponent}
-        onSort={handleSort}
+       
       />
     </div>
   );

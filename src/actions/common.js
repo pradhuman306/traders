@@ -35,10 +35,10 @@ export const totalAmountCalculateRaw = (row) => {
 
   mainAmountAfterDebit = parseInt(row.amount) - parseInt(row.debit);
   if (parseInt(row.commission) / 100 == 0) {
-    console.log(mainAmountAfterDebit);
+
     return parseInt(mainAmountAfterDebit);
   } else {
-    console.log(parseInt((mainAmountAfterDebit) + parseInt([(mainAmountAfterDebit) * (parseInt(row.commission) / 100)])));
+  
     return parseInt((mainAmountAfterDebit) + parseInt([(mainAmountAfterDebit) * (parseInt(row.commission) / 100)]));
   }
 

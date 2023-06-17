@@ -50,8 +50,7 @@ const PartyHistory = (props) => {
     const [isDisplayDate, setDisplayDate] = useState(false);
     const [dateFromTo, setDateFromTo] = useState({ start: "", end: "" });
 
-    const handleSort = (column, sortDirection) =>
-        console.log(column.selector, sortDirection);
+  
     // data provides access to your row data
 
     useEffect(() => {
@@ -113,12 +112,9 @@ const PartyHistory = (props) => {
                 })
             }
         })
-        console.log((totalAmountWithoutGSTSell - totalAmountWithoutGSTBuy) - (totalPaidWithoutGSTSell - totalPaidWithoutGSTBuy));
-        console.log(totalAmountWithoutGSTSell);
-        console.log(totalAmountWithoutGSTBuy);
-        console.log(totalPaidWithoutGSTSell);
+     
         totalAmount = totalSellAmount - totalBuyAmount;
-        console.log(totalPaidWithoutGST);
+      
         setTotalPaidWithoutGST(totalPaidWithoutGST);
         setTotalPaidWithoutGSTSellDiffBuy(totalPaidWithoutGSTSell - totalPaidWithoutGSTBuy);
         setTotalPaidWithGST(totalPaid - totalPaidWithoutGST);
@@ -155,6 +151,40 @@ const PartyHistory = (props) => {
                         <b>GST amount:</b> <div className="user-detail xl-text sm-font"> {priceFormatter(parseInt(gstCalculate(totalAmountCalculateRaw(data), data.gst)))}<div className='bysellopt'> <span className='badge rounded-pill text-bg-primary'>{data.gst != "" ? data.gst : "0"}%</span></div> </div>
 
                     </p>
+
+                
+
+          {window.innerWidth <= 599  ? <p>
+            <span className="">
+                            {data.type === 'Sale' ? <><b>Debit: </b><span className='debit'>{priceFormatter(totalAmountCalculateRaw(data))}</span></> : ""}
+                        </span>
+                        <span className="">
+                            {data.type === 'Buy' ? <><b>Credit: </b><span className='credit'>{priceFormatter(totalAmountCalculateRaw(data))}</span></> : ""}
+                        </span>
+                        <ul className='action-replay with-fill'>
+                               <b>Invoice:  </b> <li>    <a
+                                    className='btn-sml'
+                                    onClick={() => setRowData(data)}
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#invoice"
+                                >
+                                    <svg className='no-fill' fill="rgb(143, 153, 179)" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M15,8a1,1,0,0,1-1,1H6A1,1,0,0,1,6,7h8A1,1,0,0,1,15,8Zm-1,3H6a1,1,0,0,0,0,2h8a1,1,0,0,0,0-2Zm-4,4H6a1,1,0,0,0,0,2h4a1,1,0,0,0,0-2Zm13-3v8a3,3,0,0,1-3,3H4a3,3,0,0,1-3-3V4A3,3,0,0,1,4,1H16a3,3,0,0,1,3,3v7h3A1,1,0,0,1,23,12ZM17,4a1,1,0,0,0-1-1H4A1,1,0,0,0,3,4V20a1,1,0,0,0,1,1H17Zm4,9H19v8h1a1,1,0,0,0,1-1Z" /></svg>
+                                </a></li>
+
+
+                            </ul>
+            
+          </p>:window.innerWidth <= 959 ? <p>
+          <span className="">
+                            {data.type === 'Sale' ? <><b>Debit: </b><span className='debit'>{priceFormatter(totalAmountCalculateRaw(data))}</span></> : ""}
+                        </span>
+                        <span className="">
+                            {data.type === 'Buy' ? <><b>Credit: </b><span className='credit'>{priceFormatter(totalAmountCalculateRaw(data))}</span></> : ""}
+                        </span>
+          </p>:""}
+
+          
+  
                     {data.paid ? <p>
                         <b>History</b>
                         <ul className='history-list'>
@@ -299,7 +329,7 @@ const PartyHistory = (props) => {
                 name: "Pending amount",
                 sortable: true,
                 width: "150px",
-                hide: "md",
+               
                 selector: (row) => {
                     let toalPaid = 0;
                     let totalAmount = totalAmountCalculateRaw(row) + gstCalculate(totalAmountCalculateRaw(row), row.gst);
@@ -324,7 +354,7 @@ const PartyHistory = (props) => {
                 name: "Pay",
                 sortable: true,
                 width: "150px",
-                hide: "md",
+               
                 selector: (row) => {
                     let toalPaid = 0;
                     let totalAmount = totalAmountCalculateRaw(row) + gstCalculate(totalAmountCalculateRaw(row), row.gst);
@@ -352,7 +382,7 @@ const PartyHistory = (props) => {
                 name: "Invoice",
                 sortable: true,
                 width: "150px",
-                hide: "md",
+                hide: "sm",
                 selector: (row) => {
                     return (
                         <>
@@ -402,8 +432,8 @@ const PartyHistory = (props) => {
                                 {!props.pendingData ? <>
                                     {/* <p className='total-am'><span>Total Debit Amount : </span><label className='badge rounded-pill bg-text text-bg-primary xl-text'>₹{parseInt(totalAmount).toLocaleString("en-IN")}</label></p> */}
 
-                                    <p className='total-am'><span>Total Amount  </span><label className='badge rounded-pill bg-text text-bg-danger xl-text'>{priceFormatter(makePositive(parseInt((totalWithoutGST) - (totalPaidWithoutGSTSellDiffBuy)))) + `${(parseInt(totalWithoutGST)) - (parseInt(totalPaidWithoutGSTSellDiffBuy)) < 0 ? " CR." : " DR."}`}</label></p>
-                                    <p className='total-am'><span>Total GST Amount  </span><label className='badge rounded-pill bg-text text-bg-primary xl-text'>₹{makePositive(parseInt((totalSellGST - totalBuyGST) - totalPaidWithGSTSellDIffBuy)).toLocaleString("en-IN") + `${(totalSellGST - totalBuyGST) - (totalPaidWithGSTSellDIffBuy) < 0 ? " CR." : " DR."}`}</label></p>
+                                    <p className='total-am'><span>Total Amount  </span><label className={`badge rounded-pill bg-text ${(parseInt(totalWithoutGST)) - (parseInt(totalPaidWithoutGSTSellDiffBuy)) < 0 ? " text-bg-success" : " text-bg-danger"} xl-text`}>{priceFormatter(makePositive(parseInt((totalWithoutGST) - (totalPaidWithoutGSTSellDiffBuy)))) + `${(parseInt(totalWithoutGST)) - (parseInt(totalPaidWithoutGSTSellDiffBuy)) < 0 ? " CR." : " DR."}`}</label></p>
+                                    <p className='total-am'><span>Total GST Amount  </span><label className={`badge rounded-pill bg-text ${(totalSellGST - totalBuyGST) - (totalPaidWithGSTSellDIffBuy) < 0 ? " text-bg-success" : " text-bg-danger"} xl-text`}>₹{makePositive(parseInt((totalSellGST - totalBuyGST) - totalPaidWithGSTSellDIffBuy)).toLocaleString("en-IN") + `${(totalSellGST - totalBuyGST) - (totalPaidWithGSTSellDIffBuy) < 0 ? " CR." : " DR."}`}</label></p>
 
                                     <p className='pending-am'><span>Total Pending Amount </span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{parseInt(totalAmount) < 0 ? priceFormatter(makePositive(makePositive(totalAmount))) + `${" CR."}` : priceFormatter(makePositive((makePositive(totalAmount)))) + `${(makePositive(totalAmount)) < 0 ? " CR." : " DR."}`}</label></p></> : ""}
                             </div>
@@ -507,7 +537,7 @@ m760 -27 c21 -47 239 -830 275 -983 20 -88 38 -162 40 -164 4 -4 16 38 49 181
                     expandableRows
                     expandableRowsComponent={ExpandedComponent}
                     expandableRowExpanded={row => row.defaultExpanded}
-                    onSort={handleSort}
+                   
 
 
                 />

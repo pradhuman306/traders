@@ -45,10 +45,10 @@ export const login = (loginDetails) => (dispatch) => {
         message,
       } = response.data;
       if (response.status == 200) {
-        console.log(response.data.token);
+   
         let date = new Date();
         date = new Date(date.setDate(date.getDate() + 7));
-        console.log("🚀 ~ file: auth.js ~ line 63 ~ .then ~ date", date);
+     
         localstorage.set("exp", btoa(date));
         localstorage.set("traders_token", btoa(token));
         localstorage.set("userdata", JSON.stringify(data));
@@ -179,7 +179,7 @@ export const getLogo = () => (dispatch) => {
     .get(`${config.BASE_URL}getsitelogo`)
     .then((response) => {
       if (response.status == 200) {
-        console.log(response.data);
+   
 
         dispatch({
           type: actionTypes.SET_LOGO,
