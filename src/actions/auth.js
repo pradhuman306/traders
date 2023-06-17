@@ -223,3 +223,28 @@ export const UpdatePassword = (payload,resetForm,setBtnPending) => (dispatch) =>
     });
 };
 
+
+
+
+export const getAllTotalData = (payload) => (dispatch) => {
+  api
+    .get(`${config.BASE_URL}getoveralldata/${payload.user_id}?year=${payload.year}`)
+    .then((res) => {
+      dispatch({
+        type: actionTypes.SET_TOTAL_DATA,
+        payload: res.data.data,
+      });
+ 
+    })
+    .catch((error) => {
+    if(error.response){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
+ 
+    });
+};
+
+
