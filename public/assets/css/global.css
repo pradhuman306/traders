@@ -64,6 +64,7 @@ a:focus {
 
 body {
   background: rgba(var(--themeColor));
+  background: #ddd;
   font-family: var(--baseFont);
   font-size: var(--baseFontsize);
   /* letter-spacing: -0.020em; */
@@ -660,7 +661,6 @@ input#letter_pad {
   }
 
   .btn {
-    min-height: 35px;
     padding: 5px 12px;
     min-width: 78px;
   }

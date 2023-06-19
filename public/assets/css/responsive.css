@@ -56,15 +56,6 @@
         justify-content: center;
         cursor: pointer;
         border-radius: 8px;
-        margin-left: 15px;
-    }
-
-    div#nav-icon {
-        width: 22px;
-        position: relative;
-        height: 16px;
-        display: block;
-        z-index: 92;
     }
 
     div#nav-icon span {
@@ -288,14 +279,13 @@
     .ts-rent .st-fixed {
         margin-top: 0;
     }
-
     .datatable-search {
-        width: 100%;
+        width: 60%;
     }
 
     .datatable-filter-wrap {
-        flex-wrap: wrap;
-        flex-direction: column-reverse;
+        /* flex-wrap: wrap;
+        flex-direction: column-reverse; */
         gap: 15px;
         align-items: self-start;
     }
@@ -340,9 +330,9 @@
         display: none;
     }
 
-    .firm-select {
+    /* .firm-select {
         padding-left: 15px;
-    }
+    } */
 
     .l-items {
         gap: 10px 15px;

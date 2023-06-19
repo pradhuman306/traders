@@ -39,7 +39,18 @@ export default function Header(props) {
           }}
         ></div>
         <div className="l-items">
-          <h2>{titleCase(props.heading)}</h2>
+        <div
+            className="sideToggle"
+            onClick={(e) => {
+              props.handleClick(e);
+            }}
+          >
+            <div id="nav-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" fill-rule="evenodd" d="M5.75 5.25h12.5a.75.75 0 1 1 0 1.5H5.75a.75.75 0 0 1 0-1.5zm0 6h12.5a.75.75 0 1 1 0 1.5H5.75a.75.75 0 1 1 0-1.5zm0 6h12.5a.75.75 0 1 1 0 1.5H5.75a.75.75 0 1 1 0-1.5z"></path></svg>
+            </div>
+          </div>
+          {/* {!props.firmListAll?<h2>{titleCase(props.heading)}</h2>:"Select "} */}
+          {!props.firmListAll?<h2>{titleCase(props.heading)}</h2>:<h4>Select Firm</h4>}
           {props.firmListAll?<div className="firm-select">
             <label htmlFor="firmSelect">Select Firm :</label>
             <Select
@@ -148,16 +159,6 @@ export default function Header(props) {
                   </li>
                 </ul>
               </div>
-            </div>
-          </div>
-          <div
-            className="sideToggle"
-            onClick={(e) => {
-              props.handleClick(e);
-            }}
-          >
-            <div id="nav-icon">
-              <span></span> <span></span> <span></span>
             </div>
           </div>
         </div>

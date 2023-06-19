@@ -608,7 +608,7 @@ const BuySell = (props) => {
                   data-bs-toggle="modal"
                   data-bs-target="#addbuysell"
                 >
-                  Add New{" "}
+                  <span>Add New</span>{" "}
                   {isActive.buy ? "Buy" : isActive.sell ? "Sell" : "Buy/Sell"}
                 </button>
               </li>
