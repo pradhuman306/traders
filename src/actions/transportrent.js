@@ -15,10 +15,18 @@ export const getTransportRentList = (payload) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -34,10 +42,18 @@ export const getRentHistoryByParty = (payload,param,datefromto) => (dispatch) =>
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -60,10 +76,18 @@ export const addTransportRent = (payload,elementRef,setBtnPending,resetForm,part
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -85,10 +109,18 @@ export const updateTransportRent = (payload,elementRef,setBtnPending,transportRo
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -105,10 +137,18 @@ export const deleteTransportRentList = (payload) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -134,9 +174,17 @@ export const payRentAmount = (payload, elementRef, setBtnPending, resetForm ,fil
   })
   .catch((error) => {
     setBtnPending(false);
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+  
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }

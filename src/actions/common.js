@@ -103,7 +103,12 @@ export const gstCalculateBuy = (amount, gst, row) => {
 }
 
 export const priceFormatter = (price) => {
-  return "₹" + parseInt(price).toLocaleString("en-IN");
+  if(price){
+    return "₹" + parseInt(price).toLocaleString("en-IN");
+  }else{
+    return "₹0";
+  }
+
 
 }
 export const makePositive = (amount) => {
@@ -117,6 +122,15 @@ export const makePositive = (amount) => {
 
 export const titleCase = (name) => {
   return name?.replace(/(^\w{1})|(\s+\w{1})/g, letter => letter.toUpperCase());
+}
+export const shortName = (name) => {
+  let newName = name.split(" ");
+  let firstC = newName[0][0];
+  let lastC = "";
+  if (newName[1]) {
+    lastC = newName[1][0].toUpperCase();
+  }
+  return firstC+lastC;
 }
 
 export const dataFormatCSV = (data,pname,param) => {

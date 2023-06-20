@@ -54,6 +54,7 @@ export const login = (loginDetails) => (dispatch) => {
         localstorage.set("userdata", JSON.stringify(data));
         dispatch(getLogo())
         dispatch(loginSuccess(actionTypes.USER_LOADED, response.data));
+    
         dispatch({
           type: actionTypes.SUCCESS_MESSAGE,
           payload: response.data.message,
@@ -63,13 +64,21 @@ export const login = (loginDetails) => (dispatch) => {
     .catch((error) => {
 
      
-      dispatch({
-        type: actionTypes.AUTH_ERROR,
-      });
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+   
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.AUTH_ERROR,
+        });
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 };
 
@@ -88,10 +97,18 @@ export const ResetEmailSend = (payload, nav, setBtnPending) => (dispatch) => {
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+      
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 };
 
@@ -110,10 +127,18 @@ export const ResetPassword = (payload,nav,setBtnPending) => (dispatch) => {
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 };
 
@@ -140,10 +165,18 @@ export const UpdateProfile = (payload,setBtnPending) => (dispatch) => {
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 };
 
@@ -167,10 +200,18 @@ export const updateLogo = (payload,setBtnPending) => (dispatch) => {
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 };
 
@@ -190,12 +231,19 @@ export const getLogo = () => (dispatch) => {
     }
     })
     .catch((error) => {
-    if(error.response){
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
-    }
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
+
  
     });
 };
@@ -216,10 +264,18 @@ export const UpdatePassword = (payload,resetForm,setBtnPending) => (dispatch) =>
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 };
 
@@ -238,10 +294,18 @@ export const getAllTotalData = (payload) => (dispatch) => {
     })
     .catch((error) => {
     if(error.response){
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     }
  
     });

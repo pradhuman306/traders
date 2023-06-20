@@ -77,10 +77,17 @@ export const getAllPartyHistory = (payload,param) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -99,10 +106,17 @@ export const addParty = (payload,elementRef,setBtnPending,resetForm) => (dispatc
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -121,10 +135,17 @@ export const updateParty = (payload,elementRef,setBtnPending) => (dispatch) => {
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -140,10 +161,17 @@ export const deleteParty = (payload) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -164,10 +192,17 @@ export const payAmount = (payload, elementRef, setBtnPending, resetForm, type, f
   })
   .catch((error) => {
     setBtnPending(false);
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }
 

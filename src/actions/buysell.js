@@ -38,10 +38,18 @@ export const getBuyList = (payload) => (dispatch) => {
       });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -65,10 +73,18 @@ export const addBuy = (payload,elementRef,setBtnPending,resetForm,isActive) => (
   })
   .catch((error) => {
     setBtnPending(false);
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+  
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }
 
@@ -92,10 +108,18 @@ export const updateBuy = (payload,elementRef,setBtnPending,isActive) => (dispatc
   })
   .catch((error) => {
     setBtnPending(false);
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+  
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }
 
@@ -119,10 +143,18 @@ export const addSell = (payload,elementRef,setBtnPending,resetForm,isActive) => 
   })
   .catch((error) => {
     setBtnPending(false);
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+  
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }
 
@@ -145,10 +177,18 @@ export const updateSell = (payload,elementRef,setBtnPending,isActive) => (dispat
   })
   .catch((error) => {
     setBtnPending(false);
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+  
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }
 
@@ -174,10 +214,18 @@ export const deleteBuySellList = (payload,isActive) => (dispatch) => {
         });
   })
   .catch((error) => {
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+  
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }
 
@@ -193,9 +241,17 @@ export const getSellList = (payload) => (dispatch) => {
     });
   })
   .catch((error) => {
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+  
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }

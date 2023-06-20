@@ -15,10 +15,17 @@ export const getAccountList = (payload) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -38,10 +45,17 @@ export const addAccount = (payload,elementRef,setBtnPending,resetForm) => (dispa
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -60,10 +74,17 @@ export const updateAccount = (payload,elementRef,setBtnPending) => (dispatch) =>
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -79,10 +100,17 @@ export const deleteAccount = (payload) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -100,10 +128,17 @@ export const getAccountDetails = (payload) => (dispatch) => {
     })
     .catch((error) => {
 
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -118,10 +153,17 @@ export const getAccountById = (payload) => (dispatch) => {
           });
     })
     .catch((error) => {
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -141,10 +183,17 @@ export const addAccountDetails = (payload,elementRef,setBtnPending,resetForm) =>
     })
     .catch((error) => {
       setBtnPending(false);
-      dispatch({
-        type: actionTypes.ERROR_MESSAGE,
-        payload: error.response.data.message,
-      });
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
     });
 }
 
@@ -164,10 +213,17 @@ export const updateAccountDetails = (payload,elementRef,setBtnPending) => (dispa
   })
   .catch((error) => {
     setBtnPending(false);
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }
 
@@ -184,9 +240,16 @@ export const deleteAccountDetails = (payload) => (dispatch) => {
         });
   })
   .catch((error) => {
-    dispatch({
-      type: actionTypes.ERROR_MESSAGE,
-      payload: error.response.data.message,
-    });
+    if(error.code == "ERR_NETWORK"){
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.message,
+      });
+    } else{
+      dispatch({
+        type: actionTypes.ERROR_MESSAGE,
+        payload: error.response.data.message,
+      });
+    }
   });
 }

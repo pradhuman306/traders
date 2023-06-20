@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { signout } from "../../actions/auth";
-import { titleCase } from "../../actions/common";
+import { shortName, titleCase } from "../../actions/common";
 import Select from "react-select";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -74,7 +74,7 @@ export default function Header(props) {
         <div className="r-items">
           <div className="account-info-wrapper">
             <div className="account-info">
-              <span>P</span>
+              <span>{shortName(titleCase(name))}</span>
             </div>
             <div className="drop-down">
               <div className="drop-down-body">

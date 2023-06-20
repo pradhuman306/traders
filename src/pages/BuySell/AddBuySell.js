@@ -104,9 +104,11 @@ const AddBuySell = (props) => {
         if (e == 'buy') {
             newActive.buy = true;
             newActive.sell = false;
-        } else {
+        } else if(e=='sell'){
             newActive.sell = true;
             newActive.buy = false;
+        }else {
+            newActive.urd = !newActive.urd;
         }
 
         setIsActive({ ...newActive });
@@ -123,7 +125,7 @@ const AddBuySell = (props) => {
             <div className="modal-dialog">
                 <div className="modal-content right-modal">
                 <Formik
-                
+                          
                             initialValues={{
                                 party: "",
                                 bill_no: "",
@@ -136,7 +138,6 @@ const AddBuySell = (props) => {
                                 item: "",
                                 weight: "",
                                 commission: "",
-                                URD: "",
                                 description: "",
                                 totalamount: 0,
                                 date: ""
@@ -164,7 +165,8 @@ const AddBuySell = (props) => {
                             onSubmit={(values, { setSubmitting, resetForm, setFieldValue }) => {
                                 props.setBtnPending(true);
                                 values.user_id = user_id;
-                              
+                                values.URD = isActive.urd;
+                                console.log(values);
                                 itemSelectRef.current.clearValue();
                                 partySelectRef.current.clearValue();
                                 godownSelectRef.current.clearValue();
@@ -218,9 +220,11 @@ const AddBuySell = (props) => {
                                                     <div className="form-check">
                                                         <Field
                                                             type="checkbox"
-                                                            name="URD"
+                                                            onClick={(e) => handleRadioChange("urd")}
+                                                            checked={isActive.urd}
                                                             className='form-check-input'
                                                             id="URD"
+                                                          
                                                         />
                                                         <label htmlFor='URD' className='form-check-label'>
                                                             <span>Unregisterd Dealer</span>
