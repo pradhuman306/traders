@@ -443,7 +443,7 @@ const PartyHistory = (props) => {
 
                     </div>
                 </div>
-                <div className="datatable-filter-wrap balance-filter-wrap">
+                <div className="datatable-filter-wrap investment-f-wrap balance-filter-wrap">
                     <div className="datatable-search">
                         <input
                             type="text"

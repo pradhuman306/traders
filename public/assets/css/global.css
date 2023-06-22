@@ -64,7 +64,6 @@ a:focus {
 
 body {
   background: rgba(var(--themeColor));
-  background: #ddd;
   font-family: var(--baseFont);
   font-size: var(--baseFontsize);
   /* letter-spacing: -0.020em; */
@@ -163,7 +162,8 @@ nav.sc-iIPllB.rdt_Pagination {
   transform: none;
 }
 
-.form-group label, .firm-select label {
+.form-group label,
+.firm-select label {
   font-size: 15px;
   font-weight: 600;
 }
@@ -652,6 +652,16 @@ input#letter_pad {
 .action-replay {
   display: flex;
   align-items: center;
+}
+
+.Toastify__toast-theme--colored {
+  border-radius: var(--radius) !important;
+}
+.Toastify__toast-theme--colored.Toastify__toast--success {
+  background: #28a745 !important;
+}
+.Toastify__toast-theme--colored.Toastify__toast--error {
+  background: #dc3545 !important;
 }
 
 

@@ -31,6 +31,31 @@
     .amount-dtl.justify-content-end.align-items-center {
         justify-content: space-between !important;
     }
+
+    .desktop-box-inr>div+div {
+        width: 40%;
+    }
+
+    .desktop-box-inr>div {
+        max-width: 60%;
+    }
+
+    .desktop-box-inr h3 {
+        font-size: 24px;
+    }
+
+    .desktop-box-inr p {
+        font-size: 14px;
+    }
+
+    .desktop-wrap-left .desktop-box {
+        max-width: calc(50% - 12px);
+        flex: 0 0 calc(50% - 12px);
+    }
+
+    .graph-wrap .col-lg-6.col-md-12 {
+        width: 100%;
+    }
 }
 
 @media(max-width:1190px) {
@@ -279,14 +304,17 @@
     .ts-rent .st-fixed {
         margin-top: 0;
     }
+
     .datatable-search {
-        width: 60%;
+        width: 55%;
+    }
+
+    .balance-filter-wrap .datatable-search {
+        width: 82%;
     }
 
     .datatable-filter-wrap {
-        /* flex-wrap: wrap;
-        flex-direction: column-reverse; */
-        gap: 15px;
+        gap: 10px;
         align-items: self-start;
     }
 
@@ -330,10 +358,6 @@
         display: none;
     }
 
-    /* .firm-select {
-        padding-left: 15px;
-    } */
-
     .l-items {
         gap: 10px 15px;
     }
@@ -341,4 +365,61 @@
     div#firmSelect {
         min-width: 135px;
     }
+
+    .desktop-box-inr h3 {
+        font-size: 20px;
+    }
+
+    .year-filter h1 {
+        font-size: 22px;
+    }
+    .investment-f-wrap .datatable-search {
+        width: 100%;
+    }
+    .investment-f-wrap {
+        flex-wrap: wrap;
+    }
+}
+
+@media(max-width:620px) {
+    .desktop-wrap-left .desktop-box {
+        max-width: calc(100% - 0px);
+        flex: 0 0 calc(100% - 0px);
+        padding: 20px;
+    }
+
+    .desktop-box {
+        padding: 20px;
+    }
+
+    .box-icon svg {
+        max-width: 40px;
+    }
+
+    .desktop-wrap {
+        margin: 20px 0;
+    }
+
+    .desktop-wrap-left {
+        gap: 15px;
+    }
+
+    body .st-fixed .sc-jqUVSM.rdt_TableRow div+div {
+        flex-grow: 1;
+        justify-content: left;
+    }
+
+    .transporent-f-wrap .datatable-search {
+        width: 100%;
+    }
+    .select-filter {
+        justify-content: space-between;
+        width: 100%;
+    }
+    .datatable-filter-wrap.transporent-f-wrap {
+        flex-wrap: wrap;
+    }
+    
+    
+
 }

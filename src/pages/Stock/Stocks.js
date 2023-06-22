@@ -31,7 +31,7 @@ const Stocks = (props) => {
       return (
         <>
           <p>
-            <b>Total:</b>   {priceFormatter(data.total)}
+            <b>Total:</b> {priceFormatter(data.total)}
           </p>
         </>
       );
@@ -114,7 +114,7 @@ const Stocks = (props) => {
           </span>
         ),
         sortable: true,
-        hide:"sm"
+        hide: "sm",
       },
     ],
     [godownListRow]
@@ -127,8 +127,8 @@ const Stocks = (props) => {
         <div className="usermanagement-main">
           <div className="extra-stuff">
             <div className="amount-dtl stock-am-dtl justify-content-end">
-              <ul className="st-dtl">
-                {allItems.map((item,i) => (
+              <ul className="st-dtl d-none">
+                {allItems.map((item, i) => (
                   <li key={i}>
                     <span>{titleCase(item.name)}</span>
                     <span>{item.weight}qt</span>
@@ -140,8 +140,7 @@ const Stocks = (props) => {
                 {" "}
                 <span>Total</span>
                 <label className="badge rounded-pill bg-text text-bg-danger xl-text">
-              
-                  {totalAmount != ''?priceFormatter(totalAmount):"0"}{" "}
+                  {totalAmount != "" ? priceFormatter(totalAmount) : "0"}{" "}
                 </label>{" "}
               </p>
             </div>

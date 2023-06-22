@@ -263,7 +263,7 @@ window.addEventListener("resize", onresize);
       <div className="body-content">
         <div className="mr-minus">
         <div className="usermanagement-main">
-          <div className="datatable-filter-wrap mb-0">
+          <div className="datatable-filter-wrap investment-f-wrap mb-0">
             <div className="datatable-search">
               <input
                 type="text"

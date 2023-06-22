@@ -411,11 +411,11 @@ const TransportDetails = (props) => {
 
                     </div>
                     : ""}
-                {props.transportRow.party ? <div><div className="datatable-filter-wrap">
+                {props.transportRow.party ? <div><div className="datatable-filter-wrap  transporent-f-wrap">
                     <div className="datatable-search">
                         <input
                             type="text"
-                            placeholder="Search transport details..."
+                            placeholder="Search transport..."
                             className="form-control"
                             onChange={(e) => hanndleSearch(e.target.value)}
                         />
