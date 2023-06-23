@@ -379,6 +379,10 @@
     .investment-f-wrap {
         flex-wrap: wrap;
     }
+    .form-header h1 {
+        font-size: 22px;
+        line-height: 37px;
+    }
 }
 
 @media(max-width:620px) {

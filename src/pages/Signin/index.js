@@ -37,7 +37,7 @@ const Signin = (props) => {
       <section className="login-main">
         <div className="login-main-wrapper">
           <div className="column">
-            <div className="c-card  after-layer before-layer">
+            <div className="c-card after-layer before-layer">
               <div className="c-card-wrap">
                 <div className="form-header">
                   <img src="/assets/images/icon.svg" alt="" className="image" />
