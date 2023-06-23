@@ -100,7 +100,7 @@ const AddAccount = (props) => {
             <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="btn btn-primary m-auto"
+                          className="btn btn-primary m-auto d-flex justify-content-center align-items-center"
                         >
                         {props.btnPending?<ButtonLoader/>:"Add"}
                         </button>

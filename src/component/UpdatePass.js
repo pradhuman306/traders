@@ -123,7 +123,7 @@ const UpdatePass = (props) => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="btn btn-primary"
+                    className="btn btn-primary d-flex justify-content-center align-items-center"
                   >
                     {props.btnPending ? <ButtonLoader /> : "Update"}
                   </button>
