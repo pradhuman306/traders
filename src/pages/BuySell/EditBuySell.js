@@ -8,7 +8,7 @@ import { getParty } from "../../actions/balancesheet";
 import { useRef } from "react";
 import ButtonLoader from "../Customloader/ButtonLoader";
 import { updateBuy, updateSell } from "../../actions/buysell";
-import { titleCase } from "../../actions/common";
+import { handleLangChange, onvalChange, titleCase } from "../../actions/common";
 
 const EditBuySell = (props) => {
   const elementRef = useRef(null);
@@ -27,6 +27,9 @@ const EditBuySell = (props) => {
   const [godown, setGoDownList] = useState([]);
   const [firm, setFirmList] = useState([]);
   const [godownValue, setGodownValue] = useState({});
+  const [isHindi,setHindi]=useState(false);
+  const [descPlaceHolder, setDescPlaceHolder] = useState("Please enter description");
+
   const handleSelectChangeItem = (e, setFieldValue) => {
     setFieldValue("item", e.value);
     setValueItem(e);
@@ -217,7 +220,7 @@ const EditBuySell = (props) => {
                 <Form action="" id="newcustomer">
                   <div className="modal-head">
                     <h4>Edit Entry</h4>
-
+                    
                     <a
                       onClick={(e) => e.preventDefault()}
                       type="button"
@@ -266,7 +269,7 @@ const EditBuySell = (props) => {
                                 name="URD1"
                                 className="form-check-input"
                                 id="URD1"
-                                onClick={(e) =>
+                                onChange={(e) =>
                                   handleChangeCheck(e, setFieldValue)
                                 }
                                 checked={checkedURD}
@@ -614,7 +617,11 @@ const EditBuySell = (props) => {
                       <div className="row">
                         <div className="col-md-12">
                           <div className="form-group">
-                            <label>Description</label>
+                          <label className='d-flex align-items-center justify-content-between mt-3'>
+                                                        Description
+                                                        <div className="form-check">
+                                                        <input type="checkbox" className="form-check-input" onChange={(e) => handleLangChange(e,setHindi,setDescPlaceHolder)} id="langEdit" /><label htmlFor="langEdit" className="form-check-label"><span>In hindi</span></label></div>
+                                                    </label>
 
                             <Field
                               as="textarea"
@@ -622,6 +629,10 @@ const EditBuySell = (props) => {
                               className={`form-control ${
                                 values.description ? "filled" : ""
                               }`}
+                              placeholder={descPlaceHolder}
+
+                              onChange={(e)=>onvalChange(e,'description',setFieldValue,false,isHindi)}
+                              onBlur={(e)=>onvalChange(e,'description',setFieldValue,true,isHindi)}
                             />
                           </div>
                         </div>

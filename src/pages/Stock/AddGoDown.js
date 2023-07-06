@@ -4,7 +4,6 @@ import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { addAccount } from '../../actions/accounts';
 import { addGoDown } from '../../actions/godown';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
@@ -13,6 +12,8 @@ const AddGoDown = (props) => {
     const elementRef = useRef(null);
     const nav = useNavigate();
     const user_id = props.auth.userdata.id;
+
+
     const dispatch = useDispatch();
     const [error, setError] = useState({});
   return (
@@ -47,10 +48,11 @@ const AddGoDown = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({ values, isSubmitting, dirty, handleReset, touched,setFieldValue }) => (
                 <Form action="" id="newcustomer">
         <div className="modal-head">
           <h4>Add Godown</h4>
+         
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -85,6 +87,7 @@ const AddGoDown = (props) => {
                               ? "filled"
                               : ""
                             }`}
+                     
                           />
                           <ErrorMessage
                             className="error"
@@ -111,6 +114,7 @@ const AddGoDown = (props) => {
                               ? "filled"
                               : ""
                             }`}
+         
                           />
                           <ErrorMessage
                             className="error"

@@ -158,7 +158,7 @@ const AccountDetails = (props) => {
     setRemainAmount(totalCredit - totalDebit);
   };
 
-  // const hideColumns = () => {};
+ 
 
   const columns = useMemo(
     () => [

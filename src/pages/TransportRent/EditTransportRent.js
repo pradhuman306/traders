@@ -8,7 +8,7 @@ import Select from 'react-select';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
 import { useNavigate } from 'react-router-dom';
-import { titleCase } from '../../actions/common';
+import { handleLangChange, onvalChange, titleCase } from '../../actions/common';
 
 
 const EditTransportRent = (props) => {
@@ -20,6 +20,8 @@ const EditTransportRent = (props) => {
   const [newListParty, setNewListParty] = useState([]);
   const [valueParty, setValueParty] = useState({});
   const [error, setError] = useState({});
+  const [isHindi,setHindi]=useState(false);
+  const [descPlaceHolder, setDescPlaceHolder] = useState("Please enter description");
   useEffect(() => {
     setdataList({ ...props.row_data });
     setValueParty({ label: titleCase(props.row_data.party_name), value: props.row_data.party });
@@ -95,6 +97,7 @@ const EditTransportRent = (props) => {
                 <Form action="" id="newcustomer">
           <div className="modal-head">
             <h4>Edit Transport</h4>
+          
             <a
               onClick={(e) => e.preventDefault()}
               type="button"
@@ -160,6 +163,7 @@ const EditTransportRent = (props) => {
                                 ? "filled"
                                 : ""
                               }`}
+                            
                           />
                           <ErrorMessage
                             className="error"
@@ -282,9 +286,11 @@ const EditTransportRent = (props) => {
                       </div>
                       <div className="col-md-12">
                         <div className="form-group mb-4">
-                          <label>
-                            Description
-                          </label>
+                        <label className='d-flex align-items-center justify-content-between mt-3'>
+                                                        Description
+                                                        <div className="form-check">
+                                                        <input type="checkbox" className="form-check-input" onChange={(e) => handleLangChange(e,setHindi,setDescPlaceHolder)} id="langEdit" /><label htmlFor="langEdit" className="form-check-label"><span>In hindi</span></label></div>
+                                                    </label>
 
                           <Field
                             as="textarea"
@@ -293,6 +299,9 @@ const EditTransportRent = (props) => {
                               ? "filled"
                               : ""
                             }`}
+                            placeholder={descPlaceHolder}
+                            onChange={(e) => onvalChange(e, 'description', setFieldValue, false, isHindi)}
+                            onBlur={(e) => onvalChange(e, 'description', setFieldValue, true, isHindi)}
                           />
                         </div>
                       </div>

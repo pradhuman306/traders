@@ -55,13 +55,13 @@ const Items = (props) => {
         setFilter(value);
     };
 
-    // const hideColumns = () => {};
+  
 
     const columns = useMemo(
         () => [
           
           {
-            name: "Item",
+            name: "Items",
             selector: (row) => {
                 let newName = row.item.split(" ");
                 let firstC = newName[0][0];
@@ -74,6 +74,25 @@ const Items = (props) => {
                     <div className="user-wrap">
                         <div className="user-detail">{titleCase(row.item)}</div>
                     </div>
+                 
+                );
+            },
+            sortable: true,
+         
+        },
+
+        {
+            name: "Icon",
+            selector: (row) => {
+           
+                return (
+         
+
+                    <div className="logo-wrapper">
+                      {row.image && <img className="preview-img" src={row.image} alt="" />}
+                      </div>
+                 
+                 
                  
                 );
             },

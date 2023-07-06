@@ -31,7 +31,7 @@ const TransportRent = (props) => {
         dispatch(setEmptyTransDetails());
     }, [])
     const ExpandedComponent = ({ data }) => {
-        // window.innerWidth <= 599 ? <></> : "";
+    
         if (window.innerWidth <= 599) {
             let totalPaid = 0;
             if (data.rent_paid) {
@@ -132,12 +132,12 @@ const TransportRent = (props) => {
                 return false;
             });
             sortBuyAmount(tmp);
-            console.log(tmp);
+      
             setList([...tmp]);
         } else {
            
             sortBuyAmount(transRentList);
-             console.log(transRentList);
+       
             setList([...transRentList]);
         }
         let total = 0;
@@ -161,7 +161,7 @@ const TransportRent = (props) => {
         setFilter(value);
     };
 
-    // const hideColumns = () => {};
+
 
     const columns = useMemo(
         () => [

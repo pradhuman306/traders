@@ -14,6 +14,8 @@ const EditParty = (props) => {
   const [dataList, setdataList] = useState(props.row_data);
   const [error, setError] = useState({});
   const [btnPending, setBtnPending] = useState(false);
+
+
   useEffect(() => {
     setdataList({ ...props.row_data });
   }, [props.row_data])
@@ -55,10 +57,11 @@ const EditParty = (props) => {
                   setSubmitting(false);
                 }}
               >
-                {({ values, isSubmitting, dirty, handleReset, touched }) => (
+                {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                   <Form action="" id="newcustomer">
           <div className="modal-head">
             <h4>Edit Party</h4>
+   
             <a
               onClick={(e) => e.preventDefault()}
               type="button"
@@ -92,6 +95,8 @@ const EditParty = (props) => {
                                   ? "filled"
                                   : ""
                                 }`}
+                                
+                 
                             />
                             <ErrorMessage
                               className="error"

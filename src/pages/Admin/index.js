@@ -552,12 +552,12 @@ function Admin(props) {
                   <div className="desktop-box balance-box">
                     <div className="desktop-box-inr">
                       <div>
-                        <p>Total balance amount</p>
+                        <p>Total GST amount</p>
                         <h3>
                           {priceFormatter(
-                            makePositive(totalData.balance_amount)
+                            makePositive(totalData.finalgstamount)
                           )}
-                          {totalData.balance_amount > 0 ? " Dr." : " Cr."}
+                          {totalData.finalgstamount > 0 ? " Dr." : " Cr."}
                         </h3>
                       </div>
                       <div className="box-icon">

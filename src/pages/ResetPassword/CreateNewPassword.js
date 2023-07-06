@@ -39,7 +39,7 @@ function CreateNewPassword(props) {
                       values.password != values.password_confirmation
                     ) {
                       errors.password_confirmation = "Password does not match!";
-                      // errors.password = "Password does not match ";
+                    
                     }
                     setError({...errors})
                     return errors;

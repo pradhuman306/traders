@@ -54,7 +54,7 @@ const BuySell = (props) => {
   const [isExpandable, setisExpandable] = useState(false);
 
   const ExpandedComponent = ({ data }) => {
-    // window.innerWidth <= 599 ? <></> : "";
+
     if (window.innerWidth <= 599) {
       return (
         <>
@@ -280,7 +280,7 @@ const BuySell = (props) => {
     setFirmValue(e);
   };
 
-  // const hideColumns = () => {};
+
 
   const columns = useMemo(
     () => [
@@ -336,6 +336,13 @@ const BuySell = (props) => {
         hide: "sm",
       },
       {
+        name: "Weight",
+        selector: (row) => row.weight+"qt",
+        sortable: true,
+        hide: "sm",
+        width: "100px",
+      },
+      {
         name: "Bill no.",
         selector: (row) => row.bill_no,
         sortable: true,
@@ -369,13 +376,13 @@ const BuySell = (props) => {
         sortable: true,
         hide: "md",
       },
-      {
-        name: "GST",
-        selector: (row) => (row.gst ? row.gst + "%" : ""),
-        sortable: true,
-        width: "80px",
-        hide: "md",
-      },
+      // {
+      //   name: "GST",
+      //   selector: (row) => (row.gst ? row.gst + "%" : ""),
+      //   sortable: true,
+      //   width: "80px",
+      //   hide: "md",
+      // },
       {
         name: "Total",
         selector: (row) => {
@@ -525,6 +532,7 @@ const BuySell = (props) => {
         firmListAll={firmListAll}
         firmValue={firmValue}
         
+        
         {...props}
       />
       <div className="usermanagement-main">
@@ -623,6 +631,7 @@ const BuySell = (props) => {
         {...props}
         isActive={isActive}
         partyList={partyList}
+        firmValue={firmValue}
       />
       <EditBuySell
         firmListAll={firmListAll}

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { onvalChange } from '../../actions/common';
 import { updateItems } from '../../actions/items';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
@@ -16,9 +17,19 @@ const EditItems = (props) => {
   const dispatch = useDispatch();
   const [dataList, setdataList] = useState(props.row_data);
   const [error, setError] = useState({});
+  const [imgEdit, setImgEdit] = useState("");
+
+
+  const handleChangeEdit = (e, setFieldValue) => {
+    setFieldValue("image", e.currentTarget.files[0]);
+    setImgEdit(URL.createObjectURL(e.currentTarget.files[0]));
+    
+  }
+
   useEffect(() => {
     setdataList({ ...props.row_data });
-
+    setImgEdit(props.row_data.image);
+    
   }, [props.row_id])
   return (
     <div
@@ -36,7 +47,8 @@ const EditItems = (props) => {
               <Formik
                   enableReinitialize
                   initialValues={{
-                    item: dataList.item
+                    item: dataList.item,
+                    image:""
 
                   }}
                   validate={(values) => {
@@ -48,6 +60,10 @@ const EditItems = (props) => {
                     return errors;
                   }}
                   onSubmit={(values, { setSubmitting, resetForm }) => {
+                    if (!values.image) {
+                      values.old_image = dataList.image;
+                      delete values.image;
+                    }
                     values.user_id = user_id;
                     values.id = dataList.id;
                     props.setBtnPending(true);
@@ -56,10 +72,11 @@ const EditItems = (props) => {
                     setSubmitting(false);
                   }}
                 >
-                  {({ values, isSubmitting, dirty, handleReset, touched }) => (
+                  {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                     <Form action="" id="newcustomer">
               <div className="modal-head">
                 <h4>Edit Item</h4>
+              
                 <a
                   onClick={(e) => e.preventDefault()}
                   type="button"
@@ -92,6 +109,7 @@ const EditItems = (props) => {
                                     ? "filled"
                                     : ""
                                   }`}
+                             
                               />
                               <ErrorMessage
                                 className="error"
@@ -101,6 +119,47 @@ const EditItems = (props) => {
                             </div>
                           </div>
 
+                            <div className='form-group mb-4'>
+                          
+                          <label>
+                            
+                            Icon 
+                            </label>
+                            <div className='row'>
+                          <div className="col-sm-9">
+                                  <div
+                                    className="image-input"
+                                    data-toggle="tooltip"
+                                    data-placement="top"
+                                    data-bs-original-title="Upload image"
+                                  >
+                                    <input
+                                      type="file"
+                                      name="letter_pad1"
+                                      id="letter_pad1"
+                                      className=""
+                                      placeholder="Enter letter_pad1"
+                                      onChange={(e) => handleChangeEdit(e, setFieldValue)}
+                                    />
+                                    <input
+                                      type="hidden"
+                                      name="old_letter_pad1"
+                                      id="old_letter_pad1"
+                                      value=""
+                                    />
+                                    <label htmlFor="letter_pad1" className="image-button">
+                                      <img src="/assets/images/icon-image.svg" alt="" />
+                                      {"Upload Icon"}
+                                    </label>
+                                  </div>
+                                </div>
+                                <div className="col-sm-3">
+                                  <div className="logo-wrapper">
+                                    {imgEdit && <img className="preview-img" src={imgEdit} alt="" />}
+                                  </div>
+                                </div>
+                                </div>
+                                </div>
                         </div>
 
 

@@ -8,7 +8,7 @@ import {  addAccountDetails } from '../../actions/accounts';
 import Select from 'react-select';
 import { addStockDetails } from '../../actions/godown';
 import ButtonLoader from '../Customloader/ButtonLoader';
-import { titleCase } from '../../actions/common';
+import { formatDate, titleCase } from '../../actions/common';
 
 
 const AddStockDetails = (props) => {
@@ -68,6 +68,8 @@ const AddStockDetails = (props) => {
     useEffect(()=>{
    if(props.godownList.name){
     setValueGodown({label:titleCase(props.godownList.name),value:props.godownList.id});
+   }else{
+    setValueGodown("");
    }
 
   
@@ -82,17 +84,17 @@ const AddStockDetails = (props) => {
   >
     <div className="modal-dialog">
       <div className="modal-content right-modal">
-      <Formik
+  
+ {props.godownList.id && props.stockid ? <Formik
                 enableReinitialize
               initialValues={{
-                // firm:"",
-                godown:props.godownList.id?props.godownList.id:"",
+                godown:props.godownList.id || "",
                 item:"",
                 quantity:"",
                 weight:"",
                 vehicle_no:"",
                 rate:"",
-                date:""
+                date:formatDate(new Date(),'yyyy-mm-dd'),
              
               }}
               validate={(values) => {
@@ -101,11 +103,18 @@ const AddStockDetails = (props) => {
                   errors.item = "Please select item!"
                  }
                 if(!values.date){
-                  errors.date = "Please enter date!"
+                  errors.date = "Please select date!"
                  }
                  if(!values.godown){
                   errors.godown = "Please select godown!"
                  }
+                 if(!values.weight){
+                  errors.weight = "Please enter weight!"
+                 }
+                //  if(!values.rate){
+                //   errors.rate = "Please enter rate!"
+                //  }
+           
            
                 setError({ ...errors });
                 return errors;
@@ -123,6 +132,8 @@ const AddStockDetails = (props) => {
                 <Form action="" id="newcustomer">
         <div className="modal-head">
           <h4>Add Stock</h4>
+   
+
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -139,12 +150,11 @@ const AddStockDetails = (props) => {
                   <div className="form-fields-wrap">
                  
                     <div className="row">
-                     
-                    <div className="col-md-6">
+                     <div className="col-md-6">
                       <div className="form-group mb-4">
                           <label>
                             
-                          GoDown
+                          GoDown <span className="error-badge">*</span>
                           </label>
                           <Select 
                             className={`${
@@ -180,11 +190,12 @@ const AddStockDetails = (props) => {
                        
                         </div>
                       </div>
+                    
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
                             
-                          Item
+                          Item <span className="error-badge">*</span>
                           </label>
                           <Select 
                             className={`${
@@ -219,95 +230,61 @@ const AddStockDetails = (props) => {
                        
                         </div>
                       </div>
-                      {/* <div className="col-md-6">
-                      <div className="form-group mb-4">
-                          <label>
-                            
-                          Firm
-                          </label>
-                          <Select 
-                            className={`${
-                              touched.firm && error.firm
-                                ? "input-error"
-                                : ""
-                            }`} 
-                            options={newListFirm} 
-                            isSearchable={true}
-                            ref={firmRef}
-                            name="firm" 
-                            onChange={(e)=>handleSelectChangeFirm(e,setFieldValue)}
-                            theme={(theme) => ({
-                              ...theme,
-                              borderRadius: 8,
-                              colors: {
-                                ...theme.colors,
-                                primary25: 'rgb(0 120 219 / 10%);',
-                                primary: '#0078db',
-                              },
-                            })}
-                            />
-                          
-                          <ErrorMessage
-                            className="error"
-                            name="item"
-                            component="span"
-                          />
-                       
-                        </div>
-                      </div> */}
+                    
 
                     
                    
+                  
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
                             
-                          Quantity
-                          </label>
-                          <Field
-                            type="number"
-                            name="quantity"
-                            className={`form-control ${values.quantity
-                              ? "filled"
-                              : ""
-                            }`}
-                          />
-                     
-                        </div>
-                      </div>
-                      <div className="col-md-6">
-                        <div className="form-group mb-4">
-                          <label>
-                            
-                          Weight <span className='badge bg-secondary'>in quintal</span>
+                          Weight <span className='badge bg-secondary'>in quintal</span> <span className="error-badge">*</span>
                           </label>
                           <Field
                             type="number"
                             name="weight"
-                            className={`form-control ${values.weight
+                            className={`form-control ${
+                              touched.weight && error.weight
+                                ? "input-error"
+                                : ""
+                            } ${values.weight
                               ? "filled"
                               : ""
                             }`}
                           />
-                     
+                       
+                       <ErrorMessage
+                            className="error"
+                            name="weight"
+                            component="span"
+                          />
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="form-group mb-4">
                           <label>
                             
-                          Rate
+                          Rate 
                           </label>
                           <Field
                             type="number"
                             name="rate"
-                            className={`form-control ${values.rate
+                            className={`form-control ${
+                              touched.rate && error.rate
+                                ? "input-error"
+                                : ""
+                            } ${values.rate
                               ? "filled"
                               : ""
                             }`}
                             placeholder="₹"
                           />
-                     
+                        {/* <ErrorMessage
+                            className="error"
+                            name="rate"
+                            component="span"
+                          /> */}
                         </div>
                       </div>
                       <div className="col-md-6">
@@ -390,7 +367,8 @@ const AddStockDetails = (props) => {
             
             </Form>
               )}
-            </Formik>
+            </Formik>:""}
+      
         </div>
       </div>
     </div>

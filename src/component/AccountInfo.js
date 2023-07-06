@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { UpdateProfile, getLogo, updateLogo } from '../actions/auth';
+import { onvalChange } from '../actions/common';
 
 
 
@@ -16,6 +17,8 @@ const AccountInfo = (props) => {
     const [img, setImg] = useState(props.profilePic);
     const dispatch = useDispatch();
     const [error, setError] = useState({});
+    const [isHindi,setHindi]=useState(false);
+
     var { name, mobile, email, id } =
     auth && auth.userdata ? auth.userdata : undefined;
 
@@ -78,6 +81,7 @@ const AccountInfo = (props) => {
                     {({ isSubmitting, dirty, handleReset, touched, setFieldValue, values }) => (
                       <Form action="" id="profile-form">
                         <div className='nav card'>
+                      
                         <div className="row">
                           <div className="col-md-6 col-sm-6">
                             <div className="form-group mb-3">
@@ -90,6 +94,7 @@ const AccountInfo = (props) => {
                                   : ""
                                   }`}
                                 placeholder="Enter your name"
+                              
                               />
                               <ErrorMessage
                                 className="error"

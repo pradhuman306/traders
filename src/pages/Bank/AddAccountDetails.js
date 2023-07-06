@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addAccountDetails } from '../../actions/accounts';
+import { formatDate, handleLangChange, onvalChange } from '../../actions/common';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
@@ -13,6 +14,10 @@ const AddAccountDetails = (props) => {
     const accountid = props.accountid;
     const dispatch = useDispatch();
     const [error, setError] = useState({});
+  const [isHindi,setHindi]=useState(false);
+  const [descPlaceHolder, setDescPlaceHolder] = useState("Please enter description");
+
+
   return (
     <div
     className="modal fade"
@@ -25,7 +30,7 @@ const AddAccountDetails = (props) => {
       <div className="modal-content">
       <Formik
               initialValues={{
-                date:"",
+                date:formatDate(new Date(),'yyyy-mm-dd'),
                 amount:"",
                 credit:"",
                 debit:"",
@@ -55,10 +60,11 @@ const AddAccountDetails = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({  isSubmitting, touched, values }) => (
+              {({  isSubmitting, touched, values, setFieldValue }) => (
                 <Form action="" id="newcustomer">
         <div className="modal-head">
           <h4>{props.accType}</h4>
+ 
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -130,10 +136,11 @@ const AddAccountDetails = (props) => {
                       </div>
                       <div className="col-md-12">
                         <div className="form-group">
-                          <label>
-                            
-                          Description
-                          </label>
+                        <label className='d-flex align-items-center justify-content-between'>
+                                                        Description
+                                                        <div className="form-check">
+                                                        <input type="checkbox" className="form-check-input" onChange={(e) => handleLangChange(e,setHindi,setDescPlaceHolder)} id="lang" /><label htmlFor="lang" className="form-check-label"><span>In hindi</span></label></div>
+                                                    </label>
                           <Field
                             as="textarea"
                             name="description"
@@ -141,6 +148,9 @@ const AddAccountDetails = (props) => {
                               ? "description"
                               : ""
                             }`}
+                            placeholder={descPlaceHolder}
+                            onChange={(e) => onvalChange(e, 'description', setFieldValue, false, isHindi)}
+                            onBlur={(e) => onvalChange(e, 'description', setFieldValue, true, isHindi)}
                           />
                           <ErrorMessage
                             className="error"

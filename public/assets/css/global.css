@@ -77,7 +77,43 @@ li {
   margin: 0;
   padding: 0;
 }
+input[type="date"] {
+  position: relative;
+}
 
+/* create a new arrow, because we are going to mess up the native one
+see "List of symbols" below if you want another, you could also try to add a font-awesome icon.. */
+input[type="date"]:after {
+  content: "\1F4C5";
+}
+
+/* change color of symbol on hover */
+input[type="date"]:hover:after {
+  color: #bf1400;
+}
+
+/* make the native arrow invisible and stretch it over the whole field so you can click anywhere in the input field to trigger the native datepicker*/
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  color: transparent;
+  background: transparent;
+}
+
+/* adjust increase/decrease button */
+input[type="date"]::-webkit-inner-spin-button {
+  z-index: 1;
+}
+
+/* adjust clear button */
+input[type="date"]::-webkit-clear-button {
+  z-index: 1;
+}
 .btn-primary {
   --bs-btn-color: #fff;
   --bs-btn-bg: rgba(var(--primaryColor));
@@ -204,11 +240,11 @@ body .css-bftceo-control:hover {
   min-height: 41px;
   box-shadow: none;
 }
-
+/* 
 body .filled .css-1xepz10-control {
   border: 1px solid rgba(var(--primaryColor)) !important;
   box-shadow: 0 0 0 0.05rem rgba(var(--primaryColor), 1) !important;
-}
+} */
 
 body .css-1f8moss-control,
 body .filled .css-1f8moss-control {
@@ -387,11 +423,10 @@ body .gJhVev:focus {
   color: rgba(var(--primaryColor));
 }
 
-.form-control.filled {
+/* .form-control.filled {
   border-color: rgba(var(--primaryColor));
   box-shadow: 0 0 0 0.05rem rgba(var(--primaryColor), 1);
-  /* color: rgba(var(--primaryColor)); */
-}
+} */
 
 body .eKwPae:hover:not(:disabled),
 .eKwPae:focus {
@@ -421,6 +456,11 @@ body .jVeafb:hover {
 }
 
 input#letter_pad {
+  height: 0;
+  width: 0;
+}
+
+input#letter_pad1 {
   height: 0;
   width: 0;
 }

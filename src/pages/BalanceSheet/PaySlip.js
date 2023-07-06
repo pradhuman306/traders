@@ -66,17 +66,26 @@ const PaySlip = (props) => {
     >
       <div className="modal-dialog">
         <div className="modal-content ">
+         
+       
           <Formik
             enableReinitialize
             initialValues={{
-              amount: parseInt(
+              amount: !isNaN(parseInt(
                 parseInt(totalAmount) -
                   gstCalculate(
                     totalAmountCalculateRaw(props.rowData),
                     props.rowData.gst
                   ) -
                   parseInt(totalPaidWithoutGST)
-              ),
+              ))?parseInt(
+                parseInt(totalAmount) -
+                  gstCalculate(
+                    totalAmountCalculateRaw(props.rowData),
+                    props.rowData.gst
+                  ) -
+                  parseInt(totalPaidWithoutGST)
+              ):0,
               type: "main",
             }}
             validate={(values) => {

@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addParty } from '../../actions/balancesheet';
+import { onvalChange } from '../../actions/common';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
@@ -13,6 +14,8 @@ const AddParty = (props) => {
   const dispatch = useDispatch();
   const [error, setError] = useState({});
   const [btnPending, setBtnPending] = useState(false);
+
+
   return (
     <div
       className="modal fade"
@@ -49,10 +52,11 @@ const AddParty = (props) => {
 
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({ values, isSubmitting, dirty, handleReset, touched , setFieldValue}) => (
                 <Form action="" id="newcustomer">
           <div className="modal-head">
             <h4>Add New Party</h4>
+        
             <a
               onClick={(e) => e.preventDefault()}
               type="button"
@@ -85,6 +89,7 @@ const AddParty = (props) => {
                                 ? "filled"
                                 : ""
                               }`}
+
                           />
                           <ErrorMessage
                             className="error"

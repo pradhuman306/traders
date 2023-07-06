@@ -27,7 +27,7 @@ const StocksGodown = (props) => {
     // data provides access to your row data
 
     const ExpandedComponent = ({ data }) => {
-        // window.innerWidth <= 599 ? <></> : "";
+  
         if (window.innerWidth <= 599) {
             return (
                 <>
@@ -80,7 +80,7 @@ const StocksGodown = (props) => {
         setFilter(value);
     };
 
-    // const hideColumns = () => {};
+ 
 
     const columns = useMemo(
         () => [

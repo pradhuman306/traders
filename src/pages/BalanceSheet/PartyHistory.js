@@ -50,8 +50,20 @@ const PartyHistory = (props) => {
     const [isDisplayDate, setDisplayDate] = useState(false);
     const [dateFromTo, setDateFromTo] = useState({ start: "", end: "" });
 
+    const sortByPendingAmount = (data) => {
+        data.sort(function(a, b) {
+            let totalAmount1 = parseInt(totalAmountCalculateRaw(a) + gstCalculate(totalAmountCalculateRaw(a), a.gst));
+            let totalAmount2 = parseInt(totalAmountCalculateRaw(b) + gstCalculate(totalAmountCalculateRaw(b), b.gst));
+          var keyA = parseInt(totalAmount1-parseInt(a.total_paid)),
+            keyB = parseInt(totalAmount2 -parseInt(b.total_paid));
+       
+          if (keyA > keyB) return -1;
+          if (keyA < keyB) return 1;
+          return 0;
+        });
+      }
   
-    // data provides access to your row data
+  
 
     useEffect(() => {
         dispatch(getPartyById(partyid, "1y"));
@@ -137,7 +149,7 @@ const PartyHistory = (props) => {
     }, [partySingle])
 
     const ExpandedComponent = ({ data }) => {
-        // window.innerWidth <= 599 ? <></> : "";
+      
         return (
             <>
                 <div className='datatable-dtllist'>
@@ -200,8 +212,7 @@ const PartyHistory = (props) => {
     };
 
     var onresize = function () {
-        //your code here
-        //this is just an example
+   
         if (window.innerWidth <= 599 || window.innerWidth <= 959) {
             setisExpandable(true);
         } else {
@@ -261,8 +272,10 @@ const PartyHistory = (props) => {
                 }
                 return false;
             });
+            sortByPendingAmount(tmp);
             setList([...tmp]);
         } else {
+            sortByPendingAmount(partyHistoryAll);
             setList([...partyHistoryAll]);
         }
         setHistoryAll([...partyHistoryAllData])
@@ -272,7 +285,7 @@ const PartyHistory = (props) => {
         setFilter(value);
     };
 
-    // const hideColumns = () => {};
+   
 
     const columns = useMemo(
         () => [
@@ -293,12 +306,30 @@ const PartyHistory = (props) => {
             },
 
 
+
+            {
+                name: "Firm",
+                sortable: true,
+                selector: (row) => {
+                    return (
+                        <>
+                            <div className="user-detail">{row.firm_name}</div>
+                          
+                        </>
+
+                    );
+                },
+
+            },
+
+
             {
                 name: "Debit",
                 sortable: true,
                 hide: "md",
                 width: "150px",
-                selector: (row) => {
+                selector: (row) => totalAmountCalculateRaw(row),
+                cell: (row) => {
                     return (
 
                         <span className="">
@@ -313,7 +344,8 @@ const PartyHistory = (props) => {
                 sortable: true,
                 width: "150px",
                 hide: "md",
-                selector: (row) => {
+                selector: (row) => totalAmountCalculateRaw(row),
+                cell: (row) => {
                     return (
 
                         <span className="">
@@ -329,8 +361,8 @@ const PartyHistory = (props) => {
                 name: "Pending amount",
                 sortable: true,
                 width: "150px",
-               
-                selector: (row) => {
+                selector: (row) => totalAmountCalculateRaw(row) + gstCalculate(totalAmountCalculateRaw(row), row.gst),
+                cell: (row) => {
                     let toalPaid = 0;
                     let totalAmount = totalAmountCalculateRaw(row) + gstCalculate(totalAmountCalculateRaw(row), row.gst);
                     if (row.paid) {
@@ -368,7 +400,7 @@ const PartyHistory = (props) => {
                     return (
 
                         <a
-                            className={`anchor pay-btn ${parseInt(totalAmount - toalPaid) == 0 ? "paid" : ""}`}
+                            className={`anchor pay-btn ${parseInt(totalAmount - toalPaid) == 0 ? "paid-btn" : ""}`}
                             onClick={() => setRowData(row)}
                             data-bs-toggle={`${parseInt(totalAmount - toalPaid) == 0 ? false : "modal"}`}
                             data-bs-target={`${parseInt(totalAmount - toalPaid) == 0 ? false : "#paySlip"}`}
@@ -423,26 +455,29 @@ const PartyHistory = (props) => {
             <div className="body-content">
                 <Header heading={!props.pendingData ? partyDetails.name : ""} {...props} />
                 <div className='mr-minus'>
+              
                     <div className="usermanagement-main">
-                        <p class="extra-stuff">
+                        <div className="extra-stuff">
 
-                            {/* <a className='anchor-link' onClick={()=>navigate(-1)}> <img src="/assets/images/back.svg" alt="" /> Back </a> */}
+                           
 
                             <div className='amount-dtl'>
                                 {!props.pendingData ? <>
-                                    {/* <p className='total-am'><span>Total Debit Amount : </span><label className='badge rounded-pill bg-text text-bg-primary xl-text'>₹{parseInt(totalAmount).toLocaleString("en-IN")}</label></p> */}
+                                
 
                                     <p className='total-am'><span>Total Amount  </span><label className={`badge rounded-pill bg-text ${(parseInt(totalWithoutGST)) - (parseInt(totalPaidWithoutGSTSellDiffBuy)) < 0 ? " text-bg-success" : " text-bg-danger"} xl-text`}>{priceFormatter(makePositive(parseInt((totalWithoutGST) - (totalPaidWithoutGSTSellDiffBuy)))) + `${(parseInt(totalWithoutGST)) - (parseInt(totalPaidWithoutGSTSellDiffBuy)) < 0 ? " CR." : " DR."}`}</label></p>
                                     <p className='total-am'><span>Total GST Amount  </span><label className={`badge rounded-pill bg-text ${(totalSellGST - totalBuyGST) - (totalPaidWithGSTSellDIffBuy) < 0 ? " text-bg-success" : " text-bg-danger"} xl-text`}>₹{makePositive(parseInt((totalSellGST - totalBuyGST) - totalPaidWithGSTSellDIffBuy)).toLocaleString("en-IN") + `${(totalSellGST - totalBuyGST) - (totalPaidWithGSTSellDIffBuy) < 0 ? " CR." : " DR."}`}</label></p>
-
+                                {partyDetails.expense? <p className='total-am'><span>Total Pending Expense  </span><label className={`badge rounded-pill bg-text text-bg-success xl-text`}>₹{makePositive(parseInt(partyDetails.expense)).toLocaleString("en-IN") + `${partyDetails.expense > 0 ? " CR." : " DR."}`}</label></p>:""}   
+                                    
                                     <p className='pending-am'><span>Total Pending Amount </span><label className='badge rounded-pill bg-text text-bg-warning xl-text'>{parseInt(totalAmount) < 0 ? priceFormatter(makePositive(makePositive(totalAmount))) + `${" CR."}` : priceFormatter(makePositive((makePositive(totalAmount)))) + `${(makePositive(totalAmount)) < 0 ? " CR." : " DR."}`}</label></p></> : ""}
                             </div>
-                        </p>
+                        </div>
 
 
 
                     </div>
                 </div>
+                {historyDetails.length? 
                 <div className="datatable-filter-wrap investment-f-wrap balance-filter-wrap">
                     <div className="datatable-search">
                         <input
@@ -453,7 +488,7 @@ const PartyHistory = (props) => {
                         />
                     </div>
                     <div className='select-filter form-group'>
-                    {historyDetails.length? <div>     <CSVLink data={dataFormatCSV(historyDetails, titleCase(partyDetails.name), 'balanceHistory')} filename={`${partyDetails.name?.replace(" ", "_")}.csv`}
+                   <div>     <CSVLink data={dataFormatCSV(historyDetails, titleCase(partyDetails.name), 'balanceHistory')} filename={`${partyDetails.name?.replace(" ", "_")}.csv`}
                     className="btn btn-success download-svg">
                         <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
@@ -486,7 +521,7 @@ m760 -27 c21 -47 239 -830 275 -983 20 -88 38 -162 40 -164 4 -4 16 38 49 181
 480 1660 0 1660 0 0 -480z" fill="#fff"/>
 </g>
 </svg>
-                        </CSVLink></div>:""}
+                        </CSVLink></div>
                            
                         <Select
                             options={newListItems}
@@ -504,6 +539,7 @@ m760 -27 c21 -47 239 -830 275 -983 20 -88 38 -162 40 -164 4 -4 16 38 49 181
                         />
                     </div>
                 </div>
+                :""}
 
                 <div className={`${!isDisplayDate ? "d-none" : "date-filter"}`}>
                     <label>From: <input

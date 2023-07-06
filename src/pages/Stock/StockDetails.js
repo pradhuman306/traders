@@ -76,7 +76,7 @@ const StockDetails = (props) => {
     }, [stockSingle])
 
     const ExpandedComponent = ({ data }) => {
-        // window.innerWidth <= 599 ? <></> : "";
+       
         if (window.innerWidth <= 599) {
             return (
                 <>
@@ -167,7 +167,7 @@ const StockDetails = (props) => {
         setFilter(value);
     };
 
-    // const hideColumns = () => {};
+
 
     const columns = useMemo(
         () => [
@@ -178,7 +178,7 @@ const StockDetails = (props) => {
                 selector: (row) => formatDate(row.date),
                 sortable: true,
             
-                // width: '120px',
+    
 
             },
 
@@ -196,7 +196,7 @@ const StockDetails = (props) => {
                 selector: (row) => row.weight + ' qt',
                 sortable: true,
                 hide: 'md',
-                // width: '120px',
+              
 
             },
             {
@@ -204,7 +204,7 @@ const StockDetails = (props) => {
                 selector: (row) => "₹" + parseInt(row.rate).toLocaleString("en-IN"),
                 sortable: true,
                 hide: 'md',
-                // width: '100px',
+             
 
             },
             {
@@ -228,32 +228,17 @@ const StockDetails = (props) => {
                 sortable: true,
                 hide: 'md'
                 ,
-                // width: '120px',
+              
 
             },
 
-            // {
-            //     name: "Firm",
-            //     selector: (row) =>{
-            //         return (
-
-            //             <span className="badge rounded-pill bg-text text-bg-secondary">
-            //               {row.firm}
-            //             </span>
-            //         );
-            //     },
-            //     sortable: true,
-            //     hide: 'md',
-            //     // width: "150px",
-
-            // },
-
+        
 
 
 
             {
                 name: "Actions",
-                // width: "150px",
+               
                 selector: (row) => {
                     return (
                         <>
@@ -334,16 +319,17 @@ const StockDetails = (props) => {
                             </div>
                             <div className='godown-stock'>
                                 {props.godownListRow.items.map((item,i) => (
-                                  
+                           
                                         <div key={i}><span>{titleCase(item.name)}</span>
                                             <label>{item.weight} qt</label>
+                                           
                                         </div>
 
                                  
                                 ))
                                 }
                                 {/* {props.godownListRow.items} */}
-
+                          
                             </div>
                             <p>Total <label className='badge rounded-pill bg-text text-bg-warning xl-text'>{priceFormatter(props.godownListRow.total)}</label></p>
 
@@ -381,8 +367,9 @@ const StockDetails = (props) => {
                         </div>
                     </div> : ""}
                 </div>
-
-                <AddStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} godownList={props.godownListRow} />
+                 <AddStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} godownList={props.godownListRow} />
+                            
+               
                 <EditStockDetails godownListAll={props.godownListAll} itemListAll={itemListAll} firmListAll={firmListAll} {...props} stockid={stockid} row_id={id} row_data={stockDetailsListRow} godownList={props.godownListRow} />
                 <DataTable
                     columns={columns}

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { updateAccount } from '../../actions/accounts';
+import { onvalChange } from '../../actions/common';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
@@ -17,6 +18,8 @@ const EditAccount = (props) => {
     const dispatch = useDispatch();
     const [dataList, setdataList] = useState(props.row_data);
     const [error, setError] = useState({});
+    const [isHindi,setHindi]=useState(false);
+
     useEffect(()=>{
         setdataList({...props.row_data});
  
@@ -58,10 +61,11 @@ const EditAccount = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
          <div className="modal-head">
           <h4>Edit Account</h4>
+     
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -97,6 +101,8 @@ const EditAccount = (props) => {
                               ? "filled"
                               : ""
                             }`}
+                            onChange={(e)=>onvalChange(e,'name',setFieldValue,false,isHindi)}
+                            onBlur={(e)=>onvalChange(e,'name',setFieldValue,true,isHindi)}
                           />
                           <ErrorMessage
                             className="error"

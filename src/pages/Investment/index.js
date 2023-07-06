@@ -41,7 +41,7 @@ const Investment = (props) => {
 
 
   const ExpandedComponent = ({ data }) => {
-    // window.innerWidth <= 599 ? <></> : "";
+
     if (window.innerWidth <= 599) {
         return (
             <>
@@ -108,7 +108,7 @@ window.addEventListener("resize", onresize);
     setFilter(value);
   };
 
-  // const hideColumns = () => {};
+
 
   const columns = useMemo(
     () => [

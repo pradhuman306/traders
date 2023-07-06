@@ -34,7 +34,7 @@ const BalanceSheet = (props) => {
   // data provides access to your row data
 
   const ExpandedComponent = ({ data }) => {
-    // window.innerWidth <= 599 ? <></> : "";
+    
     if (window.innerWidth <= 599) {
       return (
         <>
@@ -69,7 +69,7 @@ const sortBuyAmount = (partyData) => {
   partyData.sort(function(a, b) {
     var keyA = makePositive(a.finalpendingamount),
       keyB = makePositive(b.finalpendingamount);
-    // Compare the 2 dates
+  
     if (keyA > keyB) return -1;
     if (keyA < keyB) return 1;
     return 0;
@@ -123,7 +123,7 @@ const sortBuyAmount = (partyData) => {
 
 
   
-  // const hideColumns = () => {};
+
 
   const columns = useMemo(
     () => [
@@ -150,12 +150,26 @@ const sortBuyAmount = (partyData) => {
       },
 
       {
+        name: "Total Pending Expense",
+        selector: (row) => makePositive(row.expense),
+        cell: (row) => {
+     
+          return (
+            row.expense?<span className={`badge rounded-pill bg-text ${makePositive(row.expense)>0?" text-bg-success":" text-bg-danger"}`}>{(priceFormatter(makePositive(row.expense)))}{parseInt(row.expense)>0?" CR.":" DR."}</span>:""
+            
+          );
+        },
+        sortable: true,
+        width: "200px",
+      },
+      {
         name: "Total Amount",
         selector: (row) => makePositive(row.finalpendingamount),
         cell: (row) => {
      
           return (
-            <span className={`badge rounded-pill bg-text ${parseInt(row.finalpendingamount)<0?" text-bg-success":" text-bg-danger"}`}>{(priceFormatter(makePositive(row.finalpendingamount)))}{parseInt(row.finalpendingamount)<0?" CR.":" DR."}</span>
+            parseInt(row.finalpendingamount)?
+            <span className={`badge rounded-pill bg-text ${parseInt(row.finalpendingamount)<0?" text-bg-success":" text-bg-danger"}`}>{(priceFormatter(makePositive(row.finalpendingamount)))}{parseInt(row.finalpendingamount)<0?" CR.":" DR."}</span>:""
           );
         },
         sortable: true,

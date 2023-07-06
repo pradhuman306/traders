@@ -32,25 +32,25 @@ const EditStockDetails = (props) => {
     setValueItem({ label: titleCase(props.row_data.item), value: props.row_data.id });
     setValueFirm({ label: props.row_data.firm, value: props.row_data.firm_id });
     setValueGoDown({ label: titleCase(props.row_data.stock), value: props.row_data.stock_id });
-    
+
   }, [props.row_id])
-  useEffect(()=>{
+  useEffect(() => {
     let newItemsList = [];
     let newFirmList = [];
     let newGoDownList = [];
     props.itemListAll.forEach(element => {
-      newItemsList.push({label:titleCase(element.item),value:element.id})
+      newItemsList.push({ label: titleCase(element.item), value: element.id })
     });
     props.firmListAll.forEach(element => {
-      newFirmList.push({label:element.name,value:element.id})
+      newFirmList.push({ label: element.name, value: element.id })
     });
     props.godownListAll.forEach(element => {
-      newGoDownList.push({label:titleCase(element.name),value:element.id})
+      newGoDownList.push({ label: titleCase(element.name), value: element.id })
     });
     setNewGodownList(newGoDownList);
     setNewListItems(newItemsList);
     setNewListFirm(newFirmList);
-  },[props.itemListAll,props.firmListAll,props.godownListAll])
+  }, [props.itemListAll, props.firmListAll, props.godownListAll])
 
   const handleSelectChange = (e, setFieldValue) => {
     setFieldValue('item', e.value);
@@ -60,15 +60,15 @@ const EditStockDetails = (props) => {
   const handleSelectChangeFirm = (e, setFieldValue) => {
     setFieldValue('firm', e.value);
     setValueFirm(e);
-  
+
   }
 
-  const handleSelectChangeGoDown = (e,setFieldValue) => {
-    if(e){
-      setFieldValue('godown',e.value);
+  const handleSelectChangeGoDown = (e, setFieldValue) => {
+    if (e) {
+      setFieldValue('godown', e.value);
       setValueGoDown(e);
     }
-  } 
+  }
 
   return (
     <div
@@ -85,12 +85,12 @@ const EditStockDetails = (props) => {
 
           {Object.keys(dataList).length != 0 ?
             <div>
+       
               <Formik
                 enableReinitialize
                 initialValues={{
-                  // firm: dataList.firm,
-                  godown:dataList.stock_id,
-                  item: dataList.item,
+                  godown: dataList.stock_id,
+                  item: dataList.item_id,
                   quantity: dataList.quantity,
                   weight: dataList.weight,
                   rate: dataList.rate,
@@ -104,11 +104,18 @@ const EditStockDetails = (props) => {
                     errors.item = "Please select item!"
                   }
                   if (!values.date) {
-                    errors.date = "Please enter date!"
+                    errors.date = "Please select date!"
                   }
                   if (!values.godown) {
                     errors.godown = "Please select godown!"
                   }
+                  if (!values.weight) {
+                    errors.weight = "Please enter weight!"
+                  }
+                  // if (!values.rate) {
+                  //   errors.rate = "Please enter rate!"
+                  // }
+
 
                   setError({ ...errors });
                   return errors;
@@ -118,7 +125,7 @@ const EditStockDetails = (props) => {
                   values.stock_id = values.godown;
                   values.id = props.row_id;
                   props.setBtnPending(true);
-                  dispatch(updateStockDetails(values, elementRef, props.setBtnPending,props.godownList.id));
+                  dispatch(updateStockDetails(values, elementRef, props.setBtnPending, props.godownList.id));
                   setSubmitting(false);
                 }}
               >
@@ -142,56 +149,56 @@ const EditStockDetails = (props) => {
                       <div className="form-fields-wrap">
 
                         <div className="row">
+                  {dataList.stock_id? <div className="col-md-6">
+                            <div className="form-group mb-4">
+                              <label>
 
-                        <div className="col-md-6">
-                      <div className="form-group mb-4">
-                          <label>
-                            
-                          GoDown
-                          </label>
-                          <Select 
-                            className={`${
-                              touched.godown && error.godown
-                                ? "input-error"
-                                : ""
-                            }  ${values.godown
-                              ? "filled"
-                              : ""
-                            }`} 
-                            options={newListGodown} 
-                            isSearchable={true}
-                            value={valueGoDown}
-                            name="godown" 
-                            onChange={(e)=>handleSelectChangeGoDown(e,setFieldValue)}
-                            theme={(theme) => ({
-                              ...theme,
-                              borderRadius: 8,
-                              colors: {
-                                ...theme.colors,
-                                primary25: 'rgb(0 120 219 / 10%);',
-                                primary: '#0078db',
-                              },
-                            })}
-                            />
-                          
-                          <ErrorMessage
-                            className="error"
-                            name="godown"
-                            component="span"
-                          />
-                       
-                        </div>
-                      </div>
+                                GoDown <span className="error-badge">*</span>
+                              </label>
+                              <Select
+                                className={`${touched.godown && error.godown
+                                    ? "input-error"
+                                    : ""
+                                  }  ${values.godown
+                                    ? "filled"
+                                    : ""
+                                  }`}
+                                options={newListGodown}
+                                isSearchable={true}
+                                value={valueGoDown}
+                                name="godown"
+                                onChange={(e) => handleSelectChangeGoDown(e, setFieldValue)}
+                                theme={(theme) => ({
+                                  ...theme,
+                                  borderRadius: 8,
+                                  colors: {
+                                    ...theme.colors,
+                                    primary25: 'rgb(0 120 219 / 10%);',
+                                    primary: '#0078db',
+                                  },
+                                })}
+                              />
+
+                              <ErrorMessage
+                                className="error"
+                                name="godown"
+                                component="span"
+                              />
+
+                            </div>
+                          </div>:""}
+                         
+
                           <div className="col-md-6">
                             <div className="form-group mb-4">
                               <label>
 
-                                Item
+                                Item <span className="error-badge">*</span>
                               </label>
                               <Select
                                 className={`${touched.item && error.item
-                                    ? "input-error"
-                                    : ""
+                                  ? "input-error"
+                                  : ""
                                   } ${values.item
                                     ? "filled"
                                     : ""
@@ -254,7 +261,7 @@ const EditStockDetails = (props) => {
                             </div>
                           </div> */}
 
-                      
+{/* 
                           <div className="col-md-6">
                             <div className="form-group mb-4">
                               <label>
@@ -267,16 +274,16 @@ const EditStockDetails = (props) => {
                                 className={`form-control ${values.quantity
                                   ? "filled"
                                   : ""
-                                }`}
+                                  }`}
                               />
 
                             </div>
-                          </div>
+                          </div> */}
                           <div className="col-md-6">
                             <div className="form-group mb-4">
                               <label>
 
-                                Weight <span className='badge bg-secondary'>in quintal</span>
+                                Weight <span className='badge bg-secondary'>in quintal</span> <span className="error-badge">*</span>
                               </label>
                               <Field
                                 type="number"
@@ -284,16 +291,20 @@ const EditStockDetails = (props) => {
                                 className={`form-control ${values.weight
                                   ? "filled"
                                   : ""
-                                }`}
+                                  }`}
                               />
-
+                              <ErrorMessage
+                                className="error"
+                                name="weight"
+                                component="span"
+                              />
                             </div>
                           </div>
                           <div className="col-md-6">
                             <div className="form-group mb-4">
                               <label>
 
-                                Rate
+                                Rate 
                               </label>
                               <Field
                                 type="number"
@@ -301,9 +312,14 @@ const EditStockDetails = (props) => {
                                 className={`form-control ${values.rate
                                   ? "filled"
                                   : ""
-                                }`}
+                                  }`}
                                 placeholder="₹"
-                              />
+                              />    
+                              {/* <ErrorMessage
+                              className="error"
+                              name="rate"
+                              component="span"
+                            /> */}
 
                             </div>
                           </div>
@@ -336,7 +352,7 @@ const EditStockDetails = (props) => {
                                 className={`form-control ${values.vehicle_no
                                   ? "filled"
                                   : ""
-                                }`}
+                                  }`}
                               />
 
                             </div>
@@ -351,8 +367,8 @@ const EditStockDetails = (props) => {
                                 type="date"
                                 name="date"
                                 className={`form-control ${touched.date && error.date
-                                    ? "input-error"
-                                    : ""
+                                  ? "input-error"
+                                  : ""
                                   } ${values.date
                                     ? "filled"
                                     : ""

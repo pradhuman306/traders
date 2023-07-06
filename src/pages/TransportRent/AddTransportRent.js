@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { getParty } from '../../actions/balancesheet';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
-import { titleCase } from '../../actions/common';
+import { formatDate, handleLangChange, onvalChange, titleCase } from '../../actions/common';
 
 
 const AddTransportRent = (props) => {
@@ -22,7 +22,9 @@ const AddTransportRent = (props) => {
     const [error, setError] = useState({});
     const [partyListOpt, setPartyListOptions] = useState([]);
     const [valueParty, setValueParty] = useState([]);
-    
+    const [isHindi,setHindi]=useState(false);
+    const [descPlaceHolder, setDescPlaceHolder] = useState("Please enter description");
+
     useEffect(()=>{
 dispatch(getParty(user_id));
     },[])
@@ -70,7 +72,7 @@ dispatch(getParty(user_id));
                 rate:"",
                 advance:"",
                 weight:"",
-                date:"",
+                date:formatDate(new Date(),'yyyy-mm-dd'),
                 description:""
               }}
               validate={(values) => {
@@ -101,6 +103,7 @@ dispatch(getParty(user_id));
                 <Form action="" id="newcustomer">
         <div className="modal-head">
           <h4>Add Transport</h4>
+        
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -174,6 +177,9 @@ dispatch(getParty(user_id));
                               ? "filled"
                               : ""
                             }`}
+                          
+
+                            
                           />
                           <ErrorMessage
                             className="error"
@@ -303,9 +309,11 @@ dispatch(getParty(user_id));
                   
                       <div className="col-md-12">
                         <div className="form-group mb-4">
-                        <label>
-                            Description
-                          </label>
+                        <label className='d-flex align-items-center justify-content-between'>
+                                                        Description
+                                                        <div className="form-check">
+                                                        <input type="checkbox" className="form-check-input" onChange={(e) => handleLangChange(e,setHindi,setDescPlaceHolder)} id="lang" /><label htmlFor="lang" className="form-check-label"><span>In hindi</span></label></div>
+                                                    </label>
                        
                           <Field
                             as="textarea"
@@ -314,6 +322,10 @@ dispatch(getParty(user_id));
                               ? "filled"
                               : ""
                             }`}
+                            placeholder={descPlaceHolder}
+                            onChange={(e) => onvalChange(e, 'description', setFieldValue, false, isHindi)}
+                            onBlur={(e) => onvalChange(e, 'description', setFieldValue, true, isHindi)}
+                          
                           />
                         </div>
                       </div>

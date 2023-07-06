@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { onvalChange } from '../../actions/common';
 import { addFirm } from '../../actions/firm';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
@@ -14,6 +15,8 @@ const AddFirm = (props) => {
     const user_id = props.auth.userdata.id;
     const dispatch = useDispatch();
     const [error, setError] = useState({});
+  
+
   return (
     <div
     className="modal  fade"
@@ -44,10 +47,11 @@ const AddFirm = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
         <div className="modal-head">
           <h4>Add new firm</h4>
+         
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -82,6 +86,7 @@ const AddFirm = (props) => {
                               ? "filled"
                               : ""
                             }`}
+                        
                           />
                           <ErrorMessage
                             className="error"

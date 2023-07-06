@@ -53,7 +53,7 @@ const Bank = (props) => {
         setFilter(value);
     };
 
-    // const hideColumns = () => {};
+    
 
     const columns = useMemo(
         () => [

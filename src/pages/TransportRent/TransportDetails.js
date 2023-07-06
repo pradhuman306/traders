@@ -69,7 +69,7 @@ const TransportDetails = (props) => {
         }]
         setNewListItems([...newFilterItems]);
         setValueFilter(newFilterItems[0]);
-        // dispatch(getRentHistoryByParty(transid,newFilterItems[0].value));
+       
     }, [transid])
 
     useEffect(() => {
@@ -117,7 +117,7 @@ const TransportDetails = (props) => {
 
 
     const ExpandedComponent = ({ data }) => {
-        // window.innerWidth <= 599 ? <></> : "";
+      
         if (window.innerWidth <= 599) {
             return (
                 <>
@@ -212,7 +212,6 @@ const TransportDetails = (props) => {
         setFilter(value);
     };
 
-    // const hideColumns = () => {};
 
     const columns = useMemo(
         () => [
@@ -227,7 +226,7 @@ const TransportDetails = (props) => {
                 name: "Destination",
                 selector: (row) => titleCase(row.destination),
                 sortable: true,
-                // width: "200px",
+        
                 hide: "sm",
             },
 
@@ -347,12 +346,14 @@ const TransportDetails = (props) => {
 
     useEffect(() => {
         if (props.transportRow.party) {
-            let newName = props.transportRow.party.split(" ");
-            let firstC = newName[0][0];
+            let newName =  titleCase(props.transportRow.party);
+            newName = newName.split(" ");
+            let firstC = newName[0][0].toUpperCase();
             let lastC = "";
             if (newName[1]) {
                 lastC = newName[1][0].toUpperCase();
             }
+     
             setPartyShort(firstC + lastC);
         }
     }, [props.transportRow])

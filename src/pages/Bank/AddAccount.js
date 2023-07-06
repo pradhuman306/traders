@@ -4,12 +4,15 @@ import { useRef } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addAccount } from '../../actions/accounts';
+import { onvalChange } from '../../actions/common';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
 
 const AddAccount = (props) => {
     const elementRef = useRef(null);
     const user_id = props.auth.userdata.id;
+  const [isHindi,setHindi]=useState(false);
+
     const dispatch = useDispatch();
     const [error, setError] = useState({});
   return (
@@ -42,10 +45,11 @@ const AddAccount = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
         <div className="modal-head">
           <h4>Add new account</h4>
+        
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -80,6 +84,8 @@ const AddAccount = (props) => {
                               ? "filled"
                               : ""
                             }`}
+                            onChange={(e)=>onvalChange(e,'name',setFieldValue,false,isHindi)}
+                            onBlur={(e)=>onvalChange(e,'name',setFieldValue,true,isHindi)}
                           />
                           <ErrorMessage
                             className="error"

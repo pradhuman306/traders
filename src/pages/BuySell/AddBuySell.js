@@ -8,7 +8,8 @@ import { getParty } from '../../actions/balancesheet';
 import { useRef } from 'react';
 import ButtonLoader from '../Customloader/ButtonLoader';
 import { addBuy, addSell } from '../../actions/buysell';
-import { titleCase } from '../../actions/common';
+import { formatDate, handleLangChange, onvalChange, titleCase } from '../../actions/common';
+
 
 
 const AddBuySell = (props) => {
@@ -25,25 +26,30 @@ const AddBuySell = (props) => {
     const [newListItems, setNewListItems] = useState([]);
     const [partyValue, setPartyValue] = useState({});
     const [itemValue, setItemValue] = useState({});
+    const [firmValue, setFirmValue] = useState({});
+    const [godown, setGoDownList] = useState([]);
+    const [firm, setFirmList] = useState([]);
+    const [isHindi, setHindi] = useState(false);
+    const [descPlaceHolder, setDescPlaceHolder] = useState("Please enter description");
 
-    const [godown,setGoDownList]=useState([]);
-    const [firm,setFirmList]=useState([]);
 
-    const [godownValue,setGodownValue]=useState({});
-    
 
-    
+    const [godownValue, setGodownValue] = useState({});
+
+
+
     const handleSelectChangeItem = (e, setFieldValue) => {
         if (e) {
             setFieldValue('item', e.value);
             setItemValue(e);
-          
+
         }
 
     }
     const handleSelectChangeFirm = (e, setFieldValue) => {
         if (e) {
             setFieldValue('firm', e.value);
+            setFirmValue(e);
         }
 
     }
@@ -52,7 +58,17 @@ const AddBuySell = (props) => {
     }, [])
     useEffect(() => {
         setIsActive({ ...props.isActive });
-    }, [props.isActive])
+       
+        if (props.firmValue.value) {
+
+            setFirmValue(props.firmValue);
+        } else {
+            setFirmValue({});
+
+        }
+
+
+    }, [props.isActive, props.firmValue])
     useEffect(() => {
         let newPartyList = [];
         props.partyList.forEach((item) => {
@@ -74,7 +90,7 @@ const AddBuySell = (props) => {
         })
         setFirmList([...firmList]);
 
-    }, [props.godownListAll,props.firmListAll])
+    }, [props.godownListAll, props.firmListAll])
 
     const handleSelectChange = (e, setFieldValue) => {
         if (e) {
@@ -104,15 +120,17 @@ const AddBuySell = (props) => {
         if (e == 'buy') {
             newActive.buy = true;
             newActive.sell = false;
-        } else if(e=='sell'){
+        } else if (e == 'sell') {
             newActive.sell = true;
             newActive.buy = false;
-        }else {
+        } else {
             newActive.urd = !newActive.urd;
         }
 
         setIsActive({ ...newActive });
     }
+
+
 
     return (
         <div
@@ -124,80 +142,81 @@ const AddBuySell = (props) => {
         >
             <div className="modal-dialog">
                 <div className="modal-content right-modal">
-                <Formik
-                          
-                            initialValues={{
-                                party: "",
-                                bill_no: "",
-                                godown:"",
-                                rate: "",
-                                firm:"",
-                                amount: "",
-                                debit: "",
-                                gst: "",
-                                item: "",
-                                weight: "",
-                                commission: "",
-                                description: "",
-                                totalamount: 0,
-                                date: ""
-                            }}
-                            validate={(values) => {
-                                const errors = {};
-                                if (!values.party) {
-                                    errors.party = "Please select party!"
-                                }
-                                if (!values.item) {
-                                    errors.item = "Please select item!"
-                                }
-                                if (!values.date) {
-                                    errors.date = "Please select date!"
-                                }
-                                if (!values.godown) {
-                                    errors.godown = "Please select godown!"
-                                }
+                    <Formik
+
+                        initialValues={{
+                            party: "",
+                            bill_no: "",
+                            godown: "",
+                            rate: "",
+                            firm: "",
+                            amount: "",
+                            debit: "",
+                            gst: "",
+                            item: "",
+                            weight: "",
+                            commission: "",
+                            description: "",
+                            totalamount: 0,
+                            date: formatDate(new Date(), 'yyyy-mm-dd')
+                        }}
+                        validate={(values) => {
+                            const errors = {};
+                            if (!values.party) {
+                                errors.party = "Please select party!"
+                            }
+                            if (!values.item) {
+                                errors.item = "Please select item!"
+                            }
+                            if (!values.date) {
+                                errors.date = "Please select date!"
+                            }
+                            if (!values.godown) {
+                                errors.godown = "Please select godown!"
+                            }
 
 
-                                setError({ ...errors });
+                            setError({ ...errors });
 
-                                return errors;
-                            }}
-                            onSubmit={(values, { setSubmitting, resetForm, setFieldValue }) => {
-                                props.setBtnPending(true);
-                                values.user_id = user_id;
-                                values.URD = isActive.urd;
-                                console.log(values);
-                                itemSelectRef.current.clearValue();
-                                partySelectRef.current.clearValue();
-                                godownSelectRef.current.clearValue();
-                             
-                                if (isActive.buy) {
-                                    dispatch(addBuy(values, elementRef, props.setBtnPending, resetForm,props.isActive));
-                                } else if(isActive.sell) {
-                                    dispatch(addSell(values, elementRef, props.setBtnPending, resetForm,props.isActive));
-                                }   
-
-                                setSubmitting(false);
-                            }}
-                        >
-                            {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
-                                <Form action="" id="newcustomer">
-                    <div className="modal-head">
-                        <h4>Add Entry</h4>
-
-                        <a
-                            onClick={(e) => e.preventDefault()}
-                            type="button"
-                            className="close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                            ref={elementRef}
-                        >
-                            <img src="/assets/images/close.svg" alt="" />
-                        </a>
-                    </div>
-                    <div className="modal-body">
+                            return errors;
+                        }}
+                        onSubmit={(values, { setSubmitting, resetForm, setFieldValue }) => {
+                            props.setBtnPending(true);
+                            values.user_id = user_id;
+                            values.URD = isActive.urd;
                        
+                            itemSelectRef.current.clearValue();
+                            partySelectRef.current.clearValue();
+                            godownSelectRef.current.clearValue();
+
+                            if (isActive.buy) {
+                                dispatch(addBuy(values, elementRef, props.setBtnPending, resetForm, props.isActive));
+                            } else if (isActive.sell) {
+                                dispatch(addSell(values, elementRef, props.setBtnPending, resetForm, props.isActive));
+                            }
+
+                            setSubmitting(false);
+                        }}
+                    >
+                        {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
+                            <Form action="" id="newcustomer">
+                                <div className="modal-head">
+                                    <h4>Add Entry</h4>
+
+
+                                    <a
+                                        onClick={(e) => e.preventDefault()}
+                                        type="button"
+                                        className="close"
+                                        data-bs-dismiss="modal"
+                                        aria-label="Close"
+                                        ref={elementRef}
+                                    >
+                                        <img src="/assets/images/close.svg" alt="" />
+                                    </a>
+                                </div>
+                                <div className="modal-body">
+
                                     <div className="form-fields-wrap">
                                         <div className='row'>
                                             <div className='col-md-12'>
@@ -224,7 +243,7 @@ const AddBuySell = (props) => {
                                                             checked={isActive.urd}
                                                             className='form-check-input'
                                                             id="URD"
-                                                          
+
                                                         />
                                                         <label htmlFor='URD' className='form-check-label'>
                                                             <span>Unregisterd Dealer</span>
@@ -251,11 +270,11 @@ const AddBuySell = (props) => {
                                                             } ${values.party
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                         options={partyListOpt}
                                                         name="party"
                                                         isSearchable={true}
-                                                        isClearable={true}
+                                                
                                                         ref={partySelectRef}
                                                         onChange={(e) => handleSelectChange(e, setFieldValue)}
                                                         theme={(theme) => ({
@@ -284,7 +303,7 @@ const AddBuySell = (props) => {
 
                                                     </label>
                                                     <Field
-                                                    placeholder="Enter bill number"
+                                                        placeholder="Enter bill number"
                                                         type="text"
                                                         name="bill_no"
                                                         className={`form-control ${touched.bill_no && error.bill_no
@@ -293,7 +312,7 @@ const AddBuySell = (props) => {
                                                             } ${values.bill_no
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                     />
                                                     <ErrorMessage
                                                         className="error"
@@ -304,11 +323,11 @@ const AddBuySell = (props) => {
                                             </div>
                                         </div>
                                         <div className='row'>
-                                        <div className='col-md-6'>
+                                            <div className='col-md-6'>
                                                 <div className="form-group mb-4">
                                                     <label>
 
-                                                        Firm 
+                                                        Firm
                                                     </label>
 
                                                     <Select
@@ -318,10 +337,11 @@ const AddBuySell = (props) => {
                                                             } ${values.firm
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                         options={firm}
                                                         isSearchable={true}
-                                                        isClearable={true}
+                                                   
+                                                        value={firmValue}
                                                         name="firm"
                                                         ref={firmSelectRef}
                                                         onChange={(e) => handleSelectChangeFirm(e, setFieldValue)}
@@ -336,10 +356,10 @@ const AddBuySell = (props) => {
                                                         })}
                                                     />
 
-                                                
+
                                                 </div>
                                             </div>
-                                        <div className='col-md-6'>
+                                            <div className='col-md-6'>
                                                 <div className="form-group mb-4">
                                                     <label>
 
@@ -353,7 +373,7 @@ const AddBuySell = (props) => {
                                                             } ${values.godown
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                         options={godown}
                                                         isSearchable={true}
                                                         isClearable={true}
@@ -392,7 +412,7 @@ const AddBuySell = (props) => {
                                                             } ${values.item
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                         options={newListItems}
                                                         isSearchable={true}
                                                         isClearable={true}
@@ -417,7 +437,7 @@ const AddBuySell = (props) => {
                                                     />
                                                 </div>
                                             </div>
-                                           
+
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
@@ -426,7 +446,7 @@ const AddBuySell = (props) => {
                                                     </label>
 
                                                     <Field
-                                                    placeholder="Enter item weight"
+                                                        placeholder="Enter item weight"
                                                         type="number"
                                                         name="weight"
                                                         className={`form-control ${touched.weight && error.weight
@@ -435,7 +455,7 @@ const AddBuySell = (props) => {
                                                             } ${values.weight
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                     />
 
                                                 </div>
@@ -443,7 +463,7 @@ const AddBuySell = (props) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                    ₹ Rate
+                                                        ₹ Rate
                                                     </label>
                                                     <Field
                                                         type="text"
@@ -454,7 +474,7 @@ const AddBuySell = (props) => {
                                                             } ${values.rate
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                         placeholder="₹"
 
 
@@ -465,7 +485,7 @@ const AddBuySell = (props) => {
                                             <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
-                                                    ₹ Amount
+                                                        ₹ Amount
                                                     </label>
                                                     <Field
                                                         type="text"
@@ -476,18 +496,14 @@ const AddBuySell = (props) => {
                                                             }`}
                                                         value={values.amount = values.rate * values.weight}
                                                         placeholder="₹"
-                                                        // disabled
+                                                  
 
                                                     />
-                                                   
-                                                    {/* <ErrorMessage
-                                                        className="error"
-                                                        name="amount"
-                                                        component="span"
-                                                    /> */}
+
+                                                  
                                                 </div>
                                             </div>
-                                            <div className="col-md-6">
+                                            <div className="col-md-4">
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         Debit Note
@@ -502,18 +518,14 @@ const AddBuySell = (props) => {
                                                             } ${values.debit
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                         placeholder="₹"
-                                                    // onChange={(e)=>handleChangeValues('debit',e,setFieldValue,values)}
+                                               
                                                     />
-                                                    {/* <ErrorMessage
-                                                        className="error"
-                                                        name="debit"
-                                                        component="span"
-                                                    /> */}
+                                                   
                                                 </div>
                                             </div>
-                                            <div className="col-md-6">
+                                            <div className="col-md-4">
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         commission %
@@ -528,7 +540,7 @@ const AddBuySell = (props) => {
                                                             } ${values.commission
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                         placeholder="%"
 
 
@@ -540,12 +552,7 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div className="row">
-
-                                           
-                                            
-                                            <div className="col-md-6">
+                                            <div className="col-md-4">
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         GST %
@@ -559,7 +566,7 @@ const AddBuySell = (props) => {
                                                             } ${values.gst
                                                                 ? "filled"
                                                                 : ""
-                                                              }`}
+                                                            }`}
                                                         placeholder="%"
                                                     />
                                                     {/* <ErrorMessage
@@ -569,6 +576,12 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div className="row">
+
+
+
+                                         
                                             <div className="col-md-6">
                                                 <div className="form-group">
                                                     <label>
@@ -582,10 +595,10 @@ const AddBuySell = (props) => {
                                                         disabled={true}
                                                         placeholder="₹"
                                                         value={
-                                                     
-                                                            values.commission/100 == 0 ? "₹"+(values.rate*values.weight - values.debit) :
-                                                            "₹"+((values.rate*values.weight- values.debit)+parseInt([(values.rate*values.weight - values.debit)*(values.commission/100)])).toLocaleString("en-IN")
-                                                            
+
+                                                            values.commission / 100 == 0 ? "₹" + (values.rate * values.weight - values.debit) :
+                                                                "₹" + ((values.rate * values.weight - values.debit) + parseInt([(values.rate * values.weight - values.debit) * (values.commission / 100)])).toLocaleString("en-IN")
+
                                                         }
                                                     />
                                                     {/* <ErrorMessage
@@ -595,7 +608,7 @@ const AddBuySell = (props) => {
                                                     /> */}
                                                 </div>
                                             </div>
-                                            <div className="col-md-12">
+                                            <div className="col-md-6">
                                                 <div className="form-group mb-4">
                                                     <label>
                                                         Date <span className="error-badge">*</span>
@@ -612,7 +625,7 @@ const AddBuySell = (props) => {
                                                                 } ${values.date
                                                                     ? "filled"
                                                                     : ""
-                                                                  }`}
+                                                                }`}
                                                             name="date"
                                                         />
 
@@ -625,14 +638,17 @@ const AddBuySell = (props) => {
                                                 </div>
                                             </div>
                                         </div>
-                                    
+
                                         <div className="row">
 
                                             <div className="col-md-12">
                                                 <div className="form-group mb-4">
-                                                    <label>
+                                                    <label className='d-flex align-items-center justify-content-between'>
                                                         Description
+                                                        <div className="form-check">
+                                                        <input type="checkbox" className="form-check-input" onChange={(e) => handleLangChange(e,setHindi,setDescPlaceHolder)} id="lang" /><label htmlFor="lang" className="form-check-label"><span>In hindi</span></label></div>
                                                     </label>
+                                                   
 
                                                     <Field
                                                         as="textarea"
@@ -640,7 +656,10 @@ const AddBuySell = (props) => {
                                                         className={`form-control ${values.description
                                                             ? "filled"
                                                             : ""
-                                                          }`}
+                                                            }`}
+                                                        placeholder={descPlaceHolder}
+                                                        onChange={(e) => onvalChange(e, 'description', setFieldValue, false, isHindi)}
+                                                        onBlur={(e) => onvalChange(e, 'description', setFieldValue, true, isHindi)}
                                                     />
                                                 </div>
                                             </div>
@@ -649,22 +668,22 @@ const AddBuySell = (props) => {
 
 
                                     </div>
-                                   
 
-                             
-                    </div>
-                    <div className='modal-footer'>
-                                                <button
-                                                    type="submit"
-                                                    disabled={isSubmitting}
-                                                    className="btn btn-primary m-auto d-flex justify-content-center align-items-center"
-                                                >
-                                                    {props.btnPending ? <ButtonLoader /> : "Add"}
-                                                </button>
-                    </div>
-                    </Form>
-                            )}
-                        </Formik>
+
+
+                                </div>
+                                <div className='modal-footer'>
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="btn btn-primary m-auto d-flex justify-content-center align-items-center"
+                                    >
+                                        {props.btnPending ? <ButtonLoader /> : "Add"}
+                                    </button>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
                 </div>
             </div>
         </div>

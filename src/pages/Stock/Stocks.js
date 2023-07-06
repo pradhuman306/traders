@@ -26,7 +26,7 @@ const Stocks = (props) => {
   // data provides access to your row data
 
   const ExpandedComponent = ({ data }) => {
-    // window.innerWidth <= 599 ? <></> : "";
+
     if (window.innerWidth <= 599) {
       return (
         <>
@@ -71,6 +71,7 @@ const Stocks = (props) => {
     let sum = 0;
     if (stockData.length) {
       setAllItems(stockData[0].allitems);
+
       sum = stockData.reduce((accumulator, object) => {
         return accumulator + parseInt(object.total);
       }, 0);
@@ -78,7 +79,7 @@ const Stocks = (props) => {
     }
   }, [godownListAll]);
 
-  // const hideColumns = () => {};
+
 
   const columns = useMemo(
     () => [
@@ -127,12 +128,11 @@ const Stocks = (props) => {
         <div className="usermanagement-main">
           <div className="extra-stuff">
             <div className="amount-dtl stock-am-dtl justify-content-end">
-              <ul className="st-dtl d-none">
+              <ul className="st-dtl">
                 {allItems.map((item, i) => (
                   <li key={i}>
                     <span>{titleCase(item.name)}</span>
                     <span>{item.weight}qt</span>
-                    <span>{priceFormatter(item.total)}</span>
                   </li>
                 ))}
               </ul>

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { addAccount, updateAccount } from '../../actions/accounts';
+import { onvalChange } from '../../actions/common';
 import { updateGoDown } from '../../actions/godown';
 import ButtonLoader from '../Customloader/ButtonLoader';
 
@@ -58,10 +59,11 @@ const EditGoDown = (props) => {
                 setSubmitting(false);
               }}
             >
-              {({ values, isSubmitting, dirty, handleReset, touched }) => (
+              {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                 <Form action="" id="newcustomer">
           <div className="modal-head">
           <h4>Edit GoDown</h4>
+    
           <a
             onClick={(e) => e.preventDefault()}
             type="button"
@@ -96,6 +98,7 @@ const EditGoDown = (props) => {
                               ? "filled"
                               : ""
                             }`}
+                    
                           />
                           <ErrorMessage
                             className="error"
@@ -122,6 +125,7 @@ const EditGoDown = (props) => {
                               ? "filled"
                               : ""
                             }`}
+                       
                           />
                           <ErrorMessage
                             className="error"

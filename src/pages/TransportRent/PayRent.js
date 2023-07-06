@@ -3,6 +3,7 @@ import React, { useRef } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { formatDate } from "../../actions/common";
 import { payRentAmount } from "../../actions/transportrent";
 import ButtonLoader from "../Customloader/ButtonLoader";
 const PayRent = (props) => {
@@ -25,7 +26,7 @@ const PayRent = (props) => {
           enableReinitialize
             initialValues={{
               amount: "",
-              date:"",
+              date:formatDate(new Date(),'yyyy-mm-dd'),
               description:""
             }}
             validate={(values) => {

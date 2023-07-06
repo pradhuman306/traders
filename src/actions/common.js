@@ -1,6 +1,6 @@
 import { SET_LOADED, SET_PENDING } from "../constants/actionTypes";
 
-export const formatDate = (date) => {
+export const formatDate = (date,format) => {
   var d = new Date(date),
     month = '' + (d.getMonth() + 1),
     day = '' + d.getDate(),
@@ -13,8 +13,12 @@ export const formatDate = (date) => {
   if (day.length < 2) {
     day = '0' + day;
   }
-
+if(format == 'yyyy-mm-dd'){
+  return year + "-" + month + "-" + day;
+}else{
   return day + "-" + month + "-" + year;
+}
+ 
 }
 
 export const setPendingData = (dispatch) => {
@@ -157,3 +161,38 @@ let newArray = [itemHeader];
 })
 return newArray;
 }
+
+
+export const onvalChange = (e,param,setFieldValue,is_blur,is_hindi) => {
+  if((e.target.value[e.target.value.length-1] == " " || is_blur)&&(is_hindi)){
+    var mainurl = "https://www.google.com/inputtools/request?text="+e.target.value+"&ime=transliteration_en_hi&num=5&cp=0&cs=0&ie=utf-8&oe=utf-8"
+    fetch(mainurl)
+    .then (res=> res.json())
+    .then((jsonData) => {
+      if(jsonData){
+       
+          var val = jsonData[1][0][1][0];
+          setFieldValue(param,val);
+       
+        // e.target.value= val;
+      }
+    })
+    .catch((error) => {
+    
+    })
+  }else{
+    setFieldValue(param,e.target.value); 
+  }
+
+}
+
+export const handleLangChange = (e,setHindi,setDescPlaceHolder) => {
+  if (e.target.checked) {
+      setHindi(true);
+      setDescPlaceHolder('कृपया अपना विवरण दर्ज करें');
+  } else {
+      setHindi(false);
+      setDescPlaceHolder('Please enter description');
+  }
+}
+

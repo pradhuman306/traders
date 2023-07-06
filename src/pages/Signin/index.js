@@ -9,7 +9,6 @@ import ButtonLoader from "../Customloader/ButtonLoader";
 const Signin = (props) => {
   const dispatch = useDispatch();
   const message = useSelector((state) => state.toasterReducer);
-  // const logo = useSelector((state) => state.logoReducer).logo;
   const email = Cokkie.getCookie("email") ? Cokkie.getCookie("email") : "";
   const password = Cokkie.getCookie("password")
     ? Cokkie.getCookie("password")
@@ -25,7 +24,6 @@ const Signin = (props) => {
     setTimeout(() => {
       setsignInPending(false);
     }, 1000);
-    // dispatch(getLogo());
   }, []);
 
   useEffect(() => {

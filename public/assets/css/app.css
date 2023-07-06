@@ -128,7 +128,7 @@ div#firmSelect {
 }
 
 body .sc-jqUVSM.rdt_TableRow {
-    font-size: 14px;
+    font-size: 15px;
     min-height: 52px;
 }
 
@@ -238,7 +238,7 @@ body .sc-jqUVSM.rdt_TableRow {
 
 .c-date {
     opacity: 0.8;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .credit,
@@ -715,10 +715,24 @@ ul.st-dtl {
 .st-dtl li {
     display: flex;
     gap: 10px;
-    border: 1px solid #dee2e6;
+    border: 1px solid rgb(var(--border));
     padding: 5px 15px;
     border-radius: 20px;
     font-weight: 600;
+    align-items: center;
+    background: rgb(var(--border));
+}
+
+.amount-dtl .st-dtl span {
+    margin-right: 0;
+}
+
+.st-dtl img, .godown-stock img {
+    margin-right: 0;
+    position: relative;
+    top: 0;
+    opacity: 1;
+    height: 30px;
 }
 
 .datatable-dtllist p {
@@ -734,18 +748,23 @@ ul.st-dtl {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    font-size: 14px;
 }
 
 .godown-stock>div {
-    border: 1px solid #dee2e6;
+    border: 1px solid rgba(var(--border));
     padding: 5px 10px;
-    border-radius: 20px;
+    border-radius: var(--radius);
     font-weight: 600;
 }
-
-.godown-stock label {
-    margin-left: 10px;
+.godown-stock div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(var(--border));
 }
+
+
 
 .history-list li {
     line-height: 27px;
@@ -758,6 +777,12 @@ ul.st-dtl {
     display: flex;
     gap: 10px;
     border-bottom: 1px solid rgba(var(--border));
+}
+
+.datatable-dtllist .inline:last-child {
+    border: 0;
+
+
 }
 
 .nav.inline-div {
@@ -829,7 +854,9 @@ ul.st-dtl {
 }
 
 .datatable-dtllist {
-    background: rgba(var(--primaryColor), 0.1);
+    border-radius: var(--radius);
+    border: 1px solid rgba(var(--border));
+    /* background: rgba(var(--primaryColor), 0.07); */
 }
 
 .with-fill .no-fill:hover {
@@ -1088,6 +1115,23 @@ body .light-bg-warning {
     width: 100%;
 }
 
+#invoice p {
+    margin: 0;
+    font-size: 14px;
+}
+
+#invoice h5 {
+    font-size: 16px;
+}
+
+.logo-wrapper img {
+    width: 50px;
+}
+.logo-wrapper {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
 @media print {
 
     .sidebar,

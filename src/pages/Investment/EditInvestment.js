@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { handleLangChange, onvalChange } from '../../actions/common';
 import { updateInvestment } from '../../actions/investment';
 import { updateItems } from '../../actions/items';
 import ButtonLoader from '../Customloader/ButtonLoader';
@@ -17,6 +18,9 @@ const EditInvestment = (props) => {
   const dispatch = useDispatch();
   const [dataList, setdataList] = useState(props.row_data);
   const [error, setError] = useState({});
+  const [isHindi,setHindi]=useState(false);
+  const [descPlaceHolder, setDescPlaceHolder] = useState("Please enter description");
+
   useEffect(() => {
     setdataList({ ...props.row_data });
 
@@ -62,10 +66,11 @@ const EditInvestment = (props) => {
                     setSubmitting(false);
                   }}
                 >
-                  {({ values, isSubmitting, dirty, handleReset, touched }) => (
+                  {({ values, isSubmitting, dirty, handleReset, touched, setFieldValue }) => (
                     <Form action="" id="newcustomer">
               <div className="modal-head">
                 <h4>Edit investment</h4>
+            
                 <a
                   onClick={(e) => e.preventDefault()}
                   type="button"
@@ -135,10 +140,11 @@ const EditInvestment = (props) => {
                       </div>
                       <div className="col-md-12">
                         <div className="form-group">
-                          <label>
-                            
-                          Description
-                          </label>
+                        <label className='d-flex align-items-center justify-content-between mt-3'>
+                                                        Description
+                                                        <div className="form-check">
+                                                        <input type="checkbox" className="form-check-input" onChange={(e) => handleLangChange(e,setHindi,setDescPlaceHolder)} id="langEdit" /><label htmlFor="langEdit" className="form-check-label"><span>In hindi</span></label></div>
+                                                    </label>
                           <Field
                             as="textarea"
                             name="description"
@@ -146,6 +152,9 @@ const EditInvestment = (props) => {
                               ? "filled"
                               : ""
                             }`}
+                            placeholder={descPlaceHolder}
+                            onChange={(e)=>onvalChange(e,'description',setFieldValue,false,isHindi)}
+                            onBlur={(e)=>onvalChange(e,'description',setFieldValue,true,isHindi)}
                           />
                           <ErrorMessage
                             className="error"

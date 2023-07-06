@@ -50,7 +50,7 @@ const Firm = (props) => {
         setFilter(value);
     };
 
-    // const hideColumns = () => {};
+
 
     const columns = useMemo(
         () => [

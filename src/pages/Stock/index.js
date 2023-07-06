@@ -3,18 +3,31 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import DataTable from 'react-data-table-component';
 import { useSelector } from 'react-redux';
+import { makePositive } from '../../actions/common';
 const GoDown = (props) => {
-    const godownListAll = useSelector((state)=>state.godownReducer).godownList;
+
    
-        const [godownList, setList] = useState([...godownListAll]);
+        const [godownList, setList] = useState([...props.godownListAll]);
         const [filterText, setFilter] = useState("");
         const hanndleSearch = (value) => {
             setFilter(value);
         };
+        const sortGodown = (data) => {
+            data.sort(function(a, b) {
+              var keyA = makePositive(a.total),
+                keyB = makePositive(b.total);
         
+              if (keyA > keyB) return -1;
+              if (keyA < keyB) return 1;
+              return 0;
+            });
+          }
+      
+
+
     useEffect(() => {
         if (filterText) {
-            let tmp = godownListAll.filter((item) => {
+            let tmp = props.godownListAll.filter((item) => {
                 if (
                     item.name?.toLowerCase().includes(filterText.toLowerCase()) 
                 ) {
@@ -22,11 +35,16 @@ const GoDown = (props) => {
                 }
                 return false;
             });
+            
             setList([...tmp]);
         } else {
-            setList([...godownListAll]);
+      
+            setList([...props.godownListAll]);
         }
-    }, [filterText,godownListAll]);
+    }, [filterText,props.godownListAll]);
+
+
+    sortGodown(godownList);
 
 
     return (
