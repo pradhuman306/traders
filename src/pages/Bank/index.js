@@ -12,7 +12,7 @@ import EditAccount from './EditAccount';
 import AddAccount from './AddAccount';
 import DeleteSelected from '../../component/DeleteSelected';
 import Header from '../Header/Header';
-import { titleCase } from '../../actions/common';
+import { priceFormatter, titleCase } from '../../actions/common';
 
 const Bank = (props) => {
     const userId = props.auth.userdata.id;
@@ -73,6 +73,22 @@ const Bank = (props) => {
                     <div className="user-detail">{titleCase(row.name)}</div>
                     </div>
                     </Link>
+                );
+            },
+            sortable: true,
+         
+        },
+
+        {
+            name: "Total",
+            selector: (row) => {
+             
+                return (
+          
+                    row.total < 0 ?   <span className="debit">{priceFormatter(row.total)}</span>:<span className="credit">{priceFormatter(row.total)}</span>
+                  
+                  
+            
                 );
             },
             sortable: true,

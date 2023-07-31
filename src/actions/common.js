@@ -143,6 +143,8 @@ export const dataFormatCSV = (data,pname,param) => {
     itemHeader = ['Party','Date','Destination','Rate','Weight','Advance','Total'];
   }else if(param == 'balanceHistory'){
      itemHeader = ['Party','Date','Type','Bill no','Item','Weight','Rate','Amount','Debit','Commission','GST','Total'];
+  }else if(param == 'accountHistory'){
+    itemHeader = ['Name','Date','Credit','Debit','Description'];
   }
 let newArray = [itemHeader];
  data.map((item,i) => {
@@ -155,6 +157,8 @@ let newArray = [itemHeader];
     newItem.push(pname,formatDate(item.date),item.type,item.bill_no,item.item,item.weight,item.rate,item.amount,item.debit,item.commission,item.gst,totalAmountCalculateRaw(newRow));
     }else if(param == 'transportHistory'){
       newItem.push(pname,formatDate(item.date),item.destination,item.rate,item.weight,item.advance,parseInt(item.weight)*parseInt(item.rate)-parseInt(item.advance));
+    }else if(param == 'accountHistory'){
+      newItem.push(pname,formatDate(item.date),item.credit ?  '+'+parseInt(item.credit) : "",item.debit ? '-'+parseInt(item.debit) : "",item.description);
     }
     newArray.push(newItem);
   
