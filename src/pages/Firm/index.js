@@ -187,9 +187,9 @@ const Firm = (props) => {
                 data={firmList}
                 progressPending={props.pendingData}
                 progressComponent={<CustomLoader/>}
-                paginationRowsPerPageOptions={[8, 25, 50, 100]}
+                paginationRowsPerPageOptions={[8, 30, 50, 100]}
                 pagination
-                paginationPerPage={8}
+                paginationPerPage={30}
               
                
             />

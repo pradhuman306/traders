@@ -298,6 +298,7 @@ const PartyHistory = (props) => {
                         <>
                             <div className="user-detail xl-text">{titleCase(row.item)}  <div className='bysellopt'>{row.type === 'Buy' ? <span className='badge rounded-pill text-bg-primary'>Buy</span> : <span className='badge rounded-pill text-bg-danger'>Sell</span>}</div></div>
                             <div className='c-date'>{formatDate(row.date?.split(" ")[0])}</div>
+                            <div className='c-date'>{row.bill_no}</div>
                         </>
 
                     );
@@ -567,9 +568,9 @@ m760 -27 c21 -47 239 -830 275 -983 20 -88 38 -162 40 -164 4 -4 16 38 49 181
                     keyField={'key'}
                     progressPending={props.pendingData}
                     progressComponent={<CustomLoader />}
-                    paginationRowsPerPageOptions={[8, 25, 50, 100]}
+                    paginationRowsPerPageOptions={[8, 30, 50, 100]}
                     pagination
-                    paginationPerPage={8}
+                    paginationPerPage={30}
                     expandableRows
                     expandableRowsComponent={ExpandedComponent}
                     expandableRowExpanded={row => row.defaultExpanded}

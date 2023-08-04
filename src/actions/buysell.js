@@ -194,7 +194,7 @@ export const updateSell = (payload,elementRef,setBtnPending,isActive) => (dispat
 
 export const deleteBuySellList = (payload,isActive) => (dispatch) => {
   ajaxCall
-  .post(`${config.BASE_URL}${isActive.buy?"deletebuy":"deletesale"}/${payload.id}`)
+  .post(`${config.BASE_URL}${payload.type == 'Buy'?"deletebuy":"deletesale"}/${payload.id}`)
   .then((res) => {
    
       if(isActive.buy){

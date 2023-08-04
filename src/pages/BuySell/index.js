@@ -500,7 +500,7 @@ const BuySell = (props) => {
                     yes={(id) => {
                       dispatch(
                         deleteBuySellList(
-                          { id: row.id, name: row.party, user_id: user_id },
+                          { id: row.id, name: row.party, user_id: user_id, type:row.type },
                           isActive
                         )
                       );
@@ -650,9 +650,9 @@ const BuySell = (props) => {
         keyField={"key"}
         progressPending={props.pendingData}
         progressComponent={<CustomLoader />}
-        paginationRowsPerPageOptions={[8, 25, 50, 100]}
+        paginationRowsPerPageOptions={[8, 30, 50, 100]}
         pagination
-        paginationPerPage={8}
+        paginationPerPage={30}
         expandableRows={isExpandable}
         expandableRowsComponent={ExpandedComponent}
       />

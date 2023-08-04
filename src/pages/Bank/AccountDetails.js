@@ -420,9 +420,9 @@ m760 -27 c21 -47 239 -830 275 -983 20 -88 38 -162 40 -164 4 -4 16 38 49 181
         data={accountDetails}
         progressPending={props.pendingData}
         progressComponent={<CustomLoader />}
-        paginationRowsPerPageOptions={[8, 25, 50, 100]}
+        paginationRowsPerPageOptions={[8, 30, 50, 100]}
         pagination
-        paginationPerPage={8}
+        paginationPerPage={30}
         expandableRows={isExpandable}
         expandableRowsComponent={ExpandedComponent}
        
