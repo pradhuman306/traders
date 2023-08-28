@@ -52,10 +52,30 @@ const PartyHistory = (props) => {
 
     const sortByPendingAmount = (data) => {
         data.sort(function(a, b) {
-            let totalAmount1 = parseInt(totalAmountCalculateRaw(a) + gstCalculate(totalAmountCalculateRaw(a), a.gst));
-            let totalAmount2 = parseInt(totalAmountCalculateRaw(b) + gstCalculate(totalAmountCalculateRaw(b), b.gst));
-          var keyA = parseInt(totalAmount1-parseInt(a.total_paid)),
-            keyB = parseInt(totalAmount2 -parseInt(b.total_paid));
+            // let totalAmount1 = parseInt(totalAmountCalculateRaw(a) + gstCalculate(totalAmountCalculateRaw(a), a.gst));
+            // let totalAmount2 = parseInt(totalAmountCalculateRaw(b) + gstCalculate(totalAmountCalculateRaw(b), b.gst));
+            let toalPaid1 = 0;
+            let toalPaid2 = 0;
+            let totalAmount1 = totalAmountCalculateRaw(a) + gstCalculate(totalAmountCalculateRaw(a), a.gst);
+            if (a.paid) {
+                let paidData = JSON.parse(a.paid);
+                paidData.map(element => {
+                    toalPaid1 += parseInt(element.amount);
+                }
+                );
+            }
+            let totalAmount2 = totalAmountCalculateRaw(b) + gstCalculate(totalAmountCalculateRaw(b), b.gst);
+            if (b.paid) {
+                let paidData = JSON.parse(b.paid);
+                paidData.map(element => {
+                    toalPaid2 += parseInt(element.amount);
+                }
+                );
+            }
+            totalAmount1 = totalAmount1 - toalPaid1;
+            totalAmount2 = totalAmount2 - toalPaid2;
+          var keyA = parseInt(totalAmount1),
+            keyB = parseInt(totalAmount2);
        
           if (keyA > keyB) return -1;
           if (keyA < keyB) return 1;
@@ -266,7 +286,8 @@ const PartyHistory = (props) => {
                 if (
                     formatDate(item.date)?.toLowerCase().includes(filterText.toLowerCase()) ||
                     item.item.toLowerCase().includes(filterText.toLowerCase()) ||
-                    item.type.toLowerCase().includes(filterText.toLowerCase())
+                    item.type.toLowerCase().includes(filterText.toLowerCase()) ||
+                    item.bill_no.toLowerCase().includes(filterText.toLowerCase())
                 ) {
                     return true;
                 }
@@ -298,7 +319,7 @@ const PartyHistory = (props) => {
                         <>
                             <div className="user-detail xl-text">{titleCase(row.item)}  <div className='bysellopt'>{row.type === 'Buy' ? <span className='badge rounded-pill text-bg-primary'>Buy</span> : <span className='badge rounded-pill text-bg-danger'>Sell</span>}</div></div>
                             <div className='c-date'>{formatDate(row.date?.split(" ")[0])}</div>
-                            <div className='c-date'>{row.bill_no}</div>
+                      
                         </>
 
                     );
@@ -306,6 +327,20 @@ const PartyHistory = (props) => {
 
             },
 
+            {
+                name: "Bill no",
+                sortable: true,
+                selector: (row) => {
+                    return (
+                        <>
+                            <div className="user-detail">{row.bill_no}</div>
+                          
+                        </>
+
+                    );
+                },
+
+            },
 
 
             {
@@ -478,7 +513,7 @@ const PartyHistory = (props) => {
 
                     </div>
                 </div>
-                {historyDetails.length? 
+         
                 <div className="datatable-filter-wrap investment-f-wrap balance-filter-wrap">
                     <div className="datatable-search">
                         <input
@@ -540,7 +575,7 @@ m760 -27 c21 -47 239 -830 275 -983 20 -88 38 -162 40 -164 4 -4 16 38 49 181
                         />
                     </div>
                 </div>
-                :""}
+          
 
                 <div className={`${!isDisplayDate ? "d-none" : "date-filter"}`}>
                     <label>From: <input

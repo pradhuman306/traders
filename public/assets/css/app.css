@@ -1141,3 +1141,7 @@ body .light-bg-warning {
 
     }
 }
+
+div {
+    font-weight: bold !important;
+}
