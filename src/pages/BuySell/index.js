@@ -33,6 +33,7 @@ const BuySell = (props) => {
   const buySellListAll = useSelector(
     (state) => state.buySellReducer
   ).buySellList;
+  const stockList = useSelector((state) => state.buySellReducer).stockList;
   const firmListAll = useSelector((state) => state.firmReducer).firmList;
   const itemListAll = useSelector((state) => state.itemReducer).itemList;
   const partyList = useSelector((state) => state.balanceSheetReducer).partyList;
@@ -628,6 +629,7 @@ const BuySell = (props) => {
         firmListAll={firmListAll}
         godownListAll={godownListAll}
         itemListAll={itemListAll}
+        stockList={stockList}
         {...props}
         isActive={isActive}
         partyList={partyList}
@@ -637,6 +639,7 @@ const BuySell = (props) => {
         firmListAll={firmListAll}
         godownListAll={godownListAll}
         itemListAll={itemListAll}
+        stockList={stockList}
         {...props}
         isActive={isActive}
         partyList={partyList}

@@ -727,7 +727,8 @@ ul.st-dtl {
     margin-right: 0;
 }
 
-.st-dtl img, .godown-stock img {
+.st-dtl img,
+.godown-stock img {
     margin-right: 0;
     position: relative;
     top: 0;
@@ -757,6 +758,7 @@ ul.st-dtl {
     border-radius: var(--radius);
     font-weight: 600;
 }
+
 .godown-stock div {
     display: flex;
     flex-direction: column;
@@ -1127,11 +1129,49 @@ body .light-bg-warning {
 .logo-wrapper img {
     width: 50px;
 }
+
 .logo-wrapper {
     display: flex;
     align-items: center;
     height: 100%;
 }
+
+.react-select input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.react-select .css-3w2yfm-ValueContainer {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100px;
+    display: initial;
+}
+
+.react-select .css-1x4b61v-multiValue {
+    display: inline-flex;
+}
+
+.select-quantity p {
+font-weight: 400 !important;
+}
+
+.select-quantity p .error {
+    margin-top: 0px;
+    margin-left: 5px;
+    font-size: 14px;
+}
+
+.select-quantity p .success {
+    font-size: 14px;
+    color: rgba(var(--success));
+    display: inline-block;
+    background: rgba(var(--success), 0.1);
+    border-radius: 5px;
+    padding: 2px 8px;
+    margin-left: 5px;
+}
+
 @media print {
 
     .sidebar,

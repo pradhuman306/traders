@@ -1,11 +1,12 @@
 
 import {
-  SET_BUY, SET_SELL, SET_ALL_BUYSELL
+  SET_BUY, SET_SELL, SET_ALL_BUYSELL, SET_STOCK_LIST
   } from "../constants/actionTypes";
   const initialState ={
     buyList:[],
     sellList:[],
     buySellList:[],
+    stockList:[],
     pending: false,
   }
 
@@ -25,6 +26,13 @@ import {
           buyList: action.payload,
           pending: false,
         };
+        case SET_STOCK_LIST:
+          return {
+            ...state,
+            stockList: action.payload,
+            pending: false,
+          };
+        
         case SET_SELL:
           return {
             ...state,

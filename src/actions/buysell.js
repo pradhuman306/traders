@@ -123,7 +123,8 @@ export const updateBuy = (payload,elementRef,setBtnPending,isActive) => (dispatc
   });
 }
 
-export const addSell = (payload,elementRef,setBtnPending,resetForm,isActive) => (dispatch) => {
+export const addSell = (payload,elementRef,setBtnPending,resetForm,isActive,stockSelectRef) => (dispatch) => {
+  console.log(stockSelectRef);
   ajaxCall
   .post(`${config.BASE_URL}createsale`,payload)
   .then((res) => {
@@ -228,6 +229,32 @@ export const deleteBuySellList = (payload,isActive) => (dispatch) => {
     }
   });
 }
+
+export const getStockQuantityList = (payload) => (dispatch) => {
+    ajaxCall
+    .get(`${config.BASE_URL}getstockrecordbyid/${payload.user_id}/${payload.stock_id}/${payload.item_id}`)
+    .then((res) => {
+        dispatch({
+            type: actionTypes.SET_STOCK_LIST,
+            payload: res.data.data,
+          });
+    })
+    .catch((error) => {
+      if(error.code == "ERR_NETWORK"){
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.message,
+        });
+      } else{
+    
+        dispatch({
+          type: actionTypes.ERROR_MESSAGE,
+          payload: error.response.data.message,
+        });
+      }
+    });
+}
+
 
 export const getSellList = (payload) => (dispatch) => {
   setPendingData(dispatch);

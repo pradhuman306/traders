@@ -538,11 +538,11 @@ function Admin(props) {
                             </svg>
                           )}
 
-                          {totalProfitLoss < 0
+                          {totalData.FINALPROFIT < 0
                             ? "Total Loss "
                             : "Total Profit "}
                         </p>
-                        <h3>{priceFormatter(totalProfitLoss)}</h3>
+                        <h3>{priceFormatter(totalData.FINALPROFIT)}</h3>
                       </div>
                       <div>
                         <Line options={options} data={profitChart} />
