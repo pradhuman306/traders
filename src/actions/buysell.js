@@ -231,8 +231,9 @@ export const deleteBuySellList = (payload,isActive) => (dispatch) => {
 }
 
 export const getStockQuantityList = (payload) => (dispatch) => {
+ if(payload.stock_id != undefined) {
     ajaxCall
-    .get(`${config.BASE_URL}getstockrecordbyid/${payload.user_id}/${payload.stock_id}/${payload.item_id}`)
+    .get(`${config.BASE_URL}getstockrecordbyid/${payload.user_id}/${payload.stock_id}/${payload.item_id}/${payload.edit_id}`)
     .then((res) => {
         dispatch({
             type: actionTypes.SET_STOCK_LIST,
@@ -253,6 +254,7 @@ export const getStockQuantityList = (payload) => (dispatch) => {
         });
       }
     });
+  }
 }
 
 

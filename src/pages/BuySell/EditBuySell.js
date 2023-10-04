@@ -213,7 +213,7 @@ const EditBuySell = (props) => {
 
     setIsActive({ ...newIsActive });
 
-    dispatch(getStockQuantityList({ user_id: user_id, stock_id: props.row_data.godown_id, item_id: props.row_data.item_id }));
+    dispatch(getStockQuantityList({ user_id: user_id, stock_id: props.row_data.godown_id, item_id: props.row_data.item_id, edit_id:props.row_data.id }));
 
     console.log(props.row_data);
 
@@ -298,7 +298,7 @@ const EditBuySell = (props) => {
       let total = 0;
       let stock = 0;
       stockList.map((stocks) => {
-        if (stock <= parseInt(e.target.value) && total <= parseInt(e.target.value)) {
+        if (stock < parseFloat(e.target.value) && total < parseFloat(e.target.value)) {
           newStockList.push({ label: stocks.label, value: stocks.value, stock: stocks.stock });
           newStockList_1.push({ label: stocks.label, value: stocks.value, stock: stocks.stock });
           total += stocks.stock;

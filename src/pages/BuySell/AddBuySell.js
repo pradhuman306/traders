@@ -57,6 +57,27 @@ const AddBuySell = (props) => {
         const onMouseUp = () => setIsActive(false);
         const onMouseLeave = () => setIsActive(false);
 
+        const customStyles = {
+            valueContainer: (provided, state) => ({
+                ...provided,
+                textOverflow: "ellipsis",
+                maxWidth: "20%",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                display: "initial"
+            })
+        };
+    
+        // multiValueContainer function
+        const multiValueContainer = ({ selectProps, data }) => {
+       const label = data.label;
+    const allSelected = selectProps.value;
+    const index = allSelected.findIndex(selected => selected.label === label);
+    const isLastSelected = index === allSelected.length - 1;
+    const labelSuffix = isLastSelected ? ` (${allSelected.length})` : ", ";
+    const val = `${label}${labelSuffix}`;
+    return val;
+        };
         // styles
         let bg = "transparent";
         let checkboxColor = "inherit";
@@ -90,6 +111,10 @@ const AddBuySell = (props) => {
                 isSelected={isSelected}
                 getStyles={getStyles}
                 innerProps={props}
+                styles={customStyles} // Apply custom styles
+                components={{
+                    MultiValueContainer: multiValueContainer // Apply custom MultiValueContainer function
+                }}
             >
                 <input type="checkbox" checked={isSelected} />
                 {children}
@@ -217,7 +242,7 @@ const AddBuySell = (props) => {
 
     const setStocksList = (stock_id, item_id) => {
         if (stock_id != '' && item_id != '') {
-            dispatch(getStockQuantityList({ user_id: user_id, stock_id: stock_id, item_id: item_id }));
+            dispatch(getStockQuantityList({ user_id: user_id, stock_id: stock_id, item_id: item_id, edit_id:0 }));
         }
     }
 
@@ -274,12 +299,13 @@ const AddBuySell = (props) => {
             let total = 0;
             let stock = 0;
             stockList.map((stocks) => {
-                if (stock <= parseInt(e.target.value) && total <= parseInt(e.target.value)) {
+                if (stock < parseFloat(e.target.value) && total < parseFloat(e.target.value)) {
                     newStockList.push({ label: stocks.label, value: stocks.value, stock: stocks.stock });
                     newStockList_1.push({ label: stocks.label, value: stocks.value, stock: stocks.stock });
                     total += stocks.stock;
                     stock = stocks.stock;
                 } else {
+                    
                     newStockList_1.push({ label: stocks.label, value: stocks.value, stock: stocks.stock, isDisabled: true });
                 }
 
@@ -289,7 +315,6 @@ const AddBuySell = (props) => {
             setFieldValue("totalstock", total);
             setStockList(newStockList_1);
             setSelectedStockList(newStockList);
-            // stockSelectRef.current.clearValue();
         }
     }
 
@@ -665,7 +690,6 @@ const AddBuySell = (props) => {
                                                                 : ""
                                                             }`}
                                                         options={stockList}  
-                                                        menuIsOpen={true}
                                                         isSearchable={true}
                                                         isDisabled={isActive.buy}
                                                         hideSelectedOptions={false}
