@@ -678,7 +678,7 @@ const AddBuySell = (props) => {
                                                         Stock <span className="error-badge">*</span>
                                                     </label>
                                                     <p>
-                                                        {(values.weight != 0 || values.weight != '') ? (values.weight - values.totalstock) > 0 ? <span className="error">Please select {(values.weight - values.totalstock).toFixed(2)}qt more!</span>:<span className="success">Stock selected successfully!</span>:''}
+                                                        {(values.weight != 0 || values.weight != '') ? (values.weight - values.totalstock).toFixed(2) > 0 ? <span className="error">Please select {(values.weight - values.totalstock).toFixed(2)}qt more!</span>:<span className="success">Stock selected successfully!</span>:''}
                                                     </p>
                                                         </div>
                                                     <Select

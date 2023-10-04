@@ -142,19 +142,24 @@ const EditBuySell = (props) => {
 
 
 
-
-
   useEffect(() => {
     let sel_sold = props.row_data.selected_sold?.split(",");
     let newStockList = [];
     let selStockList = [];
     if (props.stockList.length) {
-   
+      let selStockTotal = 0;
       props.stockList.map((stocks) => {
+    
         if (sel_sold && sel_sold.includes(stocks.newid)) {
+          selStockTotal+=parseFloat(stocks.instock.toFixed(2));
           selStockList.push({ label: '₹' + stocks.rate + ' - ' + stocks.instock.toFixed(2) + 'qt', value: stocks.newid, stock: stocks.instock });
         }
-        newStockList.push({ label: '₹' + stocks.rate + ' - ' + stocks.instock.toFixed(2) + 'qt', value: stocks.newid, stock: stocks.instock });
+        if(selStockTotal >= parseFloat(props.row_data.weight) && !sel_sold.includes(stocks.newid)){
+          newStockList.push({ label: '₹' + stocks.rate + ' - ' + stocks.instock.toFixed(2) + 'qt', value: stocks.newid, stock: stocks.instock, isDisabled:true });
+        }else{
+          newStockList.push({ label: '₹' + stocks.rate + ' - ' + stocks.instock.toFixed(2) + 'qt', value: stocks.newid, stock: stocks.instock });
+        }
+        
       });
       setStockList(newStockList);
       setSelectedStockList(selStockList);
@@ -168,7 +173,7 @@ const EditBuySell = (props) => {
       setStockList([]);
     }
 
-  
+
 
 
 
@@ -667,7 +672,7 @@ const EditBuySell = (props) => {
                                                     </label>
                                                     <p>
                                              
-                                                        {((values.weight != 0 || values.weight != '')) ? (values.weight - values.totalstock) > 0 ? <span className="error">Please select {(values.weight - values.totalstock).toFixed(2)}qt more!</span>:<span className="success">Stock selected successfully!</span>:''}
+                                                        {((values.weight != 0 || values.weight != '')) ? (values.weight - values.totalstock).toFixed(2) > 0 ? <span className="error">Please select {(values.weight - values.totalstock).toFixed(2)}qt more!</span>:<span className="success">Stock selected successfully!</span>:''}
                                                     </p>
                                                         </div>
                               <Select
