@@ -133,6 +133,7 @@ const AddBuySell = (props) => {
 
         }
         setFieldValue("selected_sold", "");
+        setFieldValue("selected_weight", "");
         setFieldValue("totalstock", 0);
         setSelectedStockList([]);
 
@@ -200,12 +201,14 @@ const AddBuySell = (props) => {
             setStocksList("0", item_id);
         }
         setFieldValue("selected_sold", "");
+        setFieldValue("selected_weight", "");
         setFieldValue("totalstock", 0);
         setSelectedStockList([]);
 
     }
 
     const handleSelectChangeStock = (e, setFieldValue, itemWeight, tstock) => {
+        console.log(e);
         let newStockList = [];
         if (e) {
             let totalStock = e.reduce((acc, obj) => acc + obj['stock'], 0);
@@ -227,13 +230,15 @@ const AddBuySell = (props) => {
                 setStockList(newStockList);
             }
             const values = e.map(item => item.value);
-
+            const stockValue = e.map(item => item.stock);
             setFieldValue("selected_sold", values.join(","));
+            setFieldValue("selected_weight", stockValue.join(","));
             setFieldValue("totalstock", totalStock);
             setSelectedStockList(e);
 
         } else {
             setFieldValue("selected_sold", "");
+            setFieldValue("selected_weight", "");
             setFieldValue("totalstock", 0);
             setSelectedStockList([]);
         }
@@ -311,7 +316,10 @@ const AddBuySell = (props) => {
 
             });
             const values = newStockList.map(item => item.value);
+            const stockValue = newStockList.map(item => item.stock);
+
             setFieldValue("selected_sold", values.join(","));
+            setFieldValue("selected_weight", stockValue.join(","));
             setFieldValue("totalstock", total);
             setStockList(newStockList_1);
             setSelectedStockList(newStockList);
@@ -341,6 +349,7 @@ const AddBuySell = (props) => {
                             debit: "",
                             gst: "",
                             selected_sold: "",
+                            selected_weight:"",
                             item: "",
                             weight: "",
                             commission: "",
@@ -718,6 +727,12 @@ const AddBuySell = (props) => {
                                                         name="totalstock"
                                                         className={`d-none`}
                                                         placeholder="₹"
+                                                    />
+
+                                                        <Field
+                                                        type="text"
+                                                        name="selected_weight"
+                                                        className={`d-none`}
                                                     />
 
                                                     <ErrorMessage

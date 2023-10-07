@@ -214,6 +214,7 @@ const BuySell = (props) => {
         if (
           item.amount.toLowerCase().includes(filterText.toLowerCase()) ||
           item.party.toLowerCase().includes(filterText.toLowerCase()) ||
+          item.godown.toLowerCase().includes(filterText.toLowerCase()) ||
           formatDate(item.date).includes(filterText) ||
           item.gst.toString().includes(filterText) ||
           item.item.toLowerCase().includes(filterText.toLowerCase()) ||
@@ -343,6 +344,7 @@ const BuySell = (props) => {
         hide: "sm",
         width: "100px",
       },
+  
       {
         name: "Bill no.",
         selector: (row) => row.bill_no,

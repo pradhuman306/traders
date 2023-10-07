@@ -23,6 +23,7 @@ const EditBuySell = (props) => {
   const [newListItems, setNewListItems] = useState([]);
   const [stockList, setStockList] = useState([]);
   const [selectedStocks, setSelectedStockList] = useState([]);
+  const [selectedWeights, setSelectedWeights] = useState("");
   const [valueParty, setValueParty] = useState({});
   const [valueItem, setValueItem] = useState({});
   const [firmValue, setValueFirm] = useState({});
@@ -48,6 +49,7 @@ const EditBuySell = (props) => {
 
     }
     setFieldValue("selected_sold", "");
+    setFieldValue("selected_weight", "");
     setFieldValue("totalstock", 0);
     setSelectedStockList([]);
   };
@@ -78,7 +80,9 @@ const EditBuySell = (props) => {
         setStockList(newStockList);
       }
       const values = e.map(item => item.value);
+      const stockweight = e.map(item => item.stock);
       setFieldValue("selected_sold", values.join(","));
+      setFieldValue("selected_weight", stockweight.join(","));
       setFieldValue("totalstock", totalStock);
       setSelectedStockList(e);
 
@@ -146,6 +150,7 @@ const EditBuySell = (props) => {
     let sel_sold = props.row_data.selected_sold?.split(",");
     let newStockList = [];
     let selStockList = [];
+    let selWeightList = [];
     if (props.stockList.length) {
       let selStockTotal = 0;
       props.stockList.map((stocks) => {
@@ -153,6 +158,7 @@ const EditBuySell = (props) => {
         if (sel_sold && sel_sold.includes(stocks.newid)) {
           selStockTotal+=parseFloat(stocks.instock.toFixed(2));
           selStockList.push({ label: '₹' + stocks.rate + ' - ' + stocks.instock.toFixed(2) + 'qt', value: stocks.newid, stock: stocks.instock });
+          selWeightList.push(stocks.instock);
         }
         if(selStockTotal >= parseFloat(props.row_data.weight) && !sel_sold.includes(stocks.newid)){
           newStockList.push({ label: '₹' + stocks.rate + ' - ' + stocks.instock.toFixed(2) + 'qt', value: stocks.newid, stock: stocks.instock, isDisabled:true });
@@ -162,8 +168,9 @@ const EditBuySell = (props) => {
         
       });
       setStockList(newStockList);
+      
       setSelectedStockList(selStockList);
-  
+      setSelectedWeights(selWeightList.join(","));
       if(selStockList.length){
         let totalStock = selStockList.reduce((acc, obj) => acc + obj['stock'], 0);
         setTotalStocks(totalStock);
@@ -174,11 +181,7 @@ const EditBuySell = (props) => {
     }
 
 
-
-
-
-
-  }, [props.stockList])
+  }, [props.stockList,props.row_data.selected_sold])
 
   useEffect(() => {
     dispatch(getParty(user_id));
@@ -285,6 +288,7 @@ const EditBuySell = (props) => {
       setStocksList("0", item_id);
     }
     setFieldValue("selected_sold", "");
+    setFieldValue("selected_weight", "");
     setFieldValue("totalstock", 0);
     setSelectedStockList([]);
   };
@@ -314,7 +318,9 @@ const EditBuySell = (props) => {
 
       });
       const values = newStockList.map(item => item.value);
+      const stockweight = newStockList.map(item => item.stock);
       setFieldValue("selected_sold", values.join(","));
+      setFieldValue("selected_weight", stockweight.join(","));
       setFieldValue("totalstock", total);
       setStockList(newStockList_1);
       setSelectedStockList(newStockList);
@@ -345,6 +351,7 @@ const EditBuySell = (props) => {
                 gst: rowData.gst,
                 item: rowData.item_id,
                 selected_sold: rowData.selected_sold,
+                selected_weight: selectedWeights,
                 weight: rowData.weight,
                 commission: rowData.commission,
                 URD: rowData.URD,
@@ -387,26 +394,26 @@ const EditBuySell = (props) => {
                 values.user_id = user_id;
                 values.id = props.row_id;
                 values.amount = values.rate * values.weight;
-
-                if (isActive.buy) {
-                  dispatch(
-                    updateBuy(
-                      values,
-                      elementRef,
-                      props.setBtnPending,
-                      props.isActive
-                    )
-                  );
-                } else if (isActive.sell) {
-                  dispatch(
-                    updateSell(
-                      values,
-                      elementRef,
-                      props.setBtnPending,
-                      props.isActive
-                    )
-                  );
-                }
+                console.log(values);
+                // if (isActive.buy) {
+                //   dispatch(
+                //     updateBuy(
+                //       values,
+                //       elementRef,
+                //       props.setBtnPending,
+                //       props.isActive
+                //     )
+                //   );
+                // } else if (isActive.sell) {
+                //   dispatch(
+                //     updateSell(
+                //       values,
+                //       elementRef,
+                //       props.setBtnPending,
+                //       props.isActive
+                //     )
+                //   );
+                // }
 
                 setSubmitting(false);
               }}
@@ -713,7 +720,12 @@ const EditBuySell = (props) => {
                               className={`d-none`}
                               placeholder="₹"
                             />
-
+                        <Field
+                              type="text"
+                              name="selected_weight"
+                              className={`d-none`}
+                              placeholder="₹"
+                            />
                             <ErrorMessage
                               className="error"
                               name="selected_sold"
