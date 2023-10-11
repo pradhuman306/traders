@@ -234,7 +234,7 @@ const StockDetails = (props) => {
 
             {
                 name: "Status",
-                selector: (row) => parseFloat(row.weight) == parseFloat(row.sold) ? <span class="badge rounded-pill text-bg-success">✔ Sold</span>: parseFloat(row.weight) > parseFloat(row.sold) ? (parseFloat(row.weight) - parseFloat(row.sold)).toFixed(2)+' qt' : '' ,
+                selector: (row) => parseFloat(row.weight) == parseFloat(row.sold) ? <span class="badge rounded-pill text-bg-success">✔ Sold</span>: parseFloat(row.weight) > parseFloat(row.sold) ? (parseFloat(row.weight) - parseFloat(row.sold)).toFixed(2)+' qt' : parseFloat(row.weight)+' qt' ,
                 sortable: true,
                 hide: 'md'
                 ,
