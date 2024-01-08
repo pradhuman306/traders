@@ -376,14 +376,22 @@ const EditBuySell = (props) => {
                 if (!values.rate) {
                   errors.rate = "Please select rate!"
                 }
+                
                 if (!values.godown) {
                   errors.godown = "Please select godown!"
                 }
+                // if (!values.selected_sold && isActive.sell) {
+                //   errors.selected_sold = "Please select stock!"
+                // } else if (values.totalstock < values.weight && isActive.sell) {
+                //   errors.selected_sold = `Please select stock equal or greater than ${values.weight}qt !`
+                // }
+              
                 if (!values.selected_sold && isActive.sell) {
-                  errors.selected_sold = "Please select stock!"
-                } else if (values.totalstock < values.weight && isActive.sell) {
-                  errors.selected_sold = `Please select stock equal or greater than ${values.weight}qt !`
-                }
+                  errors.selected_sold = "Please select stock!";
+                } else if ((values.weight - values.totalstock).toFixed(2) > 0 && isActive.sell) {
+                  errors.selected_sold = `Please select stock equal or greater than ${values.weight}qt !`;
+                } 
+                
 
                 setError({ ...errors });
 
@@ -429,7 +437,7 @@ const EditBuySell = (props) => {
                 <Form action="" id="newcustomer">
                   <div className="modal-head">
                     <h4>Edit Entry</h4>
-
+                  
                     <a
                       onClick={(e) => e.preventDefault()}
                       type="button"
@@ -678,8 +686,17 @@ const EditBuySell = (props) => {
                                                         Stock <span className="error-badge">*</span>
                                                     </label>
                                                     <p>
-                                             
-                                                        {((values.weight != 0 || values.weight != '')) ? (values.weight - values.totalstock).toFixed(2) > 0 ? <span className="error">Please select {(values.weight - values.totalstock).toFixed(2)}qt more!</span>:<span className="success">Stock selected successfully!</span>:''}
+                                                    {
+  (values.weight !== 0 && values.weight !== '' && (values.weight - values.totalstock).toFixed(2) < 0) ? (
+    <span className="success">Stock selected successfully!</span>
+  ) : (
+    (values.weight - values.totalstock).toFixed(2) > 0 ? (
+      <span className="error">Please select {(values.weight - values.totalstock).toFixed(2)} qt more!</span>
+    ) : (values.weight - values.totalstock).toFixed(2) == 0 ? <span className="success">Stock selected successfully!</span>:""
+  )
+}
+
+                                                        {/* {((values.weight != 0 || values.weight != '')) ? (values.weight - values.totalstock).toFixed(2) > 0 ? <span className="error">Please select {(values.weight - values.totalstock).toFixed(2)}qt more!</span>:<span className="success">Stock selected successfully!</span>:''} */}
                                                     </p>
                                                         </div>
                               <Select

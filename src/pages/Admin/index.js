@@ -177,6 +177,7 @@ function Admin(props) {
 
     if (totalData) {
       let yearList = [
+        { label: currentYear-1, value: currentYear-1},
         { label: currentYear, value: currentYear }
       ];
       let totalProfitLoss =
